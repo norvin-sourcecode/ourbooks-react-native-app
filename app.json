@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "final-client",
+    "slug": "final-client",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "final-client"
+}
