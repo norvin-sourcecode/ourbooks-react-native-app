@@ -9,7 +9,7 @@ import {getAusleihenRequests, getFriendRequests, respondFriendRequest} from "../
 const InboxScreen = (props) => {
 
     const [index, setIndex] = useState(0);
-    const tabs = ['Anfragen', 'Ausleihen']
+    const tabs = ['verliehen', 'geliehen']
 
     const [requestsList, setRequestsList] = useState([])
 
@@ -83,7 +83,7 @@ const InboxScreen = (props) => {
 
     return (
         <View style={{paddingTop: 5}}>
-            <ButtonGroup buttonStyle={{backgroundColor:"#fdd560"}} textStyle={{color: "#565a63"}} selectedTextStyle={{color:"#fdd560"}} selectedButtonStyle={{backgroundColor: '#2b2e32'}} onPress={setIndex} selectedIndex={index} buttons={tabs} />
+            <ButtonGroup buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setIndex} selectedIndex={index} buttons={tabs} />
             <Divider style={{paddingTop: 5}}/>
             {index === 0 &&
             <View>

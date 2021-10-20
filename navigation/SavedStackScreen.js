@@ -1,12 +1,11 @@
 import React from "react";
 import {Text, View} from "react-native";
 import {createNativeStackNavigator} from "react-native-screens/native-stack";
+import SavedScreen from "../screens/mainScreens/saved/SavedScreen";
 
 const SavedStackScreen1 = (props) => {
     return (
-        <View>
-            <Text navigation={props.navigation}>SavedStackScreen1</Text>
-        </View>
+        <SavedScreen  navigation={props.navigation} />
     );
 }
 

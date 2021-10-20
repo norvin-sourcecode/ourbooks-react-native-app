@@ -16,7 +16,7 @@ const HomeScreen = (props) => {
         //     props.getUserBibBooksDispatch()
         // }
         if (!props.bibs.loaded) {
-            props.getBibsDispatch()
+            //props.getBibsDispatch()
         }
     }, [props.userBib, props.bibs])
 
@@ -67,10 +67,10 @@ const HomeScreen = (props) => {
                     <ListItem.Content>
                         <Card.Title>{bib.name}</Card.Title>
                         <View style={{flexDirection: "row"}}>
-                            <Text>Mitglieder: </Text>
-                            {bib.bookclubMembers.map((value, i) => (
-                                <Text key={index+i+"mapped-members"+value}>{value},</Text>
-                            ))}
+                            <Text>neuste Nachricht: ...</Text>
+                            {/*{bib.bookclubMembers.map((value, i) => (*/}
+                            {/*    <Text key={index+i+"mapped-members"+value}>{value},</Text>*/}
+                            {/*))}*/}
                         </View>
                         <Badge
                             value={1}

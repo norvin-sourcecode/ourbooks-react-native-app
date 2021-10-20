@@ -164,19 +164,19 @@ const AppTabsScreen = (props) => (
             tabBarActiveTintColor: "red"
         }}>
         <AppTabs.Screen
-            name="home"
-            component={HomeStackScreen}
-            options={{
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="library" size={30} color="#fdd560"/>
-                )}}
-        />
-        <AppTabs.Screen
             name="saved"
             component={SavedStackScreen}
             options={{
                 tabBarIcon: ({ color, size }) => (
                     <FontAwesome name="bookmark" size={30} color="#fdd560" />
+                )}}
+        />
+        <AppTabs.Screen
+            name="home"
+            component={HomeStackScreen}
+            options={{
+                tabBarIcon: ({ color, size }) => (
+                    <Ionicons name="library" size={30} color="#fdd560"/>
                 )}}
         />
         <AppTabs.Screen

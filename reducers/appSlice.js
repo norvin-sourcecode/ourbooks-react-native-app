@@ -179,7 +179,29 @@ const initialState = {
     saved: {
         loaded: false,
         loading: false,
-        booksList: [],
+        booksList: [{
+            auflage: "string",
+            authorName: "string",
+            erscheinungsDatum: "string",
+            id: 1,
+            isbn: "string",
+            sprache: "string",
+            status: 0,
+            timeCreated: "2021-10-01",
+            titel: "platzhalter_buch",
+            pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+        },{
+            auflage: "string",
+            authorName: "string",
+            erscheinungsDatum: "string",
+            id: 0,
+            isbn: "string",
+            sprache: "string",
+            status: 0,
+            timeCreated: "2021-10-01",
+            titel: "platzhalter_buch",
+            pictureUrl: "",
+        },],
         error: null
     },
     friends: {
@@ -215,15 +237,11 @@ export const getUser = createAsyncThunk(
         console.log("hier1")
         try {
             const tmpState = getState()
-            console.log("hier2")
-            console.log(tmpState.appReducer.communication.urlBase+"/user"+tmpState.appReducer.communication.conf.auth.username+tmpState.appReducer.communication.conf.auth.password)
             const response = await axios
                 .get(tmpState.appReducer.communication.urlBase+"/user", tmpState.appReducer.communication.conf)
-            return response.data && console.log(response.data)
+            return response.data
         } catch (err) {
             let error = err
-            console.log("hier3")
-            console.log("error:"+err.toString())
             if (!error.response) {
                 throw err
             }

@@ -28,6 +28,9 @@ const ProfilScreen = (props) => {
         if (!props.friends.loaded) {
             props.getFriendsDispatch()
         }
+        // const interval = setInterval(async () => {
+        //     props.getFriendsDispatch()
+        // }, 5000);
     }, [props.friends])
 
     useEffect(() => {

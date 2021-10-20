@@ -2,6 +2,8 @@ import React from "react";
 import {Text, View} from "react-native";
 import {createNativeStackNavigator} from "react-native-screens/native-stack";
 import InboxScreen from "../screens/mainScreens/inbox/InboxScreen";
+import {Ionicons} from "@expo/vector-icons";
+import {Badge} from "react-native-elements";
 
 const InboxScreen1 = (props) => {
     return (
@@ -30,6 +32,16 @@ function InboxStackScreen() {
             headerTitleStyle: {
                 fontWeight: "bold",
             },
+            headerRight: ({}) => (
+                <View>
+                    <Ionicons name="notifications" size={25} color="#fdd560"/>
+                    <Badge
+                        value={1}
+                        status="success"
+                        containerStyle={{ position: 'absolute', top: -4, right: -7 }}
+                    />
+                </View>
+            ),
         }}>
             <InboxStack.Screen name="ProcessScreen1" component={InboxScreen1} />
             <InboxStack.Screen name="ProcessScreen2" component={InboxScreen2} />
