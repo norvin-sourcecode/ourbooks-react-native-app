@@ -24,27 +24,43 @@ import {
 } from "../../../reducers/appSlice";
 import UserBibCard from "../../../components/UserBibCard";
 
-const ProfilScreen = (props) => {
+const FriendsScreen = (props) => {
 
     const [friendsList, setFriendsList] = useState([])
     const [shownFriend, setShownFriend] = useState({})
     const [newFriendUsername, setNewFriendUsername] = useState("")
     const [newFriendOverlayVisible, setNewFriendOverlayVisible] = useState(false);
     const [friendOverlayVisible, setFriendOverlayVisible] = useState(false);
-    const [userBibBooksList, setUserBibBooksList] = useState([])
+
+    const [refreshing, setRefreshing] = useState(false);
+
 
     useEffect(() => {
         if (!props.friends.loaded) {
             props.getFriendsDispatch()
         }
-        // const interval = setInterval(async () => {
-        //     props.getFriendsDispatch()
-        // }, 5000);
     }, [props.friends])
 
     useEffect(() => {
         setFriendsList(props.friends.friendsList)
+        props.navigation.setOptions({ headerRight: ({}) => (
+                <View>
+                    <Ionicons style={{right: -14,top:-1}} name="add" size={40} color="#fdd560" onPress={toggleNewFriendOverlay}/>
+                </View>
+            )
+        })
     }, [props.friends,props.userBib]);
+
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        props.getFriendsDispatch()
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
 
 
     const toggleNewFriendOverlay = () => {
@@ -94,31 +110,32 @@ const ProfilScreen = (props) => {
 
     return (
         <View>
-            <Card>
-                <View style={{paddingBottom: 15,flexDirection: "row", justifyContent: "space-between"}}>
-                    <Avatar rounded
-                            size="xlarge"
-                            source={require("./avatar-placeholder.png")}
-                    />
-                    <View style={{paddingLeft: 10,justifyContent: 'space-evenly', width: "50%"}}>
-                        <Text style={{alignSelf: "flex-start",fontWeight: "bold", paddingBottom: 10}}>{props.user.username}</Text>
-                        <View style={{width: "100%"}}>
-                            <TouchableOpacity style={{paddingBottom: 3,flexDirection: "row", justifyContent: "space-between"}} onPress={()=>{props.navigation.navigate("profilFriends")}}>
-                                <Text>Freund*innen:</Text>
-                                <Text style={{fontWeight: "bold",}}>{friendsList.length}</Text>
-                            </TouchableOpacity>
-                            <Divider/>
-                            <View style={{paddingTop: 3,flexDirection: "row", justifyContent: "space-between"}}>
-                                <Text>Bücher:</Text>
-                                <Text style={{fontWeight: "bold",}}>{props.userBib.booksList.length}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </Card>
             <View>
-                <UserBibCard navigation={props.navigation}/>
+                <VirtualizedList
+                    data={friendsList}
+                    initialNumToRender={5}
+                    renderItem={({item, index}) => <Item friend={item} index={index} />}
+                    keyExtractor={(item, index)=> 'key'+index+item.id}
+                    getItemCount={getItemCount}
+                    getItem={getItem}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />
             </View>
+            <Overlay isVisible={newFriendOverlayVisible} onBackdropPress={toggleNewFriendOverlay}>
+                <View style={{width: 250}}>
+                    <Input placeholder="username" value={newFriendUsername} onChangeText={value => setNewFriendUsername(value)} />
+                    <Button title="Freund*in hinzufügen" onPress={handelAddFriendPress} buttonStyle={{backgroundColor: "black"}} />
+                </View>
+            </Overlay>
+            <Overlay isVisible={friendOverlayVisible} onBackdropPress={toggleFriendOverlay}>
+                <View style={{width: 250}}>
+                    <Text>{shownFriend.username}</Text>
+                    <Text>{shownFriend.firstname} {shownFriend.lastname}</Text>
+                    <Text>{shownFriend.email}</Text>
+                    <Button containerStyle={{paddingTop:10}} title="Freund*in entfernen" onPress={() => {handelRemoveFriendPress(shownFriend.id)}} buttonStyle={{backgroundColor: "black"}} />
+                </View>
+            </Overlay>
         </View>
     )
 }
@@ -127,7 +144,6 @@ const mapStateToProps = state => {
     return {
         user: state.appReducer.user,
         friends: state.appReducer.friends,
-        userBib: state.appReducer.userBib,
     }
 }
 
@@ -141,12 +157,6 @@ const mapDispatchToProps = dispatch => ({
     deleteFriendDispatch(id) {
         dispatch(deleteFriend({id: id}))
     },
-    setShownBookDispatch(book) {
-        dispatch(setShownBook(book))
-    },
-    getUserBibBooksDispatch() {
-        dispatch(getUserBibBooks())
-    },
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(FriendsScreen)

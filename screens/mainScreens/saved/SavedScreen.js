@@ -2,19 +2,27 @@ import React, {useState} from "react";
 import {useEffect} from "react";
 import {Text, TouchableOpacity, View, VirtualizedList} from "react-native";
 import { connect } from "react-redux";
-import {Button,Badge, ListItem, Tab, TabView} from 'react-native-elements';
+import {Button, Badge, ListItem, Tab, TabView, Card} from 'react-native-elements';
+import {getNewlyAdded, getSaved, setShownBook} from "../../../reducers/appSlice";
+import Animated from "react-native-reanimated";
 
 const SavedScreen = (props) => {
 
+    const [newlyAdded, setNewlyAdded] = useState([])
     const [savedList, setSavedList] = useState([])
+
+    const AnimatedVirtualiedList = Animated.createAnimatedComponent(VirtualizedList)
+    const scrollY = new Animated.Value(0)
 
     useEffect(() => {
         if (!props.saved.loaded) {
-            //nein props.getLeseListeBooksFromServerDispatchAusloeser(props.Communication.urlBase, props.Communication.conf)
+            props.getNewlyAddedDispatch()
+            props.getSavedDispatch()
         }
-    }, [])
+    }, [props.saved])
 
     useEffect(() => {
+        setNewlyAdded(props.saved.newlyAddedBooksList)
         setSavedList(props.saved.booksList)
     }, [props.book, props.userBib, props.saved])
 
@@ -26,22 +34,30 @@ const SavedScreen = (props) => {
         return data.length
     }
 
+    let translateY = scrollY.interpolate({
+        inputRange: [0, 120],
+        outputRange: [0, -120],
+        extrapolate: 'clamp',
+    });
+
+    let scale = scrollY.interpolate({
+        inputRange: [0, 120],
+        outputRange: [1, 0.5],
+        extrapolate: 'clamp',
+    });
+
+    let textTranslateY = scrollY.interpolate({
+        inputRange: [0, 120],
+        outputRange: [0, 20],
+        extrapolate: 'clamp',
+    });
+
     const SavedBook = ({ book, index}) => (
         <View>
-            <ListItem.Swipeable
+            <ListItem
                 onPress={() => {
                     handleBookPress(book)
                 }}
-                rightContent={
-                    <Button
-                        title="entfernen"
-                        icon={{ name: 'delete', color: 'white' }}
-                        buttonStyle={{justifyContent: 'center', minHeight: '100%', backgroundColor: 'red' }}
-                        onPress={() => {
-                            console.log(book)
-                        }}
-                    />
-                }
                 key={index+"list-item-swipeable-leseliste"}
                 bottomDivider>
                 <ListItem.Content>
@@ -51,7 +67,7 @@ const SavedScreen = (props) => {
                     <ListItem.Subtitle>Erscheinungsdatum: {book.erscheinungsDatum}</ListItem.Subtitle>
                 </ListItem.Content>
                 <ListItem.Chevron />
-            </ListItem.Swipeable>
+            </ListItem>
         </View>
     );
 
@@ -60,14 +76,42 @@ const SavedScreen = (props) => {
         props.navigation.navigate("book")
     }
 
+    const NewlyAddedBook = ({ book, index}) => (
+        <ListItem key={index+"list-item-saved-newlyadded-booksList"} containerStyle={{backgroundColor: "transparent"}}>
+            <Card key={index+"list-item-card-saved-newlyadded-booksList"} containerStyle={{margin: 0, padding: 1}}>
+                <TouchableOpacity key={index+"touch-flaeche-home-userBib-booksList"} onPress={() => {
+                    handleBookPress(book)
+                }}>
+                    <View>
+                        {book.pictureUrl.length === 0 &&
+                        <View style={{justifyContent: "center",width: 48, height:75}}>
+                            <Text style={{alignSelf: "center"}}>Titel:</Text>
+                            <Text style={{alignSelf: "center"}}>{book.titel}</Text>
+                        </View>
+                        }
+                        {book.pictureUrl.length !== 0 &&
+                        <Card.Image style={{width: 48, height:75}} resizeMode="contain" source={{url:book.pictureUrl}}>
+                        </Card.Image>
+                        }
+                    </View>
+                </TouchableOpacity>
+            </Card>
+        </ListItem>
+    );
+
     return (
         <View>
             <View>
                 { savedList.length === 0 &&
-                <Text style={{paddingTop: 100 ,textAlign: 'center', color: "grey"}}>deine Leseliste ist noch leer...</Text>
+                <Text style={{paddingTop: 300 ,textAlign: 'center', color: "grey"}}>deine Leseliste ist noch leer...</Text>
                 }
             </View>
-            <VirtualizedList
+            <AnimatedVirtualiedList
+                scrollEventThrottle={16}
+                onScroll={Animated.event([
+                    { nativeEvent: { contentOffset: { y: scrollY } } },
+                ])}
+                contentContainerStyle={{paddingTop:120}}
                 data={savedList}
                 initialNumToRender={5}
                 renderItem={({item, index}) => <SavedBook book={item} index={index} />}
@@ -75,6 +119,36 @@ const SavedScreen = (props) => {
                 getItemCount={getItemCount}
                 getItem={getItem}
             />
+            <Animated.View
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 120,
+                    backgroundColor: '#2b2e32',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                    paddingBottom: 10,
+                    transform: [{ translateY }],
+                    borderTopWidth: 2,
+                    borderColor: "#fdd560",
+                }}>
+                <Text style={{color: "#fdd560", fontWeight: "bold", right: -5, top: 5}}>neu verfügbar:</Text>
+                {newlyAdded.length === 0 &&
+                    <Text style={{color: "white", alignSelf: "center", padding: 35}}>zurzeit keine neuen Bücher verfügbar</Text>
+                }
+                <VirtualizedList
+                    style={{alignSelf: "flex-start"}}
+                    horizontal={true}
+                    data={newlyAdded}
+                    initialNumToRender={5}
+                    renderItem={({item, index}) => <NewlyAddedBook book={item} index={index} />}
+                    keyExtractor={(item, index)=> 'key'+index+item.id}
+                    getItemCount={getItemCount}
+                    getItem={getItem}
+                />
+            </Animated.View>
         </View>
     )
 }
@@ -82,13 +156,20 @@ const SavedScreen = (props) => {
 const mapStateToProps = state => {
     return {
         saved: state.appReducer.saved,
-        communication: state.appReducer.communication,
         userBib: state.appReducer.userBib
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-
+    setShownBookDispatch(book) {
+        dispatch(setShownBook(book))
+    },
+    getSavedDispatch() {
+        dispatch(getSaved())
+    },
+    getNewlyAddedDispatch() {
+        dispatch(getNewlyAdded())
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SavedScreen)

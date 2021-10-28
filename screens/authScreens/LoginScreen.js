@@ -23,6 +23,9 @@ const LoginScreen = (props) => {
     const [logoVisible, setLogoVisible] = useState(true)
 
     useEffect(() => {
+    },[logoVisible])
+
+    useEffect(() => {
         setFirebaseUser(props.firebaseUser)
         if (props.user.error != null) {
             setVisible(true);
@@ -48,8 +51,26 @@ const LoginScreen = (props) => {
         setVisible(!visible);
     };
 
-    const toggleLogo = (value) => {
-        setLogoVisible(value)
+    const hideLogo = () => {
+        Animated.timing(scale, {
+                toValue: 0,
+                duration: 210000,
+                useNativeDriver: true
+            }
+        ).start(({ finished }) => {
+            if (finished) {
+                setLogoVisible(false)
+            }
+        })
+    }
+
+    const showLogo = () => {
+        Animated.timing(scale, {
+                toValue: 1,
+                duration: 100,
+                useNativeDriver: true
+            }
+        ).start();
     }
 
     function rechnen(a, b, c) {
@@ -78,35 +99,44 @@ const LoginScreen = (props) => {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{backgroundColor: "#2b2e32"}}>
             <KeyboardAwareScrollView
+                extraHeight={130}
+                enableOnAndroid={true}
                 resetScrollToCoords={{ x: 0, y: 0 }}
                 scrollEnabled={false}
                 contentContainerStyle={{height: "100%"}}
-                onKeyboardWillShow={() => {setLogoVisible(false)}}
-                onKeyboardWillHide={() => {setLogoVisible(true)}}
+                onKeyboardWillShow={hideLogo}
+                //onScrollAnimationEnd={() => {toggleLogo(false)}}
+                //onMomentumScrollEnd={() => {toggleLogo(false)}}
+                //onKeyboardDidShow={() => {toggleLogo(false)}}
+                onKeyboardWillHide={() => {
+                    setLogoVisible(true)
+                    showLogo()}}
+                //onKeyboardDidHide={() => {toggleLogo(true)}}
                 //onMomentumScrollEnd={event => ani(rechnen(1, event.nativeEvent.contentOffset.y, 200))}
             >
+
+                { logoVisible &&
+                <Animated.View style={{paddingTop: 30, alignItems:"center", transform: [{scale}]}}>
+                    <Animated.Image
+                        PlaceholderContent={<ActivityIndicator size='large'/>}
+                        placeholderStyle={{backgroundColor: "transparent"}}
+                        source={logo}
+                        style={{height: 200, width: 200}}
+                    />
+                </Animated.View>
+                }
                 <View style={{flex:1, justifyContent:'flex-start', height:'100%'}}>
-                    { logoVisible &&
-                        <View style={{paddingTop: 30, alignItems:"center"}}>
-                            <Image
-                                PlaceholderContent={<ActivityIndicator size='large'/>}
-                                placeholderStyle={{backgroundColor: "transparent"}}
-                                source={logo}
-                                style={{height: 200, width: 200}}
-                            />
-                        </View>
-                    }
-                    <Text style={{alignSelf: "center", paddingTop: 20, paddingBottom: 20,fontSize: 20}}>OURBOOK</Text>
+                    <Text style={{alignSelf: "center", paddingTop: 20, paddingBottom: 20,fontSize: 20, color:"#fdd560", fontWeight: "bold"}}>OURBOOK</Text>
                     <View>
-                        <Input placeholder="username" value={username} onChangeText={value => setUsername(value)} />
-                        <Input secureTextEntry={true} placeholder="password" value={password} onChangeText={value => setPassword(value)} />
-                        <Text style={{textDecorationLine: 'underline', paddingLeft: 10, paddingBottom: 20}}  onPress={() => props.navigation.navigate("resetRassword")}>Passwort vergessen?</Text>
-                        <Button title="Login" style={{paddingLeft: 10, paddingRight: 10}} buttonStyle={{ backgroundColor: 'black'}} onPress={() => {
+                        <Input inputStyle={{color: "#fdd560"}} placeholder="username" value={username} onChangeText={value => setUsername(value)} />
+                        <Input inputStyle={{color: "#fdd560"}} secureTextEntry={true} placeholder="password" value={password} onChangeText={value => setPassword(value)} />
+                        <Text style={{color: "#fdd560",textDecorationLine: 'underline', paddingLeft: 10, paddingBottom: 20}}  onPress={() => props.navigation.navigate("resetRassword")}>Passwort vergessen?</Text>
+                        <Button title="login" titleStyle={{color: "#2b2e32"}} style={{paddingLeft: 10, paddingRight: 10}} buttonStyle={{ backgroundColor: '#fdd560'}} onPress={() => {
                             handelLoginPressed()
                         }}/>
-                        <Text style={{textDecorationLine: 'underline',alignSelf: "center", paddingTop: 20}}  onPress={() => props.navigation.navigate("register")}>neuen Account erstellen</Text>
+                        <Text style={{textDecorationLine: 'underline',alignSelf: "center", paddingTop: 20, color: "#fdd560"}}  onPress={() => props.navigation.navigate("register")}>neuen Account erstellen</Text>
                     </View>
                 </View>
             </KeyboardAwareScrollView>

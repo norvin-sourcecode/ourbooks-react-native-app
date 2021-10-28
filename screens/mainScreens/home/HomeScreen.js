@@ -2,53 +2,56 @@ import React, {useState} from "react";
 import {useEffect} from "react";
 import {FlatList, Text, TouchableOpacity, View, VirtualizedList} from "react-native";
 import { connect } from "react-redux";
-import {Badge, Divider, ListItem, Button, Card,SearchBar} from "react-native-elements";
+import {Badge, Divider, ListItem, Button, Card, SearchBar, ButtonGroup, Input, Overlay} from "react-native-elements";
 import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {getBibs, getUserBibBooks, setShownBib, setShownBook} from "../../../reducers/appSlice";
+import ListBib from "../../../components/ListBib";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const HomeScreen = (props) => {
 
-    const [bibsBibsList, setbibsBibsList] = useState([])
-    const [userBibBooksList, setUserBibBooksList] = useState([])
+    const [visible, setVisible] = useState(false);
+
+    const [bibsList, setBibsList] = useState([])
+
+    const [bIndex, setBIndex] = useState(0);
+    const tabs = ['Aktivitäten', 'geteilte Bücherregale']
+
+    const [search, setSearch] = useState("")
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([
+        {label: 'neuste', value: '1'},
+        {label: 'nur Freunde-Bücherregale', value: '2'},
+        {label: 'nur Gruppen-Bücherregale', value: '3'}
+    ]);
+
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
-        // if (!props.userBib.loaded) {
-        //     props.getUserBibBooksDispatch()
-        // }
         if (!props.bibs.loaded) {
             //props.getBibsDispatch()
         }
     }, [props.userBib, props.bibs])
 
     useEffect(() => {
-        if (props.userBib.booksList.length === 0) {
-            setUserBibBooksList([{
-                auflage: "NOBOOKS",
-                authorName: "NOBOOKS",
-                erscheinungsDatum: "NOBOOKS",
-                id: 0,
-                isbn: "NOBOOKS",
-                sprache: "NOBOOKS",
-                status: 0,
-                timeCreated: "NOBOOKS",
-                titel: "NOBOOKS",
-                pictureUrl: "",
-            }])
-        } else {
-            setUserBibBooksList(props.userBib.booksList)
-        }
-        setbibsBibsList(props.bibs.bibsList)
+        setBibsList(props.bibs.bibsList)
     }, [props.bibs, props.userBib])
 
-    // useEffect(() => {
-    //     const interval = setInterval(async () => {
-    //         props.getUserBibBooksDispatch()
-    //     }, 5000);
-    //
-    //     return () => {
-    //         clearInterval(interval);
-    //     };
-    // }, [])
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        props.getUserBibBooksDispatch()
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
+
+    const toggleOverlay = () => {
+        setVisible(!visible);
+    };
 
     function getItem (data, index) {
         return data[index]
@@ -58,124 +61,70 @@ const HomeScreen = (props) => {
         return data.length
     }
 
-    const Bib = ({ bib, index}) => (
-        <View>
-            <TouchableOpacity key={index+"touch-flaeche-home-bibs-bibslist"} onPress={() => {
-                handleBibPress(bib)
-            }}>
-                <ListItem key={index+"list-item-home-bibs-bibslist"} bottomDivider>
-                    <ListItem.Content>
-                        <Card.Title>{bib.name}</Card.Title>
-                        <View style={{flexDirection: "row"}}>
-                            <Text>neuste Nachricht: ...</Text>
-                            {/*{bib.bookclubMembers.map((value, i) => (*/}
-                            {/*    <Text key={index+i+"mapped-members"+value}>{value},</Text>*/}
-                            {/*))}*/}
-                        </View>
-                        <Badge
-                            value={1}
-                            status="success"
-                            containerStyle={{ position: 'absolute', right: -4 }}
-                        />
-                    </ListItem.Content>
-                    <ListItem.Chevron />
-                </ListItem>
-            </TouchableOpacity>
-        </View>
-    );
-
-    const UserBibBook = ({ book, index}) => (
-        <ListItem key={index+"list-item-home-userBib-booksList"}>
-            <Card key={index+"list-item-card-home-userBib-booksList"} containerStyle={{margin: 0, padding: 1}}>
-                {book.titel === "NOBOOKS" &&
-                <TouchableOpacity key={index+"touch-flaeche-home-userBib-booksList"} onPress={() => {
-                    props.navigation.navigate("add a book")
-                }}>
-                    <View>
-                        <View style={{justifyContent: "center",width: 75, height: 110}}>
-                            <Ionicons style={{alignSelf:"center"}} name="add" size={35} color="black" />
-                        </View>
-                    </View>
-                </TouchableOpacity>
-                }
-                {book.titel !== "NOBOOKS" &&
-                <TouchableOpacity key={index+"touch-flaeche-home-userBib-booksList"} onPress={() => {
-                    handleBookPress(book)
-                }}>
-                    <View>
-                        {book.pictureUrl.length === 0 &&
-                        <View style={{justifyContent: "center",width: 75, height: 110}}>
-                            <Text style={{alignSelf: "center"}}>Titel:</Text>
-                            <Text> </Text>
-                            <Text style={{alignSelf: "center"}}>{book.titel}</Text>
-                        </View>
-                        }
-                        {book.pictureUrl.length !== 0 &&
-                        <Card.Image style={{width: 75, height:110}} resizeMode="contain" source={{url:book.pictureUrl}}>
-                        </Card.Image>
-                        }
-                    </View>
-                </TouchableOpacity>
-                }
-            </Card>
-        </ListItem>
-    );
-
-    function handleBookPress(book) {
-        props.setShownBookDispatch(book)
-        props.navigation.navigate("book")
-    }
-
-    function handleBibPress(bib) {
-        props.setShownBibDispatch(bib)
-        props.navigation.navigate("homeStackScreen3")
-    }
-
-    function handleUserBibPress() {
-        props.navigation.navigate("homeStackScreen2")
-    }
-
     function handleAddABibPress() {
         props.navigation.navigate("add a bib")
 
     }
 
     return (
-        <View style={{height: "100%"}}>
-            <Card containerStyle={{padding: 15}}>
-                <View style={{flexDirection: "row",width:"100%", justifyContent: "space-between"}}>
-                    <Card.Title>Nutzer-Bibliothek</Card.Title>
-                    <MaterialIcons style={{position: "absolute", right: 0, top: -8}} name="more-horiz" size={35} color="black" onPress={handleUserBibPress}/>
+        <View style={{paddingTop: 5}}>
+            <ButtonGroup buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
+            {bIndex === 0 &&
+            <View>
+                <View style={{paddingRight:11, paddingLeft:11, height:50,paddingTop:5, paddingBottom:20}}>
+                    <View style={{height:36, backgroundColor: "lightgrey",borderRadius: 7.5}}>
+                        <DropDownPicker
+                            placeholder={<View style={{paddingTop:7,flexDirection: "row"}}><MaterialIcons name="sort" size={24} color="grey" /><Text style={{paddingTop:1,color: "grey", fontSize: 18, paddingLeft: 5}}>sortieren nach...</Text></View>}
+                            style={{height:36, backgroundColor: "lightgrey",borderRadius: 7.5, borderWidth:0}}
+                            containerStyle={{borderWidth:0}}
+                            open={open}
+                            value={value}
+                            items={items}
+                            setOpen={setOpen}
+                            setValue={setValue}
+                            setItems={setItems}
+                        />
+                    </View>
                 </View>
-                <Card.Divider/>
-                <VirtualizedList
-                    style={{alignSelf: "center"}}
-                    horizontal={true}
-                    data={userBibBooksList}
-                    initialNumToRender={3}
-                    renderItem={({item, index}) => <UserBibBook book={item} index={index} />}
-                    keyExtractor={(item, index)=> 'key'+index+item.id}
-                    getItemCount={getItemCount}
-                    getItem={getItem}
-                />
-            </Card>
-            <View style={{paddingRight: 15, paddingLeft: 15,paddingTop: 5,paddingBottom:5,alignSelf: "center", width: "100%",flexDirection: "row", justifyContent: "space-between"}}>
-                <Text style={{alignSelf: "center", fontWeight: "bold", fontSize: 13}}>Gruppen-Bibliotheken:</Text>
-                <View style={{justifyContent: "center"}}>
-                    <Ionicons name="add" size={35} color="black" onPress={handleAddABibPress}/>
+                <View style={{padding: 15}}>
+                    <Text>feed</Text>
                 </View>
             </View>
-            <Divider/>
-            <VirtualizedList
-                style={{height: "60%"}}
-                data={bibsBibsList}
-                initialNumToRender={4}
-                renderItem={({item, index}) => <Bib bib={item} index={index} />}
-                keyExtractor={(item, index)=> 'key'+index+item.id}
-                getItemCount={getItemCount}
-                getItem={getItem}
-            />
-            <Divider/>
+            }
+            {bIndex === 1 &&
+            <View style={{height: "100%"}}>
+                <SearchBar
+                    containerStyle={{alignSelf: "center",paddingRight:3, paddingLeft:3, height:50, backgroundColor: "transparent",paddingTop:15, paddingBottom:20}}
+                    inputStyle={{height:35}}
+                    style={{height:35}}
+                    inputContainerStyle={{height:35}}
+                    placeholder="suche..."
+                    onChangeText={value => setSearch(value)}
+                    value={search}
+                    platform={"ios"}
+                    cancelButtonTitle="abbrechen"
+                    cancelButtonProps={{color: "#fdd560"}}
+                />
+                <View>
+                    { bibsList.length === 0 &&
+                    <Text style={{paddingTop: 100 ,textAlign: 'center', color: "grey"}}>noch keine geteilten Bücherregale...</Text>
+                    }
+                </View>
+                <View style={{height:"69%", paddingTop: 1}}>
+                    <VirtualizedList
+                        data={bibsList}
+                        initialNumToRender={4}
+                        renderItem={({item, index}) => <ListBib b={item} index={index} navigation={props.navigation}/>}
+                        keyExtractor={(item, index)=> 'key'+index+item.id}
+                        getItemCount={getItemCount}
+                        getItem={getItem}
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                </View>
+                <Divider/>
+            </View>
+            }
         </View>
     )
 }
@@ -188,9 +137,6 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    setShownBibDispatch(bib) {
-        dispatch(setShownBib(bib))
-    },
     setShownBookDispatch(book) {
         dispatch(setShownBook(book))
     },

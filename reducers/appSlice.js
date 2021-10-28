@@ -8,7 +8,7 @@ const initialState = {
     ourbookLoggedIn: false,
     firebaseLoggedIn: false,
     communication: {
-        urlBase: "http://192.168.0.116:8080",
+        urlBase: "http://192.168.178.22:8080",
         token: null,
         conf: {
             auth: {
@@ -37,63 +37,7 @@ const initialState = {
         loaded: false,
         loading: false,
         error: null,
-        booksList: [{
-            auflage: "string",
-            authorName: "Norvin Klinkmann",
-            erscheinungsDatum: "21.12.2001",
-            id: 2,
-            isbn: "string",
-            sprache: "de",
-            status: 0,
-            timeCreated: "2021-10-01",
-            titel: "TestBuch2",
-            pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
-        },{
-            auflage: "string",
-            authorName: "string",
-            erscheinungsDatum: "string",
-            id: 0,
-            isbn: "string",
-            sprache: "string",
-            status: 0,
-            timeCreated: "2021-10-01",
-            titel: "TestBuch3",
-            pictureUrl: "",
-        },{
-            auflage: "string",
-            authorName: "string",
-            erscheinungsDatum: "string",
-            id: 1,
-            isbn: "string",
-            sprache: "string",
-            status: 0,
-            timeCreated: "2021-10-01",
-            titel: "platzhalter_buch",
-            pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
-        },{
-            auflage: "string",
-            authorName: "string",
-            erscheinungsDatum: "string",
-            id: 0,
-            isbn: "string",
-            sprache: "string",
-            status: 0,
-            timeCreated: "2021-10-01",
-            titel: "platzhalter_buch",
-            pictureUrl: "",
-        },{
-            auflage: "string",
-            authorName: "string",
-            erscheinungsDatum: "string",
-            id: 0,
-            isbn: "string",
-            sprache: "string",
-            status: 0,
-            timeCreated: "2021-10-01",
-            titel: "platzhalter_buch",
-            pictureUrl: "",
-        }
-        ],
+        booksList: [],
     },
     bibs: {
         loaded: false,
@@ -102,52 +46,364 @@ const initialState = {
         bibsList: [{
             id: 0,
             name: "testBib1",
-            chat: 0,
             bookclubOwner: 0,
             bookclubMembers: [2345,3454,3566],
+            booksList: [{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            }]
         },{
             id: 0,
-            name: "name_placeholder",
-            chat: 0,
+            name: "testBib1",
             bookclubOwner: 0,
-            bookclubMembers: [],
+            bookclubMembers: [2345,3454,3566],
+            booksList: [{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            }]
         },{
             id: 0,
-            name: "name_placeholder",
-            chat: 0,
+            name: "testBib1",
             bookclubOwner: 0,
-            bookclubMembers: [],
+            bookclubMembers: [2345,3454,3566],
+            booksList: [{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },]
         },{
             id: 0,
-            name: "name_placeholder",
-            chat: 0,
+            name: "testBib1",
             bookclubOwner: 0,
-            bookclubMembers: [],
+            bookclubMembers: [2345,3454,3566],
+            booksList: [{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            }]
         },{
             id: 0,
-            name: "name_placeholder",
-            chat: 0,
+            name: "testBib1",
             bookclubOwner: 0,
-            bookclubMembers: [],
-        },{
-            id: 0,
-            name: "name_placeholder",
-            chat: 0,
-            bookclubOwner: 0,
-            bookclubMembers: [],
-        },{
-            id: 0,
-            name: "name_placeholder",
-            chat: 0,
-            bookclubOwner: 0,
-            bookclubMembers: [],
-        },{
-            id: 0,
-            name: "name_placeholder",
-            chat: 0,
-            bookclubOwner: 0,
-            bookclubMembers: [],
-        }]
+            bookclubMembers: [2345,3454,3566],
+            booksList: [{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 1,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+            },{
+                auflage: "string",
+                authorName: "string",
+                erscheinungsDatum: "string",
+                id: 0,
+                isbn: "string",
+                sprache: "string",
+                status: 0,
+                timeCreated: "2021-10-01",
+                titel: "platzhalter_buch",
+                pictureUrl: "",
+            }]
+        },]
     },
     bib: {
         loaded: false,
@@ -156,7 +412,6 @@ const initialState = {
         booksList: [],
         id: 0,
         name: "",
-        chat: 0,
         bookclubOwner: 0,
         bookclubMembers: [],
     },
@@ -179,7 +434,7 @@ const initialState = {
     saved: {
         loaded: false,
         loading: false,
-        booksList: [{
+        newlyAddedBooksList: [{
             auflage: "string",
             authorName: "string",
             erscheinungsDatum: "string",
@@ -202,6 +457,40 @@ const initialState = {
             titel: "platzhalter_buch",
             pictureUrl: "",
         },],
+        booksList: [{
+            auflage: "string",
+            authorName: "string",
+            erscheinungsDatum: "string",
+            id: 1,
+            isbn: "string",
+            sprache: "string",
+            status: 0,
+            timeCreated: "2021-10-01",
+            titel: "platzhalter_buch",
+            pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+        },{
+            auflage: "string",
+            authorName: "string",
+            erscheinungsDatum: "string",
+            id: 0,
+            isbn: "string",
+            sprache: "string",
+            status: 0,
+            timeCreated: "2021-10-01",
+            titel: "platzhalter_buch",
+            pictureUrl: "",
+        },{
+            auflage: "string",
+            authorName: "string",
+            erscheinungsDatum: "string",
+            id: 1,
+            isbn: "string",
+            sprache: "string",
+            status: 0,
+            timeCreated: "2021-10-01",
+            titel: "platzhalter_buch",
+            pictureUrl: "https://books.google.com/books?id=zyTCAlFPjgYC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+        },],
         error: null
     },
     friends: {
@@ -216,6 +505,18 @@ const initialState = {
             requestsList: [],
         }
     },
+    process: {
+        loaded: false,
+        loading: false,
+        error: false,
+        book: 0,
+        bookGiver: 0,
+        bookReceiver: 0,
+        giveDate: "2021-10-28T17:02:19.778Z",
+        id: 0,
+        returnDate: "2021-10-28T17:02:19.778Z",
+        status: 0
+    },
     auseihen: {
         loaded: false,
         loading: false,
@@ -226,15 +527,36 @@ const initialState = {
             error: null,
             requestsList: [],
         },
-        ausleihenList: [],
+        lendingList: [],
+        borrowedList: [],
 
     },
 }
 
+export const register = createAsyncThunk(
+    'app/register',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .post(tmpState.appReducer.communication.urlBase+"/user/register", data.userData, {
+                    params: {
+                        password: data.password.toString()
+                    }})
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
 export const getUser = createAsyncThunk(
     'app/getUser',
     async (data, { rejectWithValue, getState }) => {
-        console.log("hier1")
         try {
             const tmpState = getState()
             const response = await axios
@@ -275,6 +597,24 @@ export const getSaved = createAsyncThunk(
             const tmpState = getState()
             const response = await axios
                 .get(tmpState.appReducer.communication.urlBase+"/books/forReadingList", tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const getNewlyAdded = createAsyncThunk(
+    'app/getNewlyAdded',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/books/newlyAdded/1", tmpState.appReducer.communication.conf)
             return response.data
         } catch (err) {
             let error = err
@@ -416,6 +756,8 @@ export const getAusleihenRequests = createAsyncThunk(
     }
 )
 
+
+
 export const sendAusleihenRequest = createAsyncThunk(
     'app/sendAusleihenRequest',
     async (data, { rejectWithValue, getState }) => {
@@ -449,6 +791,25 @@ export const respondAusleihenRequest = createAsyncThunk(
                     params: {
                         accept: data.accept
                     }})
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const getLendingProcesses = createAsyncThunk(
+    'app/getLendingProcesses',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/process/lend", {auth:tmpState.appReducer.communication.conf.auth})
+            console.log(response.data)
             return response.data
         } catch (err) {
             let error = err
@@ -588,24 +949,6 @@ export const checkIfBookAvailable = createAsyncThunk(
     }
 )
 
-export const checkIfBookInSaved = createAsyncThunk(
-    'app/checkIfBookInSaved',
-    async (data, { rejectWithValue, getState }) => {
-        try {
-            const tmpState = getState()
-            const response = await axios
-                .get(tmpState.appReducer.communication.urlBase+"/readingList/inReadingList/"+data.id, tmpState.appReducer.communication.conf)
-            return response.data
-        } catch (err) {
-            let error = err
-            if (!error.response) {
-                throw err
-            }
-            return rejectWithValue(error.response.data)
-        }
-    }
-)
-
 const appSlice = createSlice({
     name: 'app',
     initialState,
@@ -629,6 +972,18 @@ const appSlice = createSlice({
             state.firebaseUser = null
             state.firebaseLoggedIn = false
         },
+        setShownProcess:(state, action) => {
+            state.process.loaded = false
+            state.process.loading = false
+            state.process.error = null
+            state.process.book = action.payload.book
+            state.process.bookGiver = action.payload.bookGiver
+            state.process.bookReceiver = action.payload.bookReceiver
+            state.process.giveDate = action.payload.giveDate
+            state.process.id = action.payload.id
+            state.process.returnDate = action.payload.returnDate
+            state.process.status = action.payload.status
+        },
         setShownBook:(state, action) => {
             state.book.loaded = false
             state.book.loading = false
@@ -647,12 +1002,26 @@ const appSlice = createSlice({
         setShownBib:(state, action) => {
             state.bib.id = action.payload.id
             state.bib.name = action.payload.name
-            state.bib.chat = action.payload.chat
             state.bib.bookclubOwner = action.payload.bookclubOwner
             state.bib.bookclubMembers = action.payload.bookclubMembers
         },
     },
     extraReducers: {
+        [register.pending]: (state) => {
+            state.registerProcess.success = false
+            state.registerProcess.loading = true
+            state.registerProcess.error = null
+        },
+        [register.fulfilled]: (state, { payload }) => {
+            state.registerProcess.success = true
+            state.registerProcess.loading = false
+            state.registerProcess.error = null
+        },
+        [register.rejected]: (state, action ) => {
+            state.registerProcess.success = false
+            state.registerProcess.loading = false
+            state.registerProcess.error = action.payload
+        },
         [getUser.pending]: (state) => {
             state.user.loaded = false
             state.user.loading = true
@@ -707,6 +1076,22 @@ const appSlice = createSlice({
             state.saved.loading = false
             state.saved.error = action.payload
         },
+        [getNewlyAdded.pending]: (state) => {
+            state.saved.loaded = false
+            state.saved.loading = true
+            state.saved.error = null
+        },
+        [getNewlyAdded.fulfilled]: (state, { payload }) => {
+            state.saved.loaded = true
+            state.saved.loading = false
+            state.saved.error = null
+            state.saved.newlyAddedBooksList = payload
+        },
+        [getNewlyAdded.rejected]: (state, action ) => {
+            state.saved.loaded = false
+            state.saved.loading = false
+            state.saved.error = action.payload
+        },
         [getBibs.pending]: (state) => {
             state.bibs.loaded = false
             state.bibs.loading = true
@@ -716,7 +1101,18 @@ const appSlice = createSlice({
             state.bibs.loaded = true
             state.bibs.loading = false
             state.bibs.error = null
-            state.bibs.bibsList = payload
+            const newBibsList = []
+            payload.map(bib => {
+                const newBib = {
+                    id: bib.id,
+                    name: bib.name,
+                    bookclubOwner: bib.bookclubOwner,
+                    bookclubMembers: bib.bookclubMembers,
+                    booksList: []
+                }
+                newBibsList.push(newBib)
+            })
+            state.bibs.bibsList = newBibsList
         },
         [getBibs.rejected]: (state, action ) => {
             state.bibs.loaded = false
@@ -848,6 +1244,21 @@ const appSlice = createSlice({
             state.friends.requests.loading = false
             state.friends.requests.error = action.payload
         },
+        [getLendingProcesses.pending]: (state) => {
+            state.auseihen.loaded = false
+            state.auseihen.loading = true
+            state.auseihen.error = null
+        },
+        [getLendingProcesses.fulfilled]: (state, { payload }) => {
+            state.auseihen.loaded = false
+            state.auseihen.loading = false
+            state.auseihen.lendingList = payload
+        },
+        [getLendingProcesses.rejected]: (state, action ) => {
+            state.auseihen.loaded = false
+            state.auseihen.loading = false
+            state.auseihen.error = action.payload
+        },
         [addBookToUserBib.pending]: (state) => {
             state.book.loaded = false
             state.book.loading = true
@@ -970,22 +1381,6 @@ const appSlice = createSlice({
             state.userBib.loading = false
             state.userBib.error = action.payload
         },
-        [checkIfBookInSaved.pending]: (state) => {
-            state.book.loaded = false
-            state.book.loading = true
-            state.book.error = null
-        },
-        [checkIfBookInSaved.fulfilled]: (state, { payload }) => {
-            state.book.loaded = true
-            state.book.loading = false
-            state.book.error = null
-            state.book.inSaved = payload
-        },
-        [checkIfBookInSaved.rejected]: (state, action ) => {
-            state.userBib.loaded = false
-            state.userBib.loading = false
-            state.userBib.error = action.payload
-        },
     },
 })
 
@@ -995,6 +1390,7 @@ export const {
     setLoaded,
     setShownBook,
     setShownBib,
+    setShownProcess,
     clearStatesForLogout,
     firebaseLoginSuccess,
     firebaseLoginFailure

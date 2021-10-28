@@ -6,7 +6,8 @@ import { createNativeStackNavigator} from "@react-navigation/native-stack";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {Entypo, FontAwesome, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {connect} from "react-redux";
-import AddABook from "../modals/AddABook";
+import AddABookToUserBib from "../modals/AddABookToUserBib";
+import AddABookToSaved from "../modals/AddABookToSaved";
 import Book from "../modals/Book";
 import HomeStackScreen from "./HomeStackScreen";
 import SavedStackScreen from "./SavedStackScreen";
@@ -20,105 +21,20 @@ import {firebaseLoginFailure, firebaseLoginSuccess, setLoaded} from "../reducers
 import FirebaseInstance from "../config/firebase";
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 
-// const ThemeScreen = props => {
-//     const ref = useRef();
-//
-//     const _renderIcon = (routeName, selectTab) => {
-//         let icon = '';
-//
-//         switch (routeName) {
-//             case 'home':
-//                 return (
-//                     <Ionicons name='library' size={25} color={routeName === selectTab ? '#ec4508' : 'white'} />
-//                 );
-//             case 'saved':
-//                 return (
-//                     <Entypo name='unread' size={25} color={routeName === selectTab ? '#ec4508' : 'white'} />
-//                 );
-//             case 'inbox':
-//                 return (
-//                     <MaterialIcons name='pending-actions' size={25} color={routeName === selectTab ? '#ec4508' : 'white'} />
-//                 );
-//             case 'profil':
-//                 return (
-//                     <Ionicons name='person' size={25} color={routeName === selectTab ? '#ec4508' : 'white'} />
-//                 );
-//         }
-//     };
-//
-//     return (
-//         <View style={{flex: 1,}}>
-//             <CurvedBottomBar.Navigator
-//                 ref={ref}
-//                 type="down"
-//                 height={60}
-//                 circleWidth={55}
-//                 bgColor="black"
-//                 borderTopLeftRight={false}
-//                 initialRouteName="home"
-//                 renderCircle={({ selectTab, navigate }) => (
-//                     <TouchableOpacity
-//                         style={ {
-//                             width: 60,
-//                             height: 60,
-//                             borderRadius: 30,
-//                             alignItems: 'center',
-//                             justifyContent: 'center',
-//                             backgroundColor: 'black',
-//                             shadowColor: "#000",
-//                             shadowOffset: {
-//                                 width: 0,
-//                                 height: 1,
-//                             },
-//                             shadowOpacity: 0.20,
-//                             shadowRadius: 1.41,
-//                             elevation: 1,
-//                             bottom: 28
-//                         }} onPress={()=>{console.log("test")}}
-//                     >
-//                         <Ionicons style={{left: 2, bottom: -0.5}} name="add-sharp" size={47} color="white" />
-//                     </TouchableOpacity>
-//                 )}
-//                 tabBar={({ routeName, selectTab, navigate }) => {
-//                     return (
-//                         <TouchableOpacity
-//                             onPress={() => navigate(routeName)}
-//                             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-//                         >
-//                             {_renderIcon(routeName, selectTab)}
-//                         </TouchableOpacity>
-//                     );
-//                 }}>
-//                 <CurvedBottomBar.Screen
-//                     name="home"
-//                     position="left"
-//                     component={HomeStackScreen}
-//                 />
-//                 <CurvedBottomBar.Screen
-//                     name="saved"
-//                     component={({ navigate }) => <View style={{ backgroundColor: '#BFEFFF', flex: 1 }} />}
-//                     position="left"
-//                 />
-//                 <CurvedBottomBar.Screen
-//                     name="inbox"
-//                     component={({ navigate }) => <View style={{ backgroundColor: '#BFEFFF', flex: 1 }} />}
-//                     position="right"
-//                 />
-//                 <CurvedBottomBar.Screen
-//                     name="profil"
-//                     component={({ navigate }) => <View style={{ backgroundColor: '#FFEBCD', flex: 1 }} />}
-//                     position="right"
-//                 />
-//             </CurvedBottomBar.Navigator>
-//         </View>
-//     );
-// };
-
 const AppTabs = createBottomTabNavigator();
 
-const CustomBottomTabBarButton = ({ children, onPress}) => {
+const CustomBottomTabBarButton = ({ children, onPress,navigation}) => {
 
     const [visible, setVisible] = useState(false);
+
+    function sendToAddABookToUserBibModal() {
+        navigation.navigate('add a book to user bib');
+        setVisible(false)
+    }
+    function sendToAddABookToSavedModal() {
+        navigation.navigate('add a book to saved');
+        setVisible(false)
+    }
 
     const toggleOverlay = () => {
         setVisible(!visible);
@@ -139,8 +55,9 @@ const CustomBottomTabBarButton = ({ children, onPress}) => {
                 containerStyle={{ backgroundColor: "transparent" }}
             >
                 <View style={{width: "100%"}}>
-                    <Button containerStyle={{backgroundColor: "#fdd560"}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderWidth: 1, borderColor: '#565a63'}} title="Buch zur Nutzer-Bibliothek hinzufügen" onPress={onPress}/>
-                    <Button containerStyle={{backgroundColor: "#fdd560"}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderTopWidth: 0,borderWidth: 1, borderColor: '#565a63'}} title="Buch zur Leseliste hinzufügen" onPress={()=>console.log("test")}/>
+                    <TouchableOpacity style={{width:"100%", height:500}} onPress={toggleOverlay} />
+                    <Button containerStyle={{backgroundColor: "#fdd560"}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderWidth: 1, borderColor: '#565a63'}} title="Buch zur Nutzer-Bibliothek hinzufügen" onPress={sendToAddABookToUserBibModal}/>
+                    <Button containerStyle={{backgroundColor: "#fdd560"}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderTopWidth: 0,borderWidth: 1, borderColor: '#565a63'}} title="Buch zur Leseliste hinzufügen" onPress={sendToAddABookToSavedModal}/>
                     <Button containerStyle={{backgroundColor: "#2b2e32"}} titleStyle={{ color: '#fdd560', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#2b2e32', height:50}} title="abbrechen" onPress={() => setVisible(false)}/>
                 </View>
             </BottomSheet>
@@ -164,14 +81,6 @@ const AppTabsScreen = (props) => (
             tabBarActiveTintColor: "red"
         }}>
         <AppTabs.Screen
-            name="saved"
-            component={SavedStackScreen}
-            options={{
-                tabBarIcon: ({ color, size }) => (
-                    <FontAwesome name="bookmark" size={30} color="#fdd560" />
-                )}}
-        />
-        <AppTabs.Screen
             name="home"
             component={HomeStackScreen}
             options={{
@@ -180,18 +89,26 @@ const AppTabsScreen = (props) => (
                 )}}
         />
         <AppTabs.Screen
+            name="saved"
+            component={SavedStackScreen}
+            options={{
+                tabBarIcon: ({ color, size }) => (
+                    <FontAwesome name="bookmark" size={30} color="#fdd560" />
+                )}}
+        />
+        <AppTabs.Screen
             name="addBook"
-            component={AddBookModalScreen}
+            component={AddBookToUserBibModalScreen}
             listeners={({ navigation }) => ({
                 tabPress: (e) => {
                     e.preventDefault();
-                    navigation.navigate('add a book');
+                    navigation.navigate('add a book to user bib');
                 }})}
             options={({ navigation }) => ({
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons style={{left: 1.8, bottom: -0.2}} name="add-sharp" size={48} color="#2b2e32" />
                 ),
-                tabBarButton: (props) => (<CustomBottomTabBarButton {...props}/>)
+                tabBarButton: (props) => (<CustomBottomTabBarButton navigation={navigation} {...props}/>)
             })}
         />
         <AppTabs.Screen
@@ -214,9 +131,15 @@ const AppTabsScreen = (props) => (
 )
 
 
-function AddBookModalScreen({ navigation }) {
+function AddBookToUserBibModalScreen({ navigation }) {
     return (
-        <AddABook navigation={navigation} />
+        <AddABookToUserBib navigation={navigation} />
+    );
+}
+
+function AddBookToSavedModalScreen({ navigation }) {
+    return (
+        <AddABookToSaved navigation={navigation} />
     );
 }
 
@@ -251,12 +174,9 @@ const RootNavigation = (props) =>{
 
     useEffect(() => {
         if (props.ourbookLoggedIn) {
-            //props.firebaseLoginSuccessDispatch()
-            console.log("trying with token: "+props.communication.token)
             auth.signInWithCustomToken(props.communication.token)
                 .then((credentials) =>  {
                     props.firebaseLoginSuccessDispatch(credentials)
-                    console.log("success with token: "+props.communication.token)
                 })
                 .catch((err) => {
                     props.firebaseLoginFailureDispatch()
@@ -276,7 +196,7 @@ const RootNavigation = (props) =>{
             }
             {props.loaded && !props.ourbookLoggedIn &&
             <NavigationContainer>
-                <AuthStack.Navigator initialRouteName="LoginScreen">
+                <AuthStack.Navigator initialRouteName="login">
                     <AuthStack.Screen
                         name="login"
                         component={LoginScreen}
@@ -311,8 +231,12 @@ const RootNavigation = (props) =>{
                     </RootStack.Group>
                     <RootStack.Group screenOptions={{ presentation: 'modal', gestureEnabled: true}}>
                         <RootStack.Screen
-                            name="add a book"
-                            component={AddBookModalScreen}
+                            name="add a book to user bib"
+                            component={AddBookToUserBibModalScreen}
+                        />
+                        <RootStack.Screen
+                            name="add a book to saved"
+                            component={AddBookToSavedModalScreen}
                         />
                         <RootStack.Screen
                             name="book"

@@ -4,18 +4,17 @@ import {createNativeStackNavigator} from "react-native-screens/native-stack";
 import InboxScreen from "../screens/mainScreens/inbox/InboxScreen";
 import {Ionicons} from "@expo/vector-icons";
 import {Badge} from "react-native-elements";
+import ProcessScreen from "../screens/mainScreens/inbox/ProcessScreen";
 
 const InboxScreen1 = (props) => {
     return (
-        <InboxScreen/>
+        <InboxScreen navigation={props.navigation}/>
     );
 }
 
 const InboxScreen2 = (props) => {
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text navigation={props.navigation}>InboxScreen2</Text>
-        </View>
+        <ProcessScreen navigation={props.navigation}/>
     );
 }
 
