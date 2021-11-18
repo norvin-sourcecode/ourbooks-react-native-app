@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import {Badge, Button, ButtonGroup, Divider, ListItem} from 'react-native-elements';
 import {AntDesign} from "@expo/vector-icons";
 import {
-    getAusleihenRequests,
+    getAusleihenRequests, getBorrowingProcesses,
     getFriendRequests, getLendingProcesses,
     respondAusleihenRequest,
     respondFriendRequest, setShownProcess
@@ -20,20 +20,24 @@ const InboxScreen = (props) => {
     const [requestsList, setRequestsList] = useState([])
 
     const [lendingList, setLendingList] = useState([])
+    const [borrowedList, setBorrowedList] = useState([])
+
+    const [neuLaden, setNeuLaden] = useState(false)
 
     useEffect(() => {
-        if (!props.auseihen.requests.loaded) {
+        if (!props.ausleihen.requests.loaded) {
             props.getAusleihenRequestsDispatch()
         }
-        if (!props.auseihen.loaded) {
+        if (!props.ausleihen.loaded) {
+            props.getAusleihenRequestsDispatch()
             props.getLendingProcessesDispatch()
-            console.log(props.auseihen.lendingList)
+            props.getBorrowingProcessesDispatch()
         }
-    }, [props.friends.requests.loaded, props.auseihen.requests.loaded, props.auseihen.loaded] )
+    }, [props.ausleihen.requests.loaded, props.ausleihen.requests.loaded, neuLaden] )
 
     useEffect(() => {
         const tmp = []
-        props.auseihen.requests.requestsList.map((request) => {
+        props.ausleihen.requests.requestsList.map((request) => {
             tmp.push(request)
         })
         if (tmp.length === 0) {
@@ -46,9 +50,9 @@ const InboxScreen = (props) => {
         } else {
             setRequestsList(tmp)
         }
-        setLendingList(props.auseihen.lendingList)
-    }, [ props.auseihen.requests.requestsList, props.auseihen.lendingList])
-
+        setLendingList(props.ausleihen.lendingList)
+        setBorrowedList(props.ausleihen.borrowedList)
+    }, [ props.ausleihen.requests, props.ausleihen.lendingList])
 
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -58,6 +62,7 @@ const InboxScreen = (props) => {
         setRefreshing(true);
         props.getFriendRequestsDispatch()
         props.getAusleihenRequestsDispatch()
+        props.getBorrowingProcessesDispatch()
         wait(2000).then(() => setRefreshing(false));
     }, []);
 
@@ -71,12 +76,17 @@ const InboxScreen = (props) => {
     }
 
     const handelAcceptRequestPress = (request) => {
-        console.log("hier")
         props.resondAusleihenRequestsDispatch(request.id, true)
+        setNeuLaden(!neuLaden)
     }
 
     const handelDeclineRequestPress = (request) => {
         props.resondAusleihenRequestsDispatch(request.id, false)
+        props.getAusleihenRequestsDispatch()
+        setNeuLaden(!neuLaden)
+    }
+
+    const ItemContainer = ({item, index}) => {
     }
 
     const Request = ({ request, index}) => (
@@ -133,7 +143,14 @@ const InboxScreen = (props) => {
             }
             {index === 1 &&
             <View>
-                <Text>ausleihen</Text>
+                <VirtualizedList
+                    data={borrowedList}
+                    initialNumToRender={5}
+                    renderItem={({item, index}) => <ListProcess p={item} index={index} navigation={props.navigation} />}
+                    keyExtractor={(item, index)=> 'key'+index+item.id}
+                    getItemCount={getItemCount}
+                    getItem={getItem}
+                />
             </View>
             }
         </View>
@@ -144,7 +161,7 @@ const mapStateToProps = state => {
     return {
         friends: state.appReducer.friends,
         user: state.appReducer.user,
-        auseihen: state.appReducer.auseihen,
+        ausleihen: state.appReducer.ausleihen,
     }
 }
 
@@ -166,6 +183,9 @@ const mapDispatchToProps = dispatch => ({
     },
     getLendingProcessesDispatch() {
         dispatch(getLendingProcesses())
+    },
+    getBorrowingProcessesDispatch() {
+        dispatch(getBorrowingProcesses())
     }
 })
 

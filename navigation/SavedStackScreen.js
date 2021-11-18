@@ -24,9 +24,14 @@ function SavedStackScreen() {
         <SavedStack.Navigator screenOptions={{
             title: "Leseliste",
             headerStyle: {
-                backgroundColor: '#2b2e32',
+                elevation: 0,
+                shadowOpacity: 0,
+                borderBottomWidth: 0,
+                backgroundColor: '#2b2e32'
             },
             headerTintColor: '#fdd560',
+            headerShown: false,
+            headerShadowVisible: false,
             headerTitleStyle: {
                 fontWeight: "bold",
             },

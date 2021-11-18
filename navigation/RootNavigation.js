@@ -1,5 +1,14 @@
 import React, {Component, useEffect, useRef, useState} from 'react';
-import {View, Text, ActivityIndicator, StyleSheet, TouchableOpacity} from 'react-native'
+import {
+    View,
+    Text,
+    ActivityIndicator,
+    StyleSheet,
+    TouchableOpacity,
+    Animated,
+    SafeAreaView,
+    Platform
+} from 'react-native'
 import { Provider } from 'react-redux'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator} from "@react-navigation/native-stack";
@@ -20,6 +29,10 @@ import {BottomSheet, ListItem, Overlay, SpeedDial, Button} from "react-native-el
 import {firebaseLoginFailure, firebaseLoginSuccess, setLoaded} from "../reducers/appSlice";
 import FirebaseInstance from "../config/firebase";
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
+import AddABib from "../modals/AddABib";
+import * as PropTypes from "prop-types";
+import Constants from 'expo-constants';
+import * as Notifications from "expo-notifications";
 
 const AppTabs = createBottomTabNavigator();
 
@@ -56,79 +69,108 @@ const CustomBottomTabBarButton = ({ children, onPress,navigation}) => {
             >
                 <View style={{width: "100%"}}>
                     <TouchableOpacity style={{width:"100%", height:500}} onPress={toggleOverlay} />
-                    <Button containerStyle={{backgroundColor: "#fdd560"}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderWidth: 1, borderColor: '#565a63'}} title="Buch zur Nutzer-Bibliothek hinzufügen" onPress={sendToAddABookToUserBibModal}/>
-                    <Button containerStyle={{backgroundColor: "#fdd560"}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderTopWidth: 0,borderWidth: 1, borderColor: '#565a63'}} title="Buch zur Leseliste hinzufügen" onPress={sendToAddABookToSavedModal}/>
-                    <Button containerStyle={{backgroundColor: "#2b2e32"}} titleStyle={{ color: '#fdd560', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#2b2e32', height:50}} title="abbrechen" onPress={() => setVisible(false)}/>
+                    <Button containerStyle={{backgroundColor: "#fdd560", borderTopRightRadius:15, borderTopLeftRadius:15, borderBottomLeftRadius:0, borderBottomRightRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderWidth: 0, borderColor: '#565a63'}} title="Buch zur Nutzer-Bibliothek hinzufügen" onPress={sendToAddABookToUserBibModal}/>
+                    <Button containerStyle={{backgroundColor: "#fdd560", borderRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderTopWidth: 1,borderWidth: 0, borderColor: '#565a63'}} title="Buch zur Leseliste hinzufügen" onPress={sendToAddABookToSavedModal}/>
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: '#fdd560', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#2b2e32', height:50}} title="abbrechen" onPress={() => setVisible(false)}/>
                 </View>
             </BottomSheet>
         </TouchableOpacity>
     )
 }
-const AppTabsScreen = (props) => (
+const AppTabsScreen = (props) => {
 
-    <AppTabs.Navigator
-        screenOptions={{
-            headerShown: false,
-            headerStyle: {
-                backgroundColor: "#2b2e32",
-            },
-            headerTintColor: 'black',
-            headerTitleStyle: {
-                fontWeight: "bold",
-            },
-            tabBarStyle: {backgroundColor: '#2b2e32'},
-            tabBarShowLabel: false,
-            tabBarActiveTintColor: "red"
-        }}>
-        <AppTabs.Screen
-            name="home"
-            component={HomeStackScreen}
-            options={{
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="library" size={30} color="#fdd560"/>
-                )}}
-        />
-        <AppTabs.Screen
-            name="saved"
-            component={SavedStackScreen}
-            options={{
-                tabBarIcon: ({ color, size }) => (
-                    <FontAwesome name="bookmark" size={30} color="#fdd560" />
-                )}}
-        />
-        <AppTabs.Screen
-            name="addBook"
-            component={AddBookToUserBibModalScreen}
-            listeners={({ navigation }) => ({
-                tabPress: (e) => {
-                    e.preventDefault();
-                    navigation.navigate('add a book to user bib');
-                }})}
-            options={({ navigation }) => ({
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons style={{left: 1.8, bottom: -0.2}} name="add-sharp" size={48} color="#2b2e32" />
-                ),
-                tabBarButton: (props) => (<CustomBottomTabBarButton navigation={navigation} {...props}/>)
-            })}
-        />
-        <AppTabs.Screen
-            name="inbox"
-            component={InboxStackScreen}
-            options={{
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialIcons name="pending-actions" size={30} color="#fdd560" />
-                )}}
-        />
-        <AppTabs.Screen
-            name="profil"
-            component={ProfilStackScreen}
-            options={{
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="person" size={30} color="#fdd560" />
-                )}}
-        />
-    </AppTabs.Navigator>
-)
+    const [open, setOpen] = useState(false);
+    const [openAddABib, setOpenAddABib] = useState(true);
+
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    const fadeIn = () => {
+        setOpen(true)
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+    };
+
+    const fadeOut = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 1,
+            useNativeDriver: true
+        }).start(()=>{setOpen(false)});
+    };
+
+    return (
+
+        <AppTabs.Navigator
+            style={{borderWidth: 0}}
+            screenOptions={{
+                headerShown: false,
+                headerShadowVisible:false,
+                headerStyle: {
+                    elevation: 0,
+                    shadowOpacity: 0,
+                    borderBottomWidth: 0,
+                },
+                headerTitleStyle: {
+                    fontWeight: "bold",
+                },
+                tabBarStyle: {backgroundColor: '#2b2e32', borderColor: "#fdd560", borderTopWidth:0},
+                tabBarShowLabel: false,
+            }}>
+            <AppTabs.Screen
+                name="home"
+                component={HomeStackScreen}
+                options={({ navigation }) => ({
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="library" size={30} color="#fdd560"/>
+                    )})}
+            />
+            <AppTabs.Screen
+                name="saved"
+                component={SavedStackScreen}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesome name="bookmark" size={30} color="#fdd560" />
+                    )}}
+            />
+            <AppTabs.Screen
+                name="addBook"
+                component={AddBookToUserBibModalScreen}
+                listeners={({ navigation }) => ({
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        navigation.navigate('add a book to user bib');
+                    }})}
+                options={({ navigation }) => ({
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons style={{left: 1.8, bottom: -0.2}} name="add-sharp" size={48} color="#2b2e32" />
+                    ),
+                    tabBarButton: (props) => (<CustomBottomTabBarButton navigation={navigation} {...props}/>)
+                })}
+            />
+            <AppTabs.Screen
+                name="inbox"
+                component={InboxStackScreen}
+                options={({ route }) => ({
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialIcons name="pending-actions" size={30} color="#fdd560" />
+                    )
+                })}
+            />
+            <AppTabs.Screen
+                name="profil"
+                component={ProfilStackScreen}
+                options={({ route }) => ({
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="person" size={30} color="#fdd560" />
+                    )
+                })}
+            />
+        </AppTabs.Navigator>
+    )
+}
 
 
 function AddBookToUserBibModalScreen({ navigation }) {
@@ -153,10 +195,7 @@ function BookModalScreen({ navigation }) {
 
 function AddBibModalScreen({ navigation }) {
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-            <Text style={{ fontSize: 30 }}>add a bib</Text>
-            <Button onPress={() => navigation.navigate("main")} title="close" />
-        </View>
+        <AddABib navigation={navigation} />
     )
 }
 
@@ -166,7 +205,20 @@ const RootStack = createNativeStackNavigator();
 
 const auth = FirebaseInstance.auth()
 
+function SaveAreaView(props) {
+    return null;
+}
+
+SaveAreaView.propTypes = {
+    style: PropTypes.shape({width: PropTypes.string, height: PropTypes.string}),
+    children: PropTypes.node
+};
 const RootNavigation = (props) =>{
+
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
 
     useEffect(() => {
         props.setLoadedDispatch(true)
@@ -182,6 +234,20 @@ const RootNavigation = (props) =>{
                     props.firebaseLoginFailureDispatch()
                     console.log(err)
                 })
+            registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+                setNotification(notification);
+            });
+
+            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+                console.log(response);
+            });
+
+            return () => {
+                Notifications.removeNotificationSubscription(notificationListener.current);
+                Notifications.removeNotificationSubscription(responseListener.current);
+            };
         }
     }, [props.ourbookLoggedIn])
 
@@ -226,7 +292,7 @@ const RootNavigation = (props) =>{
                             name="main"
                             component={AppTabsScreen}
                             options={{ headerMode: 'none' }}
-                            navigation={props.navigation}
+                            navigation={(navigation)=> navigation}
                         />
                     </RootStack.Group>
                     <RootStack.Group screenOptions={{ presentation: 'modal', gestureEnabled: true}}>
@@ -266,6 +332,48 @@ const mapStateToProps = state => {
         communication: state.appReducer.communication,
         user: state.appReducer.user,
     }
+}
+
+async function schedulePushNotification() {
+    await Notifications.scheduleNotificationAsync({
+        content: {
+            title: "You've got mail! 📬",
+            body: 'Here is the notification body',
+            data: { data: 'goes here' },
+        },
+        trigger: { seconds: 2 },
+    });
+}
+
+async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            alert('Failed to get push token for push notification!');
+            return;
+        }
+        token = (await Notifications.getExpoPushTokenAsync()).data;
+        console.log(token);
+    } else {
+        alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+        });
+    }
+
+    return token;
 }
 
 const mapDispatchToProps = dispatch => ({

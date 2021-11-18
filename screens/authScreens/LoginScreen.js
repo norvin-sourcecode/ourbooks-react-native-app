@@ -34,14 +34,12 @@ const LoginScreen = (props) => {
             setVisible(false);
         }
         if (props.ourbookLoggedIn) {
-            // console.log('test')
             // auth.signInWithCustomToken(props.communication.token)
             //     .then((credentials) =>  {
             //         props.firebaseLoginSuccessDispatch(credentials)
             //     })
             //     .catch((err) => {
             //         props.firebaseLoginFailureDispatch()
-            //         console.log(err)
             //     })
             // props.navigation.navigate("main")
         }
@@ -91,11 +89,6 @@ const LoginScreen = (props) => {
     function handelLoginPressed() {
         props.setConfDispatch(username, password)
         props.getUserDispatch()
-        console.log("halalsdsagjb")
-        // props.getUserDispatch(props.Communication.urlBase, {auth: {
-        //         username: username,
-        //         password: password
-        //     }})
     }
 
     return (

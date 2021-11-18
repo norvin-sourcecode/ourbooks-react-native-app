@@ -1,15 +1,18 @@
-import React from "react";
-import {Text, View, Button, TouchableOpacity} from "react-native";
+import React, {useEffect, useRef, useState} from "react";
+import {Text, View, TouchableOpacity, Animated, SafeAreaView} from "react-native";
 import {createNativeStackNavigator} from "react-native-screens/native-stack";
-import {AntDesign, Ionicons} from "@expo/vector-icons";
+import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import HomeScreen from "../screens/mainScreens/home/HomeScreen";
-import {Badge} from "react-native-elements";
+import {Badge, Button, Overlay} from "react-native-elements";
 import BibScreen from "../screens/mainScreens/home/BibScreen";
+import DropDownPicker from "react-native-dropdown-picker";
+import AddABib from "../modals/AddABib";
 
 const HomeStackScreen1 = (props) => {
+
     return (
         <View>
-            <HomeScreen navigation={props.navigation} />
+            <HomeScreen navigation={props.navigation}/>
         </View>
     );
 }
@@ -41,8 +44,11 @@ const HomeStackScreen4 = (props) => {
 const HomeStack = createNativeStackNavigator();
 
 function HomeStackScreen() {
+
     return (
         <HomeStack.Navigator screenOptions={{
+            headerShown: false,
+            headerShadowVisible:false,
             title: "Home",
             headerStyle: {
                 backgroundColor: '#2b2e32',
@@ -52,13 +58,8 @@ function HomeStackScreen() {
                 fontWeight: "bold",
             },
         }}>
-            <HomeStack.Screen name="homeStackScreen1" component={HomeStackScreen1} options={({ navigation, route }) => ({
+            <HomeStack.Screen name="homeStackScreen1" component={HomeStackScreen1} options={({ navigation }) => ({
                 title: "Home",
-                headerRight: ({}) => (
-                    <TouchableOpacity onPress={() => navigation.navigate('add a bib')}>
-                        <Ionicons style={{right:-11}} name="add" size={37} color="#fdd560"/>
-                    </TouchableOpacity>
-                ),
             })} />
             <HomeStack.Screen name="homeStackScreen2" component={HomeStackScreen2} options={{ title: "Nutzer-Bibliothek" }} />
             <HomeStack.Screen name="homeStackScreen3" component={HomeStackScreen3} options={({ navigation }) => ({

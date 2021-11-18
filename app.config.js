@@ -3,6 +3,7 @@ export default {
   expo: {
     name: "final-client",
     slug: "final-client",
+    owner: "norvin_klinkmann",
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',

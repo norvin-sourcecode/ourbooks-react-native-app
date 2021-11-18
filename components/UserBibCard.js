@@ -90,11 +90,6 @@ const UserBibCard = (props) => {
 
     return (
         <View>
-            <Card containerStyle={{padding: 15}}>
-                <View style={{flexDirection: "row",width:"100%", justifyContent: "space-between"}}>
-                    <Card.Title>Nutzer-Bibliothek</Card.Title>
-                    <MaterialIcons style={{position: "absolute", right: 0, top: -8}} name="more-horiz" size={35} color="black" onPress={handleUserBibPress}/>
-                </View>
                 <Card.Divider/>
                 <VirtualizedList
                     style={{alignSelf: "center"}}
@@ -106,7 +101,6 @@ const UserBibCard = (props) => {
                     getItemCount={getItemCount}
                     getItem={getItem}
                 />
-            </Card>
         </View>
     )
 };

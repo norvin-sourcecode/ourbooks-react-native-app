@@ -37,6 +37,8 @@ const ProfilStack = createNativeStackNavigator();
 function ProfilStackScreen() {
     return (
         <ProfilStack.Navigator screenOptions={{
+            headerShown: false,
+            headerShadowVisible:false,
             title: "Profil",
             headerStyle: {
                 backgroundColor: '#2b2e32',
@@ -46,11 +48,7 @@ function ProfilStackScreen() {
                 fontWeight: "bold",
             },
         }}>
-            <ProfilStack.Screen name="Profil" component={ProfilScreen1} options={({ navigation }) => ({
-                headerRight: ({}) => (
-                    <AntDesign name="setting" size={25} color="#fdd560" onPress={() => navigation.navigate('profilSettings')}/>
-                ),
-            })} />
+            <ProfilStack.Screen name="Profil" component={ProfilScreen1}  />
             <ProfilStack.Screen name="profilSettings" component={ProfilScreen2} />
             <ProfilStack.Screen name="profilFriends" component={ProfilScreen3} options={({ navigation}) => ({
                 title: "Freund*innen",

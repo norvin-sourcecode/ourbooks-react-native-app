@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import {useEffect} from "react";
 import {Text, TouchableOpacity, View, VirtualizedList} from "react-native";
 import { connect } from "react-redux";
-import {Button, Badge, ListItem, Tab, TabView, Card} from 'react-native-elements';
+import {Button, Badge, ListItem, Tab, TabView, Card, Divider, Header} from 'react-native-elements';
 import {getNewlyAdded, getSaved, setShownBook} from "../../../reducers/appSlice";
 import Animated from "react-native-reanimated";
 
@@ -13,6 +13,12 @@ const SavedScreen = (props) => {
 
     const AnimatedVirtualiedList = Animated.createAnimatedComponent(VirtualizedList)
     const scrollY = new Animated.Value(0)
+
+    useLayoutEffect(()=>{
+        props.navigation.setOptions({
+            headerShadowVisible:false
+        })
+    },[props.navigation])
 
     useEffect(() => {
         if (!props.saved.loaded) {
@@ -53,21 +59,36 @@ const SavedScreen = (props) => {
     });
 
     const SavedBook = ({ book, index}) => (
-        <View>
-            <ListItem
-                onPress={() => {
+        <View key={index+"list-item-saved-book"} style={{ paddingLeft: 5, paddingRight: 5 }}>
+            <Card containerStyle={{padding: 0, paddingTop: 0, margin:8, marginBottom:0, borderWidth:0, backgroundColor: "white", borderRadius:10, height:104}}>
+                <TouchableOpacity onPress={()=> {
                     handleBookPress(book)
-                }}
-                key={index+"list-item-swipeable-leseliste"}
-                bottomDivider>
-                <ListItem.Content>
-                    <ListItem.Title>Titel: {book.titel}</ListItem.Title>
-                    <ListItem.Subtitle>Author*in: {book.authorName}</ListItem.Subtitle>
-                    <ListItem.Subtitle>ISBN: {book.isbn}</ListItem.Subtitle>
-                    <ListItem.Subtitle>Erscheinungsdatum: {book.erscheinungsDatum}</ListItem.Subtitle>
-                </ListItem.Content>
-                <ListItem.Chevron />
-            </ListItem>
+                }}>
+                    <View style={{flexDirection: "row", height:110}}>
+                        <View style={{top:-3, left:0}}>
+                            {book.pictureUrl.length === 0 &&
+                            <View style={{justifyContent: "center",width: 75, height: 110}}>
+                                <Text style={{alignSelf: "center"}}>Titel:</Text>
+                                <Text> </Text>
+                                <Text style={{alignSelf: "center"}}>{book.titel}</Text>
+                            </View>
+                            }
+                            {book.pictureUrl.length !== 0 &&
+                            <Card.Image style={{width: 75, height:110, borderBottomLeftRadius:13, borderTopLeftRadius:13}} resizeMode="contain" source={{url:book.pictureUrl}}>
+                            </Card.Image>
+                            }
+                        </View>
+                        <View style={{flexDirection: "column",justifyContent: "center"}}>
+                            <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{flexWrap: "nowrap",padding: 10,top:-3, right:-53,alignSelf:"center", fontWeight: "bold", color:"#fdd560", fontSize: 20}}>{book.titel}</Text>
+                            <View style={{paddingLeft: 5,paddingTop:5, top:-3, alignSelf:"center", right:-53, alignItems: "center"}}>
+                                <Text>ISBN: {book.isbn}</Text>
+                                <Text>Author*in: {book.authorName}</Text>
+                                <Text>Erscheinungsdatum: {book.erscheinungsDatum}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </Card>
         </View>
     );
 
@@ -100,55 +121,60 @@ const SavedScreen = (props) => {
     );
 
     return (
-        <View>
-            <View>
-                { savedList.length === 0 &&
-                <Text style={{paddingTop: 300 ,textAlign: 'center', color: "grey"}}>deine Leseliste ist noch leer...</Text>
-                }
-            </View>
-            <AnimatedVirtualiedList
-                scrollEventThrottle={16}
-                onScroll={Animated.event([
-                    { nativeEvent: { contentOffset: { y: scrollY } } },
-                ])}
-                contentContainerStyle={{paddingTop:120}}
-                data={savedList}
-                initialNumToRender={5}
-                renderItem={({item, index}) => <SavedBook book={item} index={index} />}
-                keyExtractor={(item, index)=> 'key'+index+item.id}
-                getItemCount={getItemCount}
-                getItem={getItem}
+        <View style={{backgroundColor: "#2b2e32"}}>
+            <Header
+                centerComponent={{ text: 'Leseliste', style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0, zIndex:8000}}
+                
             />
-            <Animated.View
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 120,
-                    backgroundColor: '#2b2e32',
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                    paddingBottom: 10,
-                    transform: [{ translateY }],
-                    borderTopWidth: 2,
-                    borderColor: "#fdd560",
-                }}>
-                <Text style={{color: "#fdd560", fontWeight: "bold", right: -5, top: 5}}>neu verfügbar:</Text>
-                {newlyAdded.length === 0 &&
-                    <Text style={{color: "white", alignSelf: "center", padding: 35}}>zurzeit keine neuen Bücher verfügbar</Text>
-                }
-                <VirtualizedList
-                    style={{alignSelf: "flex-start"}}
-                    horizontal={true}
-                    data={newlyAdded}
+            <View style={{backgroundColor: "#2b2e32", height:"100%"}}>
+                <View>
+                    { savedList.length === 0 &&
+                    <Text style={{paddingTop: 300 ,textAlign: 'center', color: "grey"}}>deine Leseliste ist noch leer...</Text>
+                    }
+                </View>
+                <AnimatedVirtualiedList
+                    scrollEventThrottle={16}
+                    onScroll={Animated.event([
+                        { nativeEvent: { contentOffset: { y: scrollY } } },
+                    ])}
+                    contentContainerStyle={{paddingTop:120}}
+                    data={savedList}
                     initialNumToRender={5}
-                    renderItem={({item, index}) => <NewlyAddedBook book={item} index={index} />}
+                    renderItem={({item, index}) => <SavedBook book={item} index={index} />}
                     keyExtractor={(item, index)=> 'key'+index+item.id}
                     getItemCount={getItemCount}
                     getItem={getItem}
                 />
-            </Animated.View>
+                <Animated.View
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 120,
+                        backgroundColor: '#2b2e32',
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-start',
+                        paddingBottom: 10,
+                        transform: [{ translateY }],
+                    }}>
+                    <Text style={{color: "#fdd560", fontWeight: "bold", right: -5, top: 5}}>neu verfügbar:</Text>
+                    {newlyAdded.length === 0 &&
+                        <Text style={{color: "white", alignSelf: "center", padding: 35}}>zurzeit keine neuen Bücher verfügbar</Text>
+                    }
+                    <VirtualizedList
+                        style={{alignSelf: "flex-start"}}
+                        horizontal={true}
+                        data={newlyAdded}
+                        initialNumToRender={5}
+                        renderItem={({item, index}) => <NewlyAddedBook book={item} index={index} />}
+                        keyExtractor={(item, index)=> 'key'+index+item.id}
+                        getItemCount={getItemCount}
+                        getItem={getItem}
+                    />
+                </Animated.View>
+            </View>
         </View>
     )
 }

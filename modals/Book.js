@@ -10,7 +10,13 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {AnimatedCircularProgress} from "react-native-circular-progress";
 import Animated, {cancelAnimation, useSharedValue} from "react-native-reanimated";
 import {Circle} from "react-native-svg";
-import {deleteBookFromSaved, deleteBookFromUserBib, saveBook} from "../reducers/appSlice";
+import {
+    checkIfBookAvailable,
+    deleteBookFromSaved,
+    deleteBookFromUserBib,
+    saveBook,
+    sendAusleihenRequest
+} from "../reducers/appSlice";
 
 const Book = (props) => {
 
@@ -34,18 +40,18 @@ const Book = (props) => {
     ]);
 
     useEffect(() => {
+        if (!props.book.loaded) {
+            props.checkIfBookAvailableDispatch(props.book.isbn)
+        }
         if (!props.book.loading) {
-            if(props.userBib.booksList.some(book => book.id === props.book.id)){
+            if(props.userBib.booksList.some(book => book.isbn === props.book.isbn)){
                 setInUserBib(true)
             } else{
                 setInUserBib(false)
             }
-            console.log(props.saved.booksList)
-            console.log(props.book)
             if(props.saved.booksList.some(book => book.isbn === props.book.isbn)) {
                 setSaved(true)
             } else {
-                console.log(props.book.isbn)
                 setSaved(false)
             }
             if (props.book.availableAt.length !== 0) {
@@ -56,7 +62,6 @@ const Book = (props) => {
             setTargetBook(props.book)
             setLoading(false)
         } else {
-            console.log("hier")
             setLoading(true)
         }
     }, [props.saved, props.book, props.book.loading, props.userBib.booksList, props.book.availableAt])
@@ -95,14 +100,13 @@ const Book = (props) => {
         //     })
         // }
         // if (inUserBib) {
-        //     console.log(targetBook.id)
         //     props.deleteBookByIdFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, targetBook.id)
         // }
         setInUserBib(!inUserBib)
     }
 
     function handelAnfageSchickenButtonOnPress() {
-        console.log("anfrage schicken an "+value)
+        props.sendAusleihenRequestDispatch(targetBook.id, "ausleihanfrage")
         // props.sendGetBookRequestDispatchAusloeser(props.Communication.urlBase, props.Communication.conf, valueBookId, valueUsername)
     }
 
@@ -130,86 +134,110 @@ const Book = (props) => {
 
     return (
         <View style={{flex: 1, alignItems: "center", width: "100%"}}>
-            <View style={{paddingLeft: 10,paddingTop: 10,paddingRight: 10,width:"100%" ,flexDirection: "row", justifyContent: "space-between"}}>
-                <View>
-                    <Text onPress={() => props.navigation.navigate('main')} style={{color: "#565a63", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
+            { loading &&
+                <View style={{justifyContent: "center", alignItems: "center", flex: 1}}>
+                    <ActivityIndicator style={{alignSelf: "center"}} size='large' />
                 </View>
-                <View style={{flexDirection: "row"}}>
-                    <Ionicons style={{top: 2,right: 9}} name="share-outline" size={36} color="black" />
-                    <CheckBox
-                        containerStyle={{top: 5,padding: 0, margin: 0}}
-                        center
-                        checkedIcon={<FontAwesome name="bookmark" size={35} color="black" />}
-                        uncheckedIcon={<FontAwesome name="bookmark-o" size={35} color="black" />}
-                        onPress={savedCheckedBoxPressed}
-                        checked={saved}
-                    />
-                </View>
-            </View>
-            <View>
-                <Card containerStyle={{alignSelf: "center",padding: 0}}>
-                    <Card.Image style={{alignSelf: "center",width: 128, height:200}}  resizeMode="cover" source={{url:props.book.pictureUrl}}/>
-                </Card>
-                <Text style={{position: "absolute",top: 85,left: 163, fontWeight: "bold", color: "#2b2e32", fontSize: 12}}>Verfügbarkeit:</Text>
-                { inUserBib &&
-                <View>
-                    <Ionicons style={{position: "absolute", bottom: 60, right: -75}} name="library" size={50} color="black" />
-                    <Text style={{position: "absolute", bottom: 40, right: -80, textDecorationLine: "underline", color: "red"}} onPress={()=>{handleRemoveBookFromUserBibPressed()}}>entfernen</Text>
-                </View>
-                }
-                { !inUserBib &&
-                <CheckBox
-                    containerStyle={{bottom: 45,left: 9,position: "absolute", width: "100%", backgroundColor: "transparent" , borderColor: "transparent"}}
-                    size={50}
-                    disabled={true}
-                    center
-                    checkedIcon={<AntDesign name="checkcircle" size={50} color="darkgreen" />}
-                    uncheckedIcon={<AntDesign name="closecircle" size={50} color="darkred" />}
-                    onPress={checkBoxAvaliablOnPress}
-                    checked={available}
-                />
-                }
-            </View>
-            <View style={{paddingTop: 15}}>
-                <Text numberOfLines={1} adjustsFontSizeToFit={true}  style={{ flexWrap: "nowrap",alignSelf: "center",fontWeight: "bold", fontSize: 20}}>{props.book.titel}</Text>
-                <Text style={{paddingTop: 5, alignSelf: "center", color: "grey"}}>ISBN: {props.book.isbn}</Text>
-            </View>
-            <Divider style={{paddingTop: 15, width: "95%"}}/>
-            <View style={{padding: 15, width: "100%"}}>
-                <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                    <View style={{flexDirection: "column",alignItems: "center"}}>
-                        <Text style={{textDecorationLine: 'underline'}}>Author*in:</Text>
-                        <Text style={{ fontWeight: "bold"}}>{props.book.authorName}</Text>
+            }
+            { !loading &&
+                <View style={{flex: 1, alignItems: "center", width: "100%"}}>
+                    <View style={{
+                        paddingLeft: 10,
+                        paddingTop: 10,
+                        paddingRight: 10,
+                        width: "100%",
+                        flexDirection: "row",
+                        justifyContent: "space-between"
+                    }}>
+                        <View>
+                            <Text onPress={() => props.navigation.navigate('main')} style={{
+                                color: "#565a63",
+                                fontSize: 15,
+                                left: 6,
+                                top: 4,
+                                textDecorationLine: 'underline',
+                                fontWeight: "bold"
+                            }}>schließen</Text>
+                        </View>
+                        <View style={{flexDirection: "row"}}>
+                            <Ionicons style={{top: 2, right: 9}} name="share-outline" size={36} color="black"/>
+                            <CheckBox
+                                containerStyle={{top: 5, padding: 0, margin: 0}}
+                                center
+                                checkedIcon={<FontAwesome name="bookmark" size={35} color="black"/>}
+                                uncheckedIcon={<FontAwesome name="bookmark-o" size={35} color="black"/>}
+                                onPress={savedCheckedBoxPressed}
+                                checked={saved}
+                            />
+                        </View>
                     </View>
-                    <View style={{flexDirection: "column",alignItems: "center"}}>
-                        <Text style={{textDecorationLine: 'underline'}}>Sprache:</Text>
-                        <Text style={{ fontWeight: "bold"}}>{props.book.sprache}</Text>
+                    <View>
+                        <Card containerStyle={{alignSelf: "center",padding: 0}}>
+                            <Card.Image style={{alignSelf: "center",width: 128, height:200}}  resizeMode="cover" source={{url:props.book.pictureUrl}}/>
+                        </Card>
+                        <Text style={{position: "absolute",top: 85,left: 163, fontWeight: "bold", color: "#2b2e32", fontSize: 12}}>Verfügbarkeit:</Text>
+                        {inUserBib &&
+                            <View>
+                                <Ionicons style={{position: "absolute", bottom: 60, right: -75}} name="library" size={50} color="black" />
+                                <Text style={{position: "absolute", bottom: 40, right: -80, textDecorationLine: "underline", color: "red"}} onPress={()=>{handleRemoveBookFromUserBibPressed()}}>entfernen</Text>
+                            </View>
+                        }
+                        {!inUserBib &&
+                            <CheckBox
+                            containerStyle={{bottom: 45,left: 9,position: "absolute", width: "100%", backgroundColor: "transparent" , borderColor: "transparent"}}
+                            size={50}
+                            disabled={true}
+                            center
+                            checkedIcon={<AntDesign name="checkcircle" size={50} color="darkgreen" />}
+                            uncheckedIcon={<AntDesign name="closecircle" size={50} color="darkred" />}
+                            onPress={checkBoxAvaliablOnPress}
+                            checked={available}
+                            />
+                        }
                     </View>
-                    <View style={{flexDirection: "column", alignItems: "center"}}>
-                        <Text style={{textDecorationLine: 'underline'}}>Erscheinungsdatum:</Text>
-                        <Text style={{ fontWeight: "bold"}}>{props.book.erscheinungsDatum}</Text>
+                    <View style={{paddingTop: 15}}>
+                        <Text numberOfLines={1} adjustsFontSizeToFit={true}  style={{flexWrap: "nowrap",alignSelf: "center",fontWeight: "bold", fontSize: 20}}>{props.book.titel}</Text>
+                        <Text style={{paddingTop: 5, alignSelf: "center", color: "grey"}}>ISBN: {props.book.isbn}</Text>
+                    </View>
+                    <Divider style={{paddingTop: 15, width: "95%"}}/>
+                    <View style={{padding: 15, width: "100%"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                            <View style={{flexDirection: "column",alignItems: "center"}}>
+                                <Text style={{textDecorationLine: 'underline'}}>Author*in:</Text>
+                                <Text style={{fontWeight: "bold"}}>{props.book.authorName}</Text>
+                            </View>
+                            <View style={{flexDirection: "column",alignItems: "center"}}>
+                                <Text style={{textDecorationLine: 'underline'}}>Sprache:</Text>
+                                <Text style={{fontWeight: "bold"}}>{props.book.sprache}</Text>
+                            </View>
+                            <View style={{flexDirection: "column", alignItems: "center"}}>
+                                <Text style={{textDecorationLine: 'underline'}}>Erscheinungsdatum:</Text>
+                                <Text style={{fontWeight: "bold"}}>{props.book.erscheinungsDatum}</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <Divider style={{width: "95%"}}/>
+                    <View style={{padding:10, width: "100%"}} >
+                        <View style={{borderColor: "lightgray", borderWidth: 0.75, borderRadius: 5,padding: 5, width: "100%", height: 130}}>
+                            <Text style={{paddingBottom: 10, textDecorationLine: 'underline'}}>Inhalt:</Text>
+                            <ScrollView>
+                                <Text>{props.book.description}</Text>
+                            </ScrollView>
+                        </View>
+                    </View>
+                    <View style={{width: "100%", padding: 10, paddingTop:5}}>
+                        <Button
+                        disabled={!available}
+                        onPress={()=>{handelAnfageSchickenButtonOnPress()}}
+                        titleStyle={{color: "#fdd560", fontWeight: "bold"}}
+                        disabledStyle={{backgroundColor:"#c0c0c0"}}
+                        disabledTitleStyle={{color:"white"}}
+                        buttonStyle={{height: 50,width: "100%", alignSelf: "center", backgroundColor: "#2b2e32"}}
+                        title="Ausleihen"
+                        />
                     </View>
                 </View>
-            </View>
-            <Divider style={{ width: "95%"}}/>
-            <View style={{padding:10}}>
-                <View style={{borderColor: "lightgray", borderWidth: 0.75, borderRadius: 5,padding: 5, width: "100%", height: 130}}>
-                    <Text style={{paddingBottom: 10, textDecorationLine: 'underline'}}>Inhalt:</Text>
-                    <ScrollView>
-                        <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</Text>
-                    </ScrollView>
-                </View>
-            </View>
-            <View style={{width: "100%", padding: 10, paddingTop:5}}>
-                <Button
-                    disabled={!available}
-                    onPress={()=>{console.log("ausleihen")}}
-                    titleStyle={{color: "#fdd560", fontWeight: "bold"}}
-                    disabledStyle={{backgroundColor:"#c0c0c0"}}
-                    disabledTitleStyle={{color:"white"}}
-                    buttonStyle={{height: 50,width: "100%", alignSelf: "center", backgroundColor: "#2b2e32"}}
-                    title="Ausleihen" />
-            </View>
+            }
         </View>
     )
 }
@@ -232,6 +260,15 @@ const mapDispatchToProps = dispatch => ({
     },
     deleteBookFromUserBibDispatch(id) {
         dispatch(deleteBookFromUserBib({id: id}))
+    },
+    checkIfBookAvailableDispatch(isbn) {
+        dispatch(checkIfBookAvailable({isbn:isbn}))
+    },
+    sendAusleihenRequestDispatch(bookId, message) {
+        dispatch(sendAusleihenRequest({
+            bookId: bookId,
+            message: message
+        }))
     }
 })
 

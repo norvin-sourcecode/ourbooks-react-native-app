@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useLayoutEffect, useState} from "react";
 import {useEffect} from "react";
 import {
     FlatList, Image,
@@ -23,7 +23,6 @@ import {
     setShownBook
 } from "../../../reducers/appSlice";
 import UserBibCard from "../../../components/UserBibCard";
-
 const FriendsScreen = (props) => {
 
     const [friendsList, setFriendsList] = useState([])
@@ -34,6 +33,15 @@ const FriendsScreen = (props) => {
 
     const [refreshing, setRefreshing] = useState(false);
 
+    useLayoutEffect(()=>{
+        props.navigation.setOptions({
+            headerRight: ({}) => (
+                <View>
+                    <Ionicons style={{right: -14,top:-1}} name="add" size={40} color="#fdd560" onPress={toggleNewFriendOverlay}/>
+                </View>
+            )
+        })
+    },[])
 
     useEffect(() => {
         if (!props.friends.loaded) {
@@ -42,13 +50,17 @@ const FriendsScreen = (props) => {
     }, [props.friends])
 
     useEffect(() => {
-        setFriendsList(props.friends.friendsList)
-        props.navigation.setOptions({ headerRight: ({}) => (
-                <View>
-                    <Ionicons style={{right: -14,top:-1}} name="add" size={40} color="#fdd560" onPress={toggleNewFriendOverlay}/>
-                </View>
-            )
+        const tmp = []
+        props.friends.friendsList.map((friend) => {
+            tmp.push(friend)
         })
+        if (tmp.length === 0) {
+            setFriendsList([{
+                username: "NOFRIENDS99999999999999999999999",
+            }])
+        } else {
+            setFriendsList(tmp)
+        }
     }, [props.friends,props.userBib]);
 
     const wait = (timeout) => {
@@ -96,15 +108,22 @@ const FriendsScreen = (props) => {
 
     const Item = ({ friend, index}) => (
         <View>
-            <TouchableOpacity key={index+"touch-flaeche-freundesliste"} onPress={() => {
+            {friend.username === "NOFRIENDS99999999999999999999999" &&
+            <View style={{height: 450, justifyContent: "center"}}>
+                <Text style={{alignSelf:"center"}}>keine Freund*innen</Text>
+            </View>
+            }
+            {friend.username !== "NOFRIENDS99999999999999999999999" &&
+            <TouchableOpacity key={index + "touch-flaeche-freundesliste"} onPress={() => {
                 toggleFriendOverlay(friend)
             }}>
-                <ListItem key={index+"list-item-freundesliste"} bottomDivider>
+                <ListItem key={index + "list-item-freundesliste"} bottomDivider>
                     <ListItem.Content>
                         <ListItem.Title>{friend.username}</ListItem.Title>
                     </ListItem.Content>
                 </ListItem>
             </TouchableOpacity>
+            }
         </View>
     );
 
