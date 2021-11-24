@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from "react-native";
+import {Image, Text, TouchableOpacity, View} from "react-native";
 import {ListItem} from "react-native-elements";
 import React from "react";
 import {
@@ -19,29 +19,26 @@ const ListProcess = (props) => {
 
     return (
         <View>
-            {props.p.status === 99 &&
-            <View style={{height: 450, justifyContent: "center"}}>
-                <Text style={{alignSelf: "center"}}>keine Anfragen</Text>
-            </View>
-            }
-            {props.p.status !== 99 &&
             <TouchableOpacity onPress={() => {
                 handleProcessPress(props.p)
             }}>
                 <ListItem key={props.index + "list-item-process"} bottomDivider>
                     <ListItem.Content>
-                        <View style={{width: "100%"}}>
-                            <Text style={{fontWeight: "bold"}}>{props.p.book}</Text>
-                            <Text>{props.p.bookReceiver}</Text>
-                            <Text>{props.p.giveDate}</Text>
-                            <Text>{props.p.returnDate}</Text>
-                            <Text>{props.p.status}</Text>
+                        <View style={{flexDirection: "row"}}>
+                            <Image style={{alignSelf: "center",width: 64, height:100}} resizeMode="cover" source={{url:props.p.book.pictureUrl}}/>
+                            <View style={{width: "100%"}}>
+                                <Text style={{fontWeight: "bold"}}>{props.p.book.titel}</Text>
+                                <Text>{props.p.bookReceiver}</Text>
+                                <Text>{props.p.giveDate}</Text>
+                                <Text>{props.p.returnDate}</Text>
+                                <Text>{props.p.status}</Text>
+                            </View>
                         </View>
                     </ListItem.Content>
+                    <ListItem.Chevron style={{color:"black"}} />
                 </ListItem>
             </TouchableOpacity>
 
-            }
         </View>
     )}
 

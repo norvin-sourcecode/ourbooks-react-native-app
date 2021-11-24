@@ -69,7 +69,7 @@ const CustomBottomTabBarButton = ({ children, onPress,navigation}) => {
             >
                 <View style={{width: "100%"}}>
                     <TouchableOpacity style={{width:"100%", height:500}} onPress={toggleOverlay} />
-                    <Button containerStyle={{backgroundColor: "#fdd560", borderTopRightRadius:15, borderTopLeftRadius:15, borderBottomLeftRadius:0, borderBottomRightRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderWidth: 0, borderColor: '#565a63'}} title="Buch zur Nutzer-Bibliothek hinzufügen" onPress={sendToAddABookToUserBibModal}/>
+                    <Button containerStyle={{backgroundColor: "#fdd560", borderTopRightRadius:15, borderTopLeftRadius:15, borderBottomLeftRadius:0, borderBottomRightRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderWidth: 0, borderColor: '#565a63'}} title="Buch zum Nutzer-Bücherregal hinzufügen" onPress={sendToAddABookToUserBibModal}/>
                     <Button containerStyle={{backgroundColor: "#fdd560", borderRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderTopWidth: 1,borderWidth: 0, borderColor: '#565a63'}} title="Buch zur Leseliste hinzufügen" onPress={sendToAddABookToSavedModal}/>
                     <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: '#fdd560', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#2b2e32', height:50}} title="abbrechen" onPress={() => setVisible(false)}/>
                 </View>

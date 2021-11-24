@@ -2,8 +2,8 @@ import React, {useCallback, useState} from "react";
 import {useEffect} from "react";
 import {RefreshControl, Text, TouchableOpacity, View, VirtualizedList} from "react-native";
 import { connect } from "react-redux";
-import {Badge, Button, ButtonGroup, Divider, ListItem} from 'react-native-elements';
-import {AntDesign} from "@expo/vector-icons";
+import {Badge, Button, ButtonGroup, Divider, Header, ListItem} from 'react-native-elements';
+import {AntDesign, Ionicons} from "@expo/vector-icons";
 import {
     getAusleihenRequests, getBorrowingProcesses,
     getFriendRequests, getLendingProcesses,
@@ -11,18 +11,23 @@ import {
     respondFriendRequest, setShownProcess
 } from "../../../reducers/appSlice";
 import ListProcess from "../../../components/ListProcess";
+import CustomListItem from "../../../components/CustomListItem";
+import CustomProcessListItem from "../../../components/CustomProcessListItem";
 
 const InboxScreen = (props) => {
 
-    const [index, setIndex] = useState(0);
-    const tabs = ['verliehen', 'geliehen']
+    const [bIndex, setBIndex] = useState(0);
+    const tabs = ['geliehen', 'verliehen']
     const [refreshing, setRefreshing] = useState(false);
+
+    const [data1, setData1] = useState([])
+    const [data2, setData2] = useState([])
+
+
     const [requestsList, setRequestsList] = useState([])
 
     const [lendingList, setLendingList] = useState([])
     const [borrowedList, setBorrowedList] = useState([])
-
-    const [neuLaden, setNeuLaden] = useState(false)
 
     useEffect(() => {
         if (!props.ausleihen.requests.loaded) {
@@ -33,26 +38,23 @@ const InboxScreen = (props) => {
             props.getLendingProcessesDispatch()
             props.getBorrowingProcessesDispatch()
         }
-    }, [props.ausleihen.requests.loaded, props.ausleihen.requests.loaded, neuLaden] )
+    }, [props.ausleihen.requests.loaded, props.ausleihen.requests.loaded, ] )
 
     useEffect(() => {
-        const tmp = []
-        props.ausleihen.requests.requestsList.map((request) => {
-            tmp.push(request)
+        const tmp1 = []
+        const tmp2 = []
+        props.ausleihen.borrowedList.map((borrowProcess) => {
+            tmp1.push({kind:1, inhalt:borrowProcess})
         })
-        if (tmp.length === 0) {
-            setRequestsList([{
-                "id": 0,
-                "message": "NOREQUESTS",
-                "receiver": 0,
-                "sender": 0
-            }])
-        } else {
-            setRequestsList(tmp)
-        }
-        setLendingList(props.ausleihen.lendingList)
-        setBorrowedList(props.ausleihen.borrowedList)
-    }, [ props.ausleihen.requests, props.ausleihen.lendingList])
+        props.ausleihen.requests.requestsList.map((request) => {
+            tmp2.push({kind:2, inhalt:request})
+        })
+        props.ausleihen.lendingList.map((lendingProcess) => {
+            tmp2.push({kind:3, inhalt:lendingProcess})
+        })
+        setData1(tmp1)
+        setData2(tmp2)
+    }, [ props.ausleihen.requests, props.ausleihen.lendingList, props.ausleihen.borrowedList])
 
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -67,72 +69,27 @@ const InboxScreen = (props) => {
     }, []);
 
 
-    function getItem (data, index) {
-        return data[index]
+    function getItem (d, index) {
+        return d[index]
     }
 
-    function getItemCount (data) {
-        return data.length
+    function getItemCount (d) {
+        return d.length
     }
-
-    const handelAcceptRequestPress = (request) => {
-        props.resondAusleihenRequestsDispatch(request.id, true)
-        setNeuLaden(!neuLaden)
-    }
-
-    const handelDeclineRequestPress = (request) => {
-        props.resondAusleihenRequestsDispatch(request.id, false)
-        props.getAusleihenRequestsDispatch()
-        setNeuLaden(!neuLaden)
-    }
-
-    const ItemContainer = ({item, index}) => {
-    }
-
-    const Request = ({ request, index}) => (
-        <View>
-            {request.message === "NOREQUESTS" &&
-            <View></View>
-            }
-            {request.message !== "NOREQUESTS" &&
-            <ListItem key={index+"list-item-request"} bottomDivider>
-                <ListItem.Content>
-                    <View style={{width: "100%", flexDirection: "row", flexWrap: "nowrap", justifyContent: "space-between"}}>
-                        <View style={{width: "75%",alignSelf: "center"}}>
-                            <Text style={{fontWeight: "bold"}}>{request.message}</Text>
-                        </View>
-                        <View style={{flexDirection: "row", flexWrap: "nowrap"}}>
-                            <AntDesign style={{paddingRight: 10}} name="checkcircle" size={35} color="orange" onPress={() => {handelAcceptRequestPress(request)}}/>
-                            <AntDesign name="closecircle" size={35} color="orange" onPress={() => {handelDeclineRequestPress(request)}} />
-                        </View>
-                    </View>
-                </ListItem.Content>
-            </ListItem>
-            }
-        </View>
-    );
 
     return (
-        <View style={{paddingTop: 5}}>
-            <ButtonGroup buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setIndex} selectedIndex={index} buttons={tabs} />
-            <Divider style={{paddingTop: 5}}/>
-            {index === 0 &&
-            <View>
+        <View style={{backgroundColor: "#2b2e32", height:"100%"}}>
+            <Header
+                centerComponent={{ text: 'Inbox', style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
+            />
+            <ButtonGroup containerStyle={{borderWidth:2, borderColor:"#fdd560"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
+            {bIndex === 1 &&
+            <View style={{height: "100%"}}>
                 <VirtualizedList
-                    data={requestsList}
+                    data={data2}
                     initialNumToRender={5}
-                    renderItem={({item, index}) => <Request request={item} index={index} />}
-                    keyExtractor={(item, index)=> 'key'+index+item.id}
-                    getItemCount={getItemCount}
-                    getItem={getItem}
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
-                <Divider/>
-                <VirtualizedList
-                    data={lendingList}
-                    initialNumToRender={5}
-                    renderItem={({item, index}) => <ListProcess p={item} index={index} navigation={props.navigation} />}
+                    renderItem={({item, index}) =>  <CustomProcessListItem i={item} index={index} navigation={props.navigation} />}
                     keyExtractor={(item, index)=> 'key'+index+item.id}
                     getItemCount={getItemCount}
                     getItem={getItem}
@@ -141,15 +98,17 @@ const InboxScreen = (props) => {
                 />
             </View>
             }
-            {index === 1 &&
-            <View>
+            {bIndex === 0 &&
+            <View style={{height: "100%"}}>
                 <VirtualizedList
-                    data={borrowedList}
-                    initialNumToRender={5}
-                    renderItem={({item, index}) => <ListProcess p={item} index={index} navigation={props.navigation} />}
+                    data={data1}
+                    initialNumToRender={4}
+                    renderItem={({item, index}) => <CustomProcessListItem i={item} index={index} navigation={props.navigation} />}
                     keyExtractor={(item, index)=> 'key'+index+item.id}
                     getItemCount={getItemCount}
                     getItem={getItem}
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
                 />
             </View>
             }

@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import {Badge, Divider, Button, Card, SearchBar, ButtonGroup, Input, Overlay, Header} from "react-native-elements";
 import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {
+    getActivityFeed,
     getBibs,
     getFriendRequests,
     getFriends, getHelperForHomeListBibs, getHelperForHomeListFriends,
@@ -37,7 +38,15 @@ const HomeScreen = (props) => {
 
     const [data, setData] = useState([])
 
+    const [data2, setData2] = useState([])
+
     const [refreshing, setRefreshing] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await BarCodeScanner.requestPermissionsAsync();
+        })();
+    }, []);
 
     useEffect(() => {
         if (!props.friends.requests.loaded) {
@@ -49,9 +58,13 @@ const HomeScreen = (props) => {
         if (!props.bibs.loaded) {
             props.getHelperForHomeListBibsDispatch()
         }
-    }, [props.friends.requests.loaded, props.bibs.loaded, props.friends.loaded])
+        if (!props.activity.loaded) {
+            props.getActivityFeedDispatch()
+        }
+    }, [props.friends.requests.loaded, props.bibs.loaded, props.friends.loaded, props.activity.loaded])
 
     useEffect(() => {
+        setData2(props.activity.activityFeed)
         const tmp = []
         props.friends.requests.requestsList.map((request) => {
             tmp.push({kind:1, inhalt: request})
@@ -63,7 +76,7 @@ const HomeScreen = (props) => {
             tmp.push({kind:2, inhalt: bib})
         })
         setData(tmp)
-    }, [props.bibs, props.friends])
+    }, [props.bibs, props.friends, props.activity.activityFeed])
 
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -71,10 +84,10 @@ const HomeScreen = (props) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        props.getBibsDispatch()
+        props.getHelperForHomeListBibsDispatch()
         props.getFriendRequestsDispatch()
-        props.getFriendsDispatch()
-        wait(2000).then(() => setRefreshing(false));
+        props.getHelperForHomeListFriendsDispatch()
+        wait(1000).then(() => setRefreshing(false));
     }, []);
 
     const toggleOverlay = () => {
@@ -98,7 +111,7 @@ const HomeScreen = (props) => {
             <Header
                 centerComponent={{ text: 'Home', style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
-                rightComponent={<TouchableOpacity onPress={handleAddABibPress}><Ionicons style={{position:"absolute", top: -8.5, right:-8.5}} name="add-sharp" size={40} color="#fdd560"/></TouchableOpacity>}
+                rightComponent={bIndex === 0 && <TouchableOpacity onPress={handleAddABibPress}><Ionicons style={{position:"absolute", top: -8.5, right:-8.5}} name="add-sharp" size={40} color="#fdd560"/></TouchableOpacity>}
             />
             <View style={{paddingTop: 5, backgroundColor: "#2b2e32"}}>
                 <ButtonGroup containerStyle={{borderWidth:2, borderColor:"#fdd560"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
@@ -123,8 +136,15 @@ const HomeScreen = (props) => {
                         </View>
                     </View>
                     <View style={{padding: 10,  zIndex : -5 }}>
-                        <View style={{justifyContent: "center",alignItems: "center", height:439, backgroundColor: "white", borderRadius: 10}}>
-                            <Text style={{color: "grey"}}>keine neuen Aktivitäten</Text>
+                        <View style={{height:439, backgroundColor: "white", borderRadius: 10}}>
+                            <VirtualizedList
+                                data={data2}
+                                initialNumToRender={4}
+                                renderItem={({item, index}) => <Text navigation={props.navigation}>{item.user.username} hat jetzt {item.book.titel}</Text>}
+                                keyExtractor={(item, index)=> 'key'+index+item.id}
+                                getItemCount={getItemCount}
+                                getItem={getItem}
+                            />
                         </View>
                     </View>
                 </View>
@@ -173,6 +193,7 @@ const mapStateToProps = state => {
         bibs: state.appReducer.bibs,
         userBib: state.appReducer.userBib,
         friends: state.appReducer.friends,
+        activity: state.appReducer.activity
     }
 }
 
@@ -194,6 +215,9 @@ const mapDispatchToProps = dispatch => ({
     },
     getHelperForHomeListFriendsDispatch() {
         dispatch(getHelperForHomeListFriends())
+    },
+    getActivityFeedDispatch() {
+        dispatch(getActivityFeed())
     }
 })
 

@@ -12,6 +12,13 @@ const AddABib = (props) => {
     const tabs = ['mit einem/er Freund*in', 'mit einer Gruppe']
     const [scannerDa, setScannerDa] = useState(false)
 
+    const [scanned, setScanned] = useState(false);
+
+    const [visible, setVisible] = useState(false);
+
+    const [scannedData, setScannedData] = useState(false);
+
+
     const [valid, setValid] = useState(false)
 
     const [newFriendUsername, setNewFriendUsername] = useState("")
@@ -26,19 +33,50 @@ const AddABib = (props) => {
 
     function handelAnfageSchickenButtonOnPress() {
         if (bIndex === 0) {
-            console.log("friend request schicken")
             props.sendFriendRequestDispatch(newFriendUsername)
             setNewFriendUsername("")
+            setVisible(false)
         }
         if (bIndex === 1) {
             console.log("GBib create ")
         }
     }
 
+    const handlQRCodeScanned = ({ type, data }) => {
+        setScanned(true)
+        setScannedData(data)
+        if (data.split(";")[0] === "OURBOOK") {
+            setVisible(true)
+            setNewFriendUsername(data.split(";")[1])
+        } else {
+            Alert.alert(
+                "Dies ist kein OURBOOK-Nutzer...",
+                "Probiere es nochmal indem du den QR-Code aus dem Profil der Person mit der du ein geteiltes Bücherregal eröffnen möchtest einscannst!",
+                [
+                    {
+                        text: "OK",
+                        onPress: () => setScanned(false)
+                    },
+                ],
+                { cancelable: false }
+            );
+        }
+        //props.getBookByIsbnFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, data)
+        //props.navigation.navigate("book")
+        // alert(`type: ${type} & data: ${data} gescannt`);
+    };
+
 
 
     return (
         <View style={{flex: 1, alignItems: "center", width: "100%", height:"100%"}}>
+            <Overlay isVisible={visible} onBackdropPress={()=> {
+                setVisible(false)
+                setScanned(false)
+            }} >
+                <Text>{scannedData}</Text>
+                <Button title="Freund*in hinzufügen" onPress={handelAnfageSchickenButtonOnPress} buttonStyle={{backgroundColor: "black"}} />
+            </Overlay>
             <View style={{width: "100%", height:"85%"}}>
                 <View style={{paddingLeft: 10,paddingTop: 10,paddingRight: 10,width:"100%" ,flexDirection: "row", justifyContent: "space-between"}}>
                     <View>
@@ -49,7 +87,7 @@ const AddABib = (props) => {
                     <Text style={{fontWeight:"bold", fontSize:23}}>geteiltes Bücherregal erstellen...</Text>
                 </View>
                 <View style={{width: "100%", paddingTop:10}}>
-                    <ButtonGroup containerStyle={{borderWidth:2, borderColor:"#2b2e32", backgroundColor:"transparent"}} buttonStyle={{backgroundColor:"transparent"}} textStyle={{color: "#2b2e32"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
+                    <ButtonGroup disabled={true} containerStyle={{borderWidth:2, borderColor:"#2b2e32", backgroundColor:"transparent"}} buttonStyle={{backgroundColor:"transparent"}} textStyle={{color: "#2b2e32"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
                 </View>
                 <View style={{width: "100%"}}>
                     { bIndex === 0 &&
@@ -57,6 +95,10 @@ const AddABib = (props) => {
                         <Text style={{paddingLeft: 10, paddingTop:20}}>QR-Code scannen:</Text>
                         { scannerDa &&
                             <View style={{alignSelf:"center", marginTop:10,height:250, width: 250, borderWidth:2, borderColor: "#2b2e32"}}>
+                                <BarCodeScanner
+                                    onBarCodeScanned={scanned ? undefined : handlQRCodeScanned}
+                                    style={StyleSheet.absoluteFillObject}
+                                />
                             </View>
                         }
                         { !scannerDa &&
@@ -99,7 +141,7 @@ const AddABib = (props) => {
             <View style={{width: "100%", height:"15%", justifyContent: "flex-end"}}>
                 <View style={{width: "100%", padding: 10, paddingTop:5, paddingBottom:12.5}}>
                     <Button
-                        disabled={false}
+                        disabled={!valid}
                         onPress={()=>{handelAnfageSchickenButtonOnPress()}}
                         titleStyle={{color: "#fdd560", fontWeight: "bold"}}
                         disabledStyle={{backgroundColor:"#c0c0c0"}}
@@ -120,7 +162,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     sendFriendRequestDispatch(username) {
         dispatch(sendFriendRequest({username: username}))
-    }
+    },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddABib)

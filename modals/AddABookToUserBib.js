@@ -20,7 +20,8 @@ const AddABookToUserBib = (props) => {
     const howToAddButtons = ['ISBN scannen', 'online suchen', 'manuell eingeben']
 
     const [hasPermission, setHasPermission] = useState(null);
-    const [scanned, setScanned] = useState(true);
+
+    const [scanned, setScanned] = useState(false);
 
     const [visible, setVisible] = useState(false);
 
@@ -89,6 +90,8 @@ const AddABookToUserBib = (props) => {
                             <Text onPress={() => props.navigation.navigate('main')} style={{color: "#fdd560", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
                         </View>
                     </View>
+                    <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "#fdd560"}}>
+                    </View>
                     {scanned && !visible && <Button title={'Antippen zum Scannen'} onPress={() => setScanned(false)} />}
                 </View>
                 }
@@ -105,10 +108,16 @@ const AddABookToUserBib = (props) => {
                 {!props.book.loading &&
                 <View style={{backgroundColor: "white"}}>
                     <View style={{position: "absolute", flexDirection: "row", justifyContent: "space-between", width: "100%", top: -17.5}} >
-                        <TouchableOpacity style={{left: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={()=>{setVisible(false)}}>
+                        <TouchableOpacity style={{left: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={()=>{
+                            setVisible(false)
+                            setScanned(false)
+                        }}>
                             <AntDesign name="closecircle" size={35} color="darkred"/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{right: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={() => {handelAddBookToUserBibPressed(props.book)}}>
+                        <TouchableOpacity style={{right: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={() => {
+                            handelAddBookToUserBibPressed(props.book)
+                            setScanned(false)
+                        }}>
                             <AntDesign name="checkcircle" size={35} color="darkgreen" />
                         </TouchableOpacity>
                     </View>

@@ -90,7 +90,6 @@ const UserBibCard = (props) => {
 
     return (
         <View>
-                <Card.Divider/>
                 <VirtualizedList
                     style={{alignSelf: "center"}}
                     horizontal={true}

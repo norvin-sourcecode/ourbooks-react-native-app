@@ -30,7 +30,9 @@ const InboxStack = createNativeStackNavigator();
 function InboxStackScreen() {
     return (
         <InboxStack.Navigator screenOptions={{
-            title: "Inbox",
+            headerShown: false,
+            headerShadowVisible:false,
+            title: "Home",
             headerStyle: {
                 backgroundColor: '#2b2e32',
             },

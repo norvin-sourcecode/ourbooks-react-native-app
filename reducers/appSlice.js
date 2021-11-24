@@ -116,8 +116,13 @@ const initialState = {
         },
         lendingList: [],
         borrowedList: [],
-
     },
+    activity:{
+        loaded: false,
+        loading: false,
+        error: null,
+        activityFeed: []
+    }
 }
 
 export const register = createAsyncThunk(
@@ -255,7 +260,25 @@ export const getNewlyAdded = createAsyncThunk(
         try {
             const tmpState = getState()
             const response = await axios
-                .get(tmpState.appReducer.communication.urlBase+"/books/newlyAdded/1", tmpState.appReducer.communication.conf)
+                .get(tmpState.appReducer.communication.urlBase+"/books/wishedFor", tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const getActivityFeed = createAsyncThunk(
+    'app/getActivityFeed',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/books/newlyAdded", tmpState.appReducer.communication.conf)
             return response.data
         } catch (err) {
             let error = err
@@ -655,6 +678,29 @@ export const getHelperForHomeListBibs= createAsyncThunk(
             const tmpState = getState()
             const response = await axios
                 .get(tmpState.appReducer.communication.urlBase+"/bookclub/bookShelves",tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const agreeProcess= createAsyncThunk(
+    'app/agreeProcess',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .post(tmpState.appReducer.communication.urlBase+"/process/agree/"+data.processId,{
+                    keep: data.keep,
+                    bookClubs: data.bookClubs,
+                    returnToGiver: data.returnToGiver,
+                    weeksUsageTime: data.weeksUsageTime,
+                } ,tmpState.appReducer.communication.conf)
             return response.data
         } catch (err) {
             let error = err
@@ -1245,6 +1291,44 @@ const appSlice = createSlice({
             state.bibs.loaded = false
             state.bibs.loading = false
             state.bibs.error = action.payload
+        },
+        [getActivityFeed.pending]: (state) => {
+            state.activity.loaded = false
+            state.activity.loading = true
+            state.activity.error = null
+        },
+        [getActivityFeed.fulfilled]: (state, { payload }) => {
+            state.activity.loaded = true
+            state.activity.loading = false
+            state.activity.error = null
+            state.activity.activityFeed = payload
+        },
+        [getActivityFeed.rejected]: (state, action ) => {
+            state.activity.loaded = false
+            state.activity.loading = false
+            state.activity.error = action.payload
+        },
+        [agreeProcess.pending]: (state) => {
+            state.process.loaded = false
+            state.process.loading = true
+            state.process.error = null
+        },
+        [agreeProcess.fulfilled]: (state, { payload }) => {
+            state.process.loaded = true
+            state.process.loading = false
+            state.process.error = null
+            state.process.book = payload.book
+            state.process.bookGiver = payload.bookGiver
+            state.process.bookReceiver = payload.bookReceiver
+            state.process.giveDate = payload.giveDate
+            state.process.id = payload.id
+            state.process.returnDate = payload.returnDate
+            state.process.status = payload.status
+        },
+        [agreeProcess.rejected]: (state, action ) => {
+            state.process.loaded = false
+            state.process.loading = false
+            state.process.error = action.payload
         },
     },
 })

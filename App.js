@@ -13,15 +13,15 @@ Notifications.setNotificationHandler({
     }),
 });
 
-Notifications.scheduleNotificationAsync({
-    content: {
-        title: "Time's up!",
-        body: 'Change sides!',
-    },
-    trigger: {
-        seconds: 5,
-    },
-});
+// Notifications.scheduleNotificationAsync({
+//     content: {
+//         title: "Time's up!",
+//         body: 'Change sides!',
+//     },
+//     trigger: {
+//         seconds: 5,
+//     },
+// });
 
 const App = (props) =>{
 
