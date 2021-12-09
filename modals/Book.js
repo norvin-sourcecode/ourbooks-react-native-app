@@ -11,7 +11,7 @@ import {AnimatedCircularProgress} from "react-native-circular-progress";
 import Animated, {cancelAnimation, useSharedValue} from "react-native-reanimated";
 import {Circle} from "react-native-svg";
 import {
-    checkIfBookAvailable,
+    checkIfBookAvailable, checkIfBookPending,
     deleteBookFromSaved,
     deleteBookFromUserBib,
     saveBook,
@@ -25,6 +25,7 @@ const Book = (props) => {
     const [saved, setSaved] = useState(false)
     const [inUserBib, setInUserBib] = useState(false)
     const [available, setAvailable] = useState(false)
+
 
     const [visible, setVisible] = useState(false);
     const [targetBook, setTargetBook] = useState({})
@@ -42,6 +43,9 @@ const Book = (props) => {
     useEffect(() => {
         if (!props.book.loaded) {
             props.checkIfBookAvailableDispatch(props.book.isbn)
+            if (props.book.availableAt.length !== 0) {
+                props.checkIfBookIsPendingDispatch(props.book.id)
+            }
         }
         if (!props.book.loading) {
             if(props.userBib.booksList.some(book => book.isbn === props.book.isbn)){
@@ -227,7 +231,7 @@ const Book = (props) => {
                     </View>
                     <View style={{width: "100%", padding: 10, paddingTop:5}}>
                         <Button
-                        disabled={!available}
+                        disabled={!available || props.book.pending}
                         onPress={()=>{handelAnfageSchickenButtonOnPress()}}
                         titleStyle={{color: "#fdd560", fontWeight: "bold"}}
                         disabledStyle={{backgroundColor:"#c0c0c0"}}
@@ -252,6 +256,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+    checkIfBookIsPendingDispatch(id) {
+        dispatch(checkIfBookPending({id:id}))
+    },
     saveBookDispatch(isbn) {
         dispatch(saveBook({isbn: isbn}))
     },

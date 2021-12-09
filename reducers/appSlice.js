@@ -8,7 +8,7 @@ const initialState = {
     ourbookLoggedIn: false,
     firebaseLoggedIn: false,
     communication: {
-        urlBase: "http://192.168.178.29:8080", //192.168.0.116
+        urlBase: "https://ourbooktest3-n52mpekfgq-ey.a.run.app",
         token: null,
         conf: {
             auth: {
@@ -69,7 +69,8 @@ const initialState = {
         timeCreated: "",
         titel: "",
         pictureUrl: "",
-        availableAt: [{bookId: 1, username: "yannick"}],
+        availableAt: [],
+        pending: false,
         description: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     },
     saved: {
@@ -102,7 +103,9 @@ const initialState = {
         giveDate: "2021-10-28T17:02:19.778Z",
         id: 0,
         returnDate: "2021-10-28T17:02:19.778Z",
-        status: 0
+        status: 0,
+        needReload: false
+
     },
     ausleihen: {
         loaded: false,
@@ -630,6 +633,24 @@ export const checkIfBookAvailable = createAsyncThunk(
     }
 )
 
+export const checkIfBookPending = createAsyncThunk(
+    'app/checkIfBookPending',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/books/alreadySend/"+data.id, tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
 export const sendMessage = createAsyncThunk(
     'app/sendMessage',
     async (data, { rejectWithValue, getState }) => {
@@ -678,6 +699,24 @@ export const getHelperForHomeListBibs= createAsyncThunk(
             const tmpState = getState()
             const response = await axios
                 .get(tmpState.appReducer.communication.urlBase+"/bookclub/bookShelves",tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const getProcessById= createAsyncThunk(
+    'app/getProcessById',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/process/"+data.id,tmpState.appReducer.communication.conf)
             return response.data
         } catch (err) {
             let error = err
@@ -746,6 +785,7 @@ const appSlice = createSlice({
             state.process.id = action.payload.id
             state.process.returnDate = action.payload.returnDate
             state.process.status = action.payload.status
+            state.process.needReload = false
         },
         setShownBook:(state, action) => {
             state.book.loaded = false
@@ -761,6 +801,7 @@ const appSlice = createSlice({
             state.book.titel = action.payload.titel
             state.book.pictureUrl = action.payload.pictureUrl
             state.book.availableAt = []
+            state.book.pending = false
             state.book.description = action.payload.description
         },
         setShownBib:(state, action) => {
@@ -1034,6 +1075,7 @@ const appSlice = createSlice({
             state.ausleihen.requests.loaded = false
             state.ausleihen.requests.loading = true
             state.ausleihen.requests.error = null
+            state.book.loaded = false
         },
         [sendAusleihenRequest.fulfilled]: (state, { payload }) => {
             state.ausleihen.requests.loaded = true
@@ -1158,6 +1200,7 @@ const appSlice = createSlice({
             state.book.titel = payload.titel
             state.book.pictureUrl = payload.pictureUrl
             state.book.availableAt = []
+            state.book.pending = false
             state.book.description = payload.description
         },
         [getBookByIsbn.rejected]: (state, action ) => {
@@ -1245,6 +1288,22 @@ const appSlice = createSlice({
             state.userBib.loading = false
             state.userBib.error = action.payload
         },
+        [checkIfBookPending.pending]: (state) => {
+            state.book.loaded = false
+            state.book.loading = true
+            state.book.error = null
+        },
+        [checkIfBookPending.fulfilled]: (state, { payload }) => {
+            state.book.loaded = true
+            state.book.loading = false
+            state.book.error = null
+            state.book.pending = payload
+        },
+        [checkIfBookPending.rejected]: (state, action ) => {
+            state.userBib.loaded = false
+            state.userBib.loading = false
+            state.userBib.error = action.payload
+        },
         [sendMessage.pending]: (state) => {
             state.ausleihen.loaded = false
             state.ausleihen.loading = true
@@ -1312,6 +1371,7 @@ const appSlice = createSlice({
             state.process.loaded = false
             state.process.loading = true
             state.process.error = null
+            state.process.needReload = false
         },
         [agreeProcess.fulfilled]: (state, { payload }) => {
             state.process.loaded = true
@@ -1324,11 +1384,38 @@ const appSlice = createSlice({
             state.process.id = payload.id
             state.process.returnDate = payload.returnDate
             state.process.status = payload.status
+            state.process.needReload = false
         },
         [agreeProcess.rejected]: (state, action ) => {
             state.process.loaded = false
             state.process.loading = false
             state.process.error = action.payload
+            state.process.needReload = false
+        },
+        [getProcessById.pending]: (state) => {
+            state.process.loaded = false
+            state.process.loading = true
+            state.process.error = null
+            state.process.needReload = false
+        },
+        [getProcessById.fulfilled]: (state, { payload }) => {
+            state.process.loaded = true
+            state.process.loading = false
+            state.process.error = null
+            state.process.book = payload.book
+            state.process.bookGiver = payload.bookGiver
+            state.process.bookReceiver = payload.bookReceiver
+            state.process.giveDate = payload.giveDate
+            state.process.id = payload.id
+            state.process.returnDate = payload.returnDate
+            state.process.status = payload.status
+            state.process.needReload = false
+        },
+        [getProcessById.rejected]: (state, action ) => {
+            state.process.loaded = false
+            state.process.loading = false
+            state.process.error = action.payload
+            state.process.needReload = false
         },
     },
 })

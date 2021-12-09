@@ -33,6 +33,7 @@ import AddABib from "../modals/AddABib";
 import * as PropTypes from "prop-types";
 import Constants from 'expo-constants';
 import * as Notifications from "expo-notifications";
+import ProcessScreen from "../screens/mainScreens/inbox/ProcessScreen";
 
 const AppTabs = createBottomTabNavigator();
 
@@ -205,6 +206,12 @@ const RootStack = createNativeStackNavigator();
 
 const auth = FirebaseInstance.auth()
 
+const InboxScreen2Test = (props) => {
+    return (
+        <ProcessScreen navigation={props.navigation}/>
+    );
+}
+
 function SaveAreaView(props) {
     return null;
 }
@@ -292,6 +299,13 @@ const RootNavigation = (props) =>{
                             name="main"
                             component={AppTabsScreen}
                             options={{ headerMode: 'none' }}
+                            navigation={(navigation)=> navigation}
+                        />
+                    </RootStack.Group>
+                    <RootStack.Group>
+                        <RootStack.Screen
+                            name="processScreenTest"
+                            component={InboxScreen2Test}
                             navigation={(navigation)=> navigation}
                         />
                     </RootStack.Group>

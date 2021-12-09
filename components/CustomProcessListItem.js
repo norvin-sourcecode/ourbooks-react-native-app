@@ -15,7 +15,6 @@ const CustomProcessListItem = (props) => {
 
     const handelDeclineRequestPress = (request) => {
         props.resondAusleihenRequestsDispatch(request.id, false)
-        props.getAusleihenRequestsDispatch()
     }
 
     return (

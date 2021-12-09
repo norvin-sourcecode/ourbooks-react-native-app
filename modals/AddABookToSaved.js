@@ -20,7 +20,7 @@ const AddABookToSaved = (props) => {
     const howToAddButtons = ['ISBN scannen', 'online suchen', 'manuell eingeben']
 
     const [hasPermission, setHasPermission] = useState(null);
-    const [scanned, setScanned] = useState(true);
+    const [scanned, setScanned] = useState(false);
 
     const [visible, setVisible] = useState(false);
 
@@ -86,7 +86,8 @@ const AddABookToSaved = (props) => {
                             <Text onPress={() => props.navigation.navigate('main')} style={{color: "#fdd560", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
                         </View>
                     </View>
-                    {scanned && !visible && <Button title={'Antippen zum Scannen'} onPress={() => setScanned(false)} />}
+                    <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "#fdd560"}}>
+                    </View>
                 </View>
                 }
             </View>

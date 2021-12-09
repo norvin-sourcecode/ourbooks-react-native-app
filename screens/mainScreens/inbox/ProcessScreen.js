@@ -1,13 +1,21 @@
 import React, {useCallback, useState, useLayoutEffect} from "react";
 import {useEffect} from "react";
-import {Text, TouchableOpacity, View, VirtualizedList} from "react-native";
+import {Alert, StyleSheet, Text, TouchableOpacity, View, VirtualizedList} from "react-native";
 import { connect } from "react-redux";
 import {Badge, Button, ButtonGroup, Divider, Header, ListItem, Overlay} from 'react-native-elements';
 import {GiftedChat} from "react-native-gifted-chat";
-import {agreeProcess, getGBibBooks, sendMessage, setShownBook} from "../../../reducers/appSlice";
+import {
+    agreeProcess,
+    getFriendById,
+    getGBibBooks,
+    getProcessById,
+    sendMessage,
+    setShownBook
+} from "../../../reducers/appSlice";
 import FirebaseInstance from "../../../config/firebase";
 import {AntDesign, Entypo, Ionicons} from "@expo/vector-icons";
 import SvgQRCode from "react-native-qrcode-svg";
+import {BarCodeScanner} from "expo-barcode-scanner";
 
 const ProcessScreen = (props) => {
 
@@ -28,11 +36,20 @@ const ProcessScreen = (props) => {
     const [qrCodeOverlayVisible, setQrCodeOverlayVisible] = useState(false)
     const [cameraOverlayVisible, setCameraOverlayVisible] = useState(false)
 
+    const [scanned, setScanned] = useState(false);
 
     const [counter, setCounter] = useState(0)
 
     useEffect(() => {
+        if (props.process.needReload) {
+            props.getProcessByIdDispatch(props.process.id)
+        }
         setTargetProcess(props.process)
+    }, [props.process])
+
+    useEffect(() => {
+        setTargetProcess(props.process)
+        props.getFriendByIdDispatch(props.process.bookReceiver)
     }, [props.process])
 
     useEffect(() => {
@@ -67,12 +84,25 @@ const ProcessScreen = (props) => {
         };
     }, []);
 
+    const handleQRcodeScanned = ({ type, data }) => {
+        setScanned(true);
+        console.log("hallo")
+        //setVisible(true)
+        //props.getBookByIsbnFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, data)
+        //props.navigation.navigate("book")
+        // alert(`type: ${type} & data: ${data} gescannt`);
+    };
+
     function erhoehen() {
-        setCounter(counter+1)
+        if (counter < 4) {
+            setCounter(counter+1)
+        }
     }
 
     function verringern() {
-        setCounter(counter-1)
+        if (counter > 0) {
+            setCounter(counter-1)
+        }
     }
 
     const onSend = useCallback((arr = []) => {
@@ -93,8 +123,73 @@ const ProcessScreen = (props) => {
         return <SvgQRCode value={"OURBOOK;"+props.user.username+";"+props.user.id} />;
     }
 
+    const wochenSchreibweise = () => {
+        return counter > 1 ? "n" : ""
+    }
+
+    const verleihButtonOnPress = () =>{
+        Alert.alert(
+            "Buch verleihen",
+            "Möchten Sie das Buch wiklich für "+counter+" Woche"+wochenSchreibweise()+" an "+props.friends.friend.firstname+" "+props.friends.friend.lastname+" verleihen?",
+            [
+                {
+                    text: "abbrechen",
+                },
+                {
+                    text: "OK",
+                    onPress: () => {
+                        props.agreePocessDispatch(false,[],true,counter,props.process.id)
+                    }
+
+                },
+            ],
+            { cancelable: false }
+        );
+    }
+
+    const renderChatFooter = () => {
+
+        const licenceRendered = () => {
+            return props.process.status === 0 && props.process.bookGiver === props.user.id ? "40%" : 0
+        }
+
+        return (
+            <View style={{height: licenceRendered(), padding:10}}>
+                <View style={{backgroundColor: "#fdd560", borderRadius:10, height: "100%", width: "100%"}}>
+                    <Text style={{color: "#2b2e32", fontWeight: "bold", paddingTop:5, alignSelf:"center", fontSize: 40}}>Lizenzvertrag</Text>
+                    <Text style={{color: "#2b2e32", alignSelf:"center", paddingTop:10, paddingBottom:10}}>Verleihzeit: (in Wochen)</Text>
+                    <View style={{flexDirection: "row", justifyContent: "space-evenly", paddingBottom:10}}>
+                        <TouchableOpacity style={{alignSelf:"center"}} onPress={verringern}>
+                            <AntDesign name="minuscircleo" size={40} color="black" />
+                        </TouchableOpacity>
+                        <View style={{alignSelf:"center", borderWidth:3, width: 55, height: 55, borderRadius:"50%", justifyContent: "center"}}>
+                            <Text style={{color:"#2b2e32",fontWeight:"bold", alignSelf: "center", fontSize: 40}}>{counter}</Text>
+                        </View>
+                        <TouchableOpacity style={{alignSelf:"center"}} onPress={erhoehen}>
+                            <AntDesign name="pluscircleo" size={40} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                    <Button
+                        disabled={counter === 0}
+                        onPress={verleihButtonOnPress}
+                        titleStyle={{color: "#fdd560", fontWeight: "bold"}}
+                        disabledStyle={{backgroundColor:"#c0c0c0"}}
+                        disabledTitleStyle={{color:"white"}}
+                        buttonStyle={{height: 40,width: "95%", alignSelf: "center", backgroundColor: "#2b2e32"}}
+                        title="verleihen!"
+                    />
+                    {/*<View style={{backgroundColor: "black", justifyContent:"center", flexDirection:"row", alignSelf:"center"}}>*/}
+                    {/*    <Button title="-" onPress={verringern} />*/}
+                    {/*    <Text style={{color:"white", alignSelf: "center"}}>{counter}</Text>*/}
+                    {/*    <Button onPress={erhoehen} style={{alignSelf: "center"}} title="+" />*/}
+                    {/*</View>*/}
+                </View>
+            </View>
+        )
+    }
+
     return (
-        <View style={{height: "100%", paddingBottom: 28, backgroundColor: "#2b2e32"}}>
+        <View style={{height: "100%", backgroundColor: "#2b2e32", flex:1}}>
             <Header
                 centerComponent={{ text: props.process.book.titel, style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
@@ -116,30 +211,18 @@ const ProcessScreen = (props) => {
                     <UserQR/>
                 </View>
             </Overlay>
-            <Overlay isVisible={cameraOverlayVisible} onBackdropPress={toggleCameraOverlay} >
-                <View style={{borderColor: "white", borderWidth:3,alignSelf: "center",transform: [{scale: 2.5}]}}>
-                    <Text>halölo</Text>
+            <Overlay isVisible={cameraOverlayVisible} onBackdropPress={toggleCameraOverlay} overlayStyle={{height: "50%", width: "90%"}}>
+                <View style={{borderColor: "white", borderWidth:3, flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
+                    <BarCodeScanner
+                        onBarCodeScanned={scanned ? undefined : handleQRcodeScanned}
+                        style={StyleSheet.absoluteFillObject}
+                    />
                 </View>
             </Overlay>
-            {props.process.status === 0 && props.process.bookGiver === props.user.id &&
-            <View style={{ paddingRight:10, paddingLeft:10, paddingTop:25,height: "35%"}}>
-                <View style={{height: "100%", backgroundColor: "white", justifyContent: "center"}}>
-                    <Text>Lizenzvereinbarung:</Text>
-                    <Text>wie lange</Text>
-                    <View style={{height: 100,width:100, backgroundColor: "black", justifyContent:"center", flexDirection:"row", alignSelf:"center"}}>
-                        <Button title="-" onPress={verringern} />
-                        <Text style={{color:"white", alignSelf: "center"}}>{counter}</Text>
-                        <Button onPress={erhoehen} style={{alignSelf: "center"}} title="+" />
-                    </View>
-                    <ButtonGroup disabled={true} containerStyle={{borderWidth:2, borderColor:"#fdd560"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
-                    <Button title="zustimmen" onPress={()=>{props.agreePocessDispatch(false,[],true,counter, props.process.id)}} />
-                </View>
-            </View>
-            }
             <GiftedChat
                 messages={messages}
                 onSend={arr => onSend(arr)}
-                bottomOffset={50}
+                renderChatFooter={renderChatFooter}
                 user={{
                     _id: props.user.id,
                     name: props.user.username,
@@ -147,7 +230,6 @@ const ProcessScreen = (props) => {
                 }}
             />
         </View>
-
     )
 }
 
@@ -155,10 +237,17 @@ const mapStateToProps = state => {
     return {
         user: state.appReducer.user,
         process: state.appReducer.process,
+        friends: state.appReducer.friends,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
+    getProcessByIdDispatch(id) {
+        dispatch(getProcessById({id:id}))
+    },
+    getFriendByIdDispatch(id) {
+        dispatch(getFriendById({id:id}))
+    },
     setShownBookDispatch(book) {
         dispatch(setShownBook(book))
     },

@@ -14,7 +14,7 @@ const ListProcess = (props) => {
 
     function handleProcessPress(process) {
         props.setShownProcessDispatch(process)
-        props.navigation.navigate("ProcessScreen2")
+        props.navigation.navigate("processScreenTest")
     }
 
     return (
