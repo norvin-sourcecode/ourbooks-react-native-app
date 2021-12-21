@@ -1,9 +1,10 @@
 import React, {useLayoutEffect, useState} from "react";
 import {useEffect} from "react";
 import {
+    Alert,
     FlatList, Image,
     KeyboardAvoidingView,
-    Platform,
+    Platform, StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
@@ -11,8 +12,20 @@ import {
     VirtualizedList
 } from "react-native";
 import { connect } from "react-redux";
-import {Badge, Divider, ListItem, Button, Card, Avatar, Accessory, Input, Icon, Overlay} from "react-native-elements";
-import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {
+    Badge,
+    Divider,
+    ListItem,
+    Button,
+    Card,
+    Avatar,
+    Accessory,
+    Input,
+    Icon,
+    Overlay,
+    Header
+} from "react-native-elements";
+import {AntDesign, Entypo, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {
     deleteFriend,
@@ -23,6 +36,7 @@ import {
     setShownBook
 } from "../../../reducers/appSlice";
 import UserBibCard from "../../../components/UserBibCard";
+import {BarCodeScanner} from "expo-barcode-scanner";
 const FriendsScreen = (props) => {
 
     const [friendsList, setFriendsList] = useState([])
@@ -30,6 +44,14 @@ const FriendsScreen = (props) => {
     const [newFriendUsername, setNewFriendUsername] = useState("")
     const [newFriendOverlayVisible, setNewFriendOverlayVisible] = useState(false);
     const [friendOverlayVisible, setFriendOverlayVisible] = useState(false);
+
+    const [scannerDa, setScannerDa] = useState(false)
+
+    const [scanned, setScanned] = useState(false);
+
+    const [visible, setVisible] = useState(false);
+
+    const [scannedData, setScannedData] = useState(false);
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -61,7 +83,7 @@ const FriendsScreen = (props) => {
         } else {
             setFriendsList(tmp)
         }
-    }, [props.friends,props.userBib]);
+    }, [props.friends]);
 
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
@@ -74,6 +96,11 @@ const FriendsScreen = (props) => {
     }, []);
 
 
+    function handelAnfageSchickenButtonOnPress() {
+        props.sendFriendRequestDispatch(newFriendUsername)
+        setNewFriendUsername("")
+        setVisible(false)
+    }
 
     const toggleNewFriendOverlay = () => {
         setNewFriendOverlayVisible(!newFriendOverlayVisible);
@@ -102,6 +129,30 @@ const FriendsScreen = (props) => {
         }
     }
 
+    const handlQRCodeScanned = ({ type, data }) => {
+        setScanned(true)
+        setScannedData(data)
+        if (data.split(";")[0] === "OURBOOK") {
+            setVisible(true)
+            setNewFriendUsername(data.split(";")[1])
+        } else {
+            Alert.alert(
+                "Dies ist kein OURBOOK-Nutzer...",
+                "Probiere es nochmal indem du den QR-Code aus dem Profil der Person mit der du ein geteiltes Bücherregal eröffnen möchtest einscannst!",
+                [
+                    {
+                        text: "OK",
+                        onPress: () => setScanned(false)
+                    },
+                ],
+                { cancelable: false }
+            );
+        }
+        //props.getBookByIsbnFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, data)
+        //props.navigation.navigate("book")
+        // alert(`type: ${type} & data: ${data} gescannt`);
+    };
+
     function handelRemoveFriendPress(id) {
         props.deleteFriendDispatch(id)
     }
@@ -128,7 +179,13 @@ const FriendsScreen = (props) => {
     );
 
     return (
-        <View>
+        <View style={{backgroundColor: "#2b2e32", height:"100%"}}>
+            <Header
+                centerComponent={{ text: props.user.username, style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
+                rightComponent={<TouchableOpacity onPress={() => console.log("test")}><Entypo style={{position:"absolute", top: -1.5, right:0}} name="camera" size={30} color="#fdd560"/></TouchableOpacity>}
+                leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate("Profil")}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="#fdd560"/></TouchableOpacity>}
+            />
             <View>
                 <VirtualizedList
                     data={friendsList}
@@ -140,6 +197,22 @@ const FriendsScreen = (props) => {
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />
+            </View>
+            <View>
+                <Text style={{paddingLeft: 10, paddingTop:20}}>QR-Code scannen:</Text>
+                { scannerDa &&
+                    <View style={{alignSelf:"center", marginTop:10,height:250, width: 250, borderWidth:2, borderColor: "#2b2e32"}}>
+                        <BarCodeScanner
+                            onBarCodeScanned={scanned ? undefined : handlQRCodeScanned}
+                            style={StyleSheet.absoluteFillObject}
+                        />
+                    </View>
+                }
+                { !scannerDa &&
+                    <Button title="jetzt scannen" onPress={()=>{setScannerDa(!scannerDa)}} containerStyle={{alignSelf:"center", marginTop:10}} buttonStyle={{height:250, width: 250}}/>
+                }
+                <Text style={{paddingLeft: 10, paddingTop:30}}>über den Nutzernamen:</Text>
+                <Input placeholder="username" value={newFriendUsername} onChangeText={value => setNewFriendUsername(value)} />
             </View>
             <Overlay isVisible={newFriendOverlayVisible} onBackdropPress={toggleNewFriendOverlay}>
                 <View style={{width: 250}}>

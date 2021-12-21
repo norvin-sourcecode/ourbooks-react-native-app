@@ -7,6 +7,7 @@ import {Badge, Button, Overlay} from "react-native-elements";
 import BibScreen from "../screens/mainScreens/home/BibScreen";
 import DropDownPicker from "react-native-dropdown-picker";
 import AddABib from "../modals/AddABib";
+import FriendsScreen from "../screens/mainScreens/profil/FriendsScreen";
 
 const HomeStackScreen1 = (props) => {
 
@@ -20,7 +21,7 @@ const HomeStackScreen1 = (props) => {
 const HomeStackScreen2 = (props) => {
     return (
         <View>
-            <Text navigation={props.navigation}>userbib</Text>
+            <FriendsScreen navigation={props.navigation}/>
         </View>
     );
 }

@@ -1,16 +1,17 @@
-import {ActivityIndicator, Alert, Text, View, StyleSheet, TouchableOpacity} from "react-native";
+import {ActivityIndicator, Alert, Text, View, StyleSheet, TouchableOpacity, VirtualizedList} from "react-native";
 import React, {useEffect, useState} from "react";
 import { connect } from "react-redux";
-import {ButtonGroup, Card, Input, Overlay, Button} from "react-native-elements";
+import {ButtonGroup, Card, Input, Overlay, Button, ListItem, SearchBar} from "react-native-elements";
 import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {BarCodeScanner} from "expo-barcode-scanner";
-import {sendFriendRequest} from "../reducers/appSlice";
+import {getFriends, sendFriendRequest} from "../reducers/appSlice";
 
 const AddABib = (props) => {
 
     const [bIndex, setBIndex] = useState(0);
     const tabs = ['mit einem/er Freund*in', 'mit einer Gruppe']
     const [scannerDa, setScannerDa] = useState(false)
+    const [refreshing, setRefreshing] = useState(false);
 
     const [scanned, setScanned] = useState(false);
 
@@ -18,8 +19,10 @@ const AddABib = (props) => {
 
     const [scannedData, setScannedData] = useState(false);
 
-
+    const [friendsList, setFriendsList] = useState([])
     const [valid, setValid] = useState(false)
+
+    const [search, setSearch] = useState("")
 
     const [newFriendUsername, setNewFriendUsername] = useState("")
 
@@ -27,19 +30,40 @@ const AddABib = (props) => {
     const [newGBibMemberName, setNewGBibMemberName] = useState("")
     const [newGBibMemberNameList, setnewGBibMemberNameList] = useState([])
 
+    const [newGBibMemberIdList, setNewGBibMemberIdList] = useState([])
+
+    const [newGBibMemberId, setNewGBibMemberId] = useState("")
+
     useEffect(()=>{
 
-    },[])
+    },[newGBibMemberIdList])
+
+    useEffect(() => {
+        const tmp = []
+        props.friends.friendsList.map((friend) => {
+            tmp.push(friend)
+        })
+        if (tmp.length === 0) {
+            setFriendsList([{
+                username: "NOFRIENDS99999999999999999999999",
+            }])
+        } else {
+            setFriendsList(tmp)
+        }
+    }, [props.friends]);
+
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        props.getFriendsDispatch()
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
 
     function handelAnfageSchickenButtonOnPress() {
-        if (bIndex === 0) {
-            props.sendFriendRequestDispatch(newFriendUsername)
-            setNewFriendUsername("")
-            setVisible(false)
-        }
-        if (bIndex === 1) {
-            console.log("GBib create ")
-        }
+        console.log("GBib create ")
     }
 
     const handlQRCodeScanned = ({ type, data }) => {
@@ -66,7 +90,36 @@ const AddABib = (props) => {
         // alert(`type: ${type} & data: ${data} gescannt`);
     };
 
+    function getItem (data, index) {
+        return data[index]
+    }
 
+    function getItemCount (data) {
+        return data.length
+    }
+
+    const Item = ({ friend, index}) => (
+        <View key={index + "rerererreererste"}>
+            {friend.username === "NOFRIENDS99999999999999999999999" &&
+                <View style={{height: 450, justifyContent: "center"}}>
+                    <Text style={{alignSelf:"center"}}>keine Freund*innen</Text>
+                </View>
+            }
+            {friend.username !== "NOFRIENDS99999999999999999999999" &&
+                <ListItem key={index + "list-item-freuftfdrdrdddndesliste"} bottomDivider>
+                    <ListItem.Content>
+                        <ListItem.Title>{friend.username}</ListItem.Title>
+                        { !newGBibMemberIdList.includes(friend.id) &&
+                            <Button title="+" onPress={()=>{
+                                setNewGBibMemberIdList([...newGBibMemberIdList, friend.id])
+                            }}
+                            />
+                        }
+                    </ListItem.Content>
+                </ListItem>
+            }
+        </View>
+    );
 
     return (
         <View style={{flex: 1, alignItems: "center", width: "100%", height:"100%"}}>
@@ -86,68 +139,64 @@ const AddABib = (props) => {
                 <View style={{paddingLeft: 10,paddingTop: 30,paddingRight: 10}}>
                     <Text style={{fontWeight:"bold", fontSize:23}}>geteiltes Bücherregal erstellen...</Text>
                 </View>
-                <View style={{width: "100%", paddingTop:10}}>
-                    <ButtonGroup disabled={true} containerStyle={{borderWidth:2, borderColor:"#2b2e32", backgroundColor:"transparent"}} buttonStyle={{backgroundColor:"transparent"}} textStyle={{color: "#2b2e32"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
-                </View>
                 <View style={{width: "100%"}}>
-                    { bIndex === 0 &&
+                    <SearchBar
+                        containerStyle={{alignSelf: "center",paddingRight:3, paddingLeft:3, height:50, backgroundColor: "transparent",paddingTop:24, paddingBottom:20}}
+                        inputStyle={{height:35, color: "white"}}
+                        style={{height:35}}
+                        leftIconContainerStyle={{color: "white"}}
+                        inputContainerStyle={{height:35, backgroundColor:"#565a63"}}
+                        placeholder="suche..."
+                        onChangeText={value => setSearch(value)}
+                        value={search}
+                        platform={"ios"}
+                        cancelButtonTitle="abbrechen"
+                        cancelButtonProps={{color: "#fdd560"}}
+                    />
+                    <View style={{flexDirection:"column", width:"50%"}}>
+                        <Text style={{paddingLeft: 10}}>Mitglieder:</Text>
+                        {newGBibMemberIdList.map((name)=><Text key={name+"key"}>{name}</Text>)}
+                    </View>
                     <View>
-                        <Text style={{paddingLeft: 10, paddingTop:20}}>QR-Code scannen:</Text>
-                        { scannerDa &&
-                            <View style={{alignSelf:"center", marginTop:10,height:250, width: 250, borderWidth:2, borderColor: "#2b2e32"}}>
-                                <BarCodeScanner
-                                    onBarCodeScanned={scanned ? undefined : handlQRCodeScanned}
-                                    style={StyleSheet.absoluteFillObject}
+                        { bIndex === 0 &&
+                            <View>
+                                <VirtualizedList
+                                    data={friendsList}
+                                    initialNumToRender={5}
+                                    renderItem={({item, index}) => <Item friend={item} index={index} />}
+                                    keyExtractor={(item, index)=> 'key'+index+item.username+Math.random()}
+                                    getItemCount={getItemCount}
+                                    getItem={getItem}
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
                                 />
                             </View>
                         }
-                        { !scannerDa &&
-                        <Button title="jetzt scannen" onPress={()=>{setScannerDa(!scannerDa)}} containerStyle={{alignSelf:"center", marginTop:10}} buttonStyle={{height:250, width: 250}}/>
+                        { bIndex === 1 &&
+                            <View>
+                                <Input containerStyle={{paddingTop:10}} placeholder="name" value={newGBibName} onChangeText={value => setNewGBibName(value)} />
+                            </View>
                         }
-                        <Text style={{paddingLeft: 10, paddingTop:30}}>über den Nutzernamen:</Text>
-                        <Input placeholder="username" value={newFriendUsername} onChangeText={value => setNewFriendUsername(value)} />
                     </View>
-                    }
-                    { bIndex === 1 &&
-                    <View>
-                        <Text style={{paddingLeft: 10, paddingTop:20, textDecorationLine:"underline", fontWeight:"bold"}}>erstellen:</Text>
-                        <Input containerStyle={{paddingTop:10}} placeholder="name" value={newGBibName} onChangeText={value => setNewGBibName(value)} />
-                        <View style={{flexDirection:"row", width: "100%"}}>
-                            <View style={{flexDirection:"column", width:"50%"}}>
-                                <Text style={{paddingLeft: 10}}>Mitglieder:</Text>
-                                {newGBibMemberNameList.map((name)=><Text key={name+"key"}>{name}</Text>)}
-                            </View>
-                            <View style={{flexDirection:"column", width: "50%"}}>
-                                <Input style={{width: "50%"}} placeholder="username" value={newGBibMemberName} onChangeText={value => setNewGBibMemberName(value)} />
-                                <Button title="+" onPress={()=>{
-                                    if (newGBibMemberName.length === 0) {
-                                        Alert.alert(
-                                            "kein Nutzername",
-                                            "bitte gib einen Nutzernamen ein!"
-                                        )
-                                    }
-                                    const tmp = newGBibMemberNameList
-                                    tmp.push(newGBibMemberName)
-                                    setnewGBibMemberNameList(tmp)
-                                    setNewGBibMemberName("")
-                                }}/>
-                            </View>
-                        </View>
-                        <Text style={{paddingLeft: 10, paddingTop:30}}>beitreten:</Text>
-                    </View>
-                    }
                 </View>
             </View>
             <View style={{width: "100%", height:"15%", justifyContent: "flex-end"}}>
                 <View style={{width: "100%", padding: 10, paddingTop:5, paddingBottom:12.5}}>
                     <Button
-                        disabled={!valid}
-                        onPress={()=>{handelAnfageSchickenButtonOnPress()}}
+                        onPress={()=>{
+                            if (bIndex ===0 ) {
+                                setBIndex(1)
+                            }
+                            if (bIndex === 1) {
+                                handelAnfageSchickenButtonOnPress()
+                            }
+                        }}
                         titleStyle={{color: "#fdd560", fontWeight: "bold"}}
                         disabledStyle={{backgroundColor:"#c0c0c0"}}
                         disabledTitleStyle={{color:"white"}}
                         buttonStyle={{height: 50,width: "100%", alignSelf: "center", backgroundColor: "#2b2e32"}}
-                        title="los!" />
+                        title={bIndex === 0 ? "weiter" : "los!"}
+                        />
                 </View>
             </View>
         </View>
@@ -156,10 +205,14 @@ const AddABib = (props) => {
 
 const mapStateToProps = state => {
     return {
+        friends: state.appReducer.friends,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
+    getFriendsDispatch() {
+        dispatch(getFriends())
+    },
     sendFriendRequestDispatch(username) {
         dispatch(sendFriendRequest({username: username}))
     },

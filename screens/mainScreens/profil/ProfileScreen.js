@@ -65,7 +65,7 @@ const ProfilScreen = (props) => {
             <Header
                 centerComponent={{ text: props.user.username, style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
-                leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate('profilSettings')}><AntDesign style={{position:"absolute", top: -1.5, left:0}} name="setting" size={30} color="#fdd560"/></TouchableOpacity>}
+                leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate('profilFriends')}><AntDesign style={{position:"absolute", top: -1.5, left:0}} name="adduser" size={30} color="#fdd560"/></TouchableOpacity>}
                 rightComponent={<TouchableOpacity onPress={() => toggleQrCodeOverlay()}><AntDesign style={{position:"absolute", top: -1.5, right:0}} name="qrcode" size={30} color="#fdd560"/></TouchableOpacity>}
             />
             <View style={{ padding:15, flexDirection:"row",justifyContent: "space-evenly"}}>
