@@ -9,7 +9,7 @@ import {
     getFriendById,
     getGBibBooks,
     getProcessById,
-    sendMessage,
+    sendMessage, setProcessDelivered, setProcessReturned,
     setShownBook
 } from "../../../reducers/appSlice";
 import FirebaseInstance from "../../../config/firebase";
@@ -31,7 +31,7 @@ const ProcessScreen = (props) => {
     const [newMessageText, setNewMessageText] = useState("")
 
     const [bIndex, setBIndex] = useState(0);
-    const tabs = ['normale Lizenz','ourbook Licenz']
+    const tabs = ['normale Lizenz', 'ourbook Licenz']
 
     const [qrCodeOverlayVisible, setQrCodeOverlayVisible] = useState(false)
     const [cameraOverlayVisible, setCameraOverlayVisible] = useState(false)
@@ -72,7 +72,13 @@ const ProcessScreen = (props) => {
                     const name = data.username;
                     const avatar = data.avatar;
                     const system = data.system;
-                    msgArr.push({_id:id, text:text, createdAt:createdAt,system:system, user: {_id:userId, avatar:avatar, name:name}});
+                    msgArr.push({
+                        _id: id,
+                        text: text,
+                        createdAt: createdAt,
+                        system: system,
+                        user: {_id: userId, avatar: avatar, name: name}
+                    });
                 });
                 setMessages(msgArr);
                 setLoading(false);
@@ -84,9 +90,56 @@ const ProcessScreen = (props) => {
         };
     }, []);
 
-    const handleQRcodeScanned = ({ type, data }) => {
+    const handleQRcodeScanned = ({type, data}) => {
         setScanned(true);
-        console.log("hallo")
+        if (data.split(";")[0] === "OURBOOK") {
+            if (data.split(";")[3] === "DELIVER") {
+                Alert.alert(
+                    "Übergabe bestätigen?",
+                    "Titel:\n" + props.process.book.titel + "\nLeiher*in:\n" + props.friends.friend.firstname + " " + props.friends.friend.lastname,
+                    [
+                        {
+                            text: "abbrechen",
+                            onPress: () => {
+                                setScanned(false)
+                            }
+                        },
+                        {
+                            text: "OK",
+                            onPress: () => {
+                                props.setProcessDeliveredDispatch(props.process.id)
+                            }
+
+                        },
+                    ],
+                    {cancelable: false}
+                );
+            }
+            if (data.split(";")[3] === "RETURN") {
+                Alert.alert(
+                    "Rückgabe bestätigen?",
+                    "Titel:\n" + props.process.book.titel + "\nLeiher*in:\n" + props.friends.friend.firstname + " " + props.friends.friend.lastname,
+                    [
+                        {
+                            text: "abbrechen",
+                            onPress: () => {
+                                setScanned(false)
+                            }
+                        },
+                        {
+                            text: "OK",
+                            onPress: () => {
+                                props.setProcessReturnedDispatch(props.process.id)
+                            }
+
+                        },
+                    ],
+                    {cancelable: false}
+                );
+            }
+        } else {
+
+        }
         //setVisible(true)
         //props.getBookByIsbnFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, data)
         //props.navigation.navigate("book")
@@ -94,14 +147,14 @@ const ProcessScreen = (props) => {
     };
 
     function erhoehen() {
-        if (counter < 4) {
-            setCounter(counter+1)
+        if (counter < 6) {
+            setCounter(counter + 1)
         }
     }
 
     function verringern() {
         if (counter > 0) {
-            setCounter(counter-1)
+            setCounter(counter - 1)
         }
     }
 
@@ -120,17 +173,22 @@ const ProcessScreen = (props) => {
     };
 
     function UserQR() {
-        return <SvgQRCode value={"OURBOOK;"+props.user.username+";"+props.user.id} />;
+        if (props.process.status === 1) {
+            return <SvgQRCode value={"OURBOOK;" + props.user.username + ";" + props.user.id + ";" + "DELIVER"}/>;
+        }
+        if (props.process.status === 2) {
+            return <SvgQRCode value={"OURBOOK;" + props.user.username + ";" + props.user.id + ";" + "RETURN"}/>;
+        }
     }
 
     const wochenSchreibweise = () => {
         return counter > 1 ? "n" : ""
     }
 
-    const verleihButtonOnPress = () =>{
+    const verleihButtonOnPress = () => {
         Alert.alert(
             "Buch verleihen",
-            "Möchten Sie das Buch wiklich für "+counter+" Woche"+wochenSchreibweise()+" an "+props.friends.friend.firstname+" "+props.friends.friend.lastname+" verleihen?",
+            "Möchten Sie das Buch wiklich für " + counter + " Woche" + wochenSchreibweise() + " an " + props.friends.friend.firstname + " " + props.friends.friend.lastname + " verleihen?",
             [
                 {
                     text: "abbrechen",
@@ -138,14 +196,20 @@ const ProcessScreen = (props) => {
                 {
                     text: "OK",
                     onPress: () => {
-                        props.agreePocessDispatch(false,[],true,counter,props.process.id)
+                        props.agreePocessDispatch(false, [], true, counter, props.process.id)
                     }
 
                 },
             ],
-            { cancelable: false }
+            {cancelable: false}
         );
     }
+
+    // const renderSystemMessage = () => {
+    //     return (
+    //
+    //     )
+    // }
 
     const renderChatFooter = () => {
 
@@ -197,11 +261,11 @@ const ProcessScreen = (props) => {
                 rightComponent={
                     <View>
                     {
-                    props.process.status === 1 && props.process.bookReceiver === props.user.id &&
+                    (props.process.status === 1 || props.process.status === 2) && props.process.bookReceiver === props.user.id &&
                     <TouchableOpacity onPress={() => toggleQrCodeOverlay()}><AntDesign style={{position:"absolute", top: -1.5, right:0}} name="qrcode" size={30} color="#fdd560"/></TouchableOpacity>
                     }
                     {
-                    props.process.status === 1 && props.process.bookGiver === props.user.id &&
+                    (props.process.status === 1 || props.process.status === 2) && props.process.bookGiver === props.user.id &&
                     <TouchableOpacity onPress={() => toggleCameraOverlay()}><Entypo style={{position:"absolute", top: -1.5, right:0}} name="camera" size={30} color="#fdd560"/></TouchableOpacity>
                     }
                 </View> }
@@ -212,7 +276,7 @@ const ProcessScreen = (props) => {
                 </View>
             </Overlay>
             <Overlay isVisible={cameraOverlayVisible} onBackdropPress={toggleCameraOverlay} overlayStyle={{height: "50%", width: "90%"}}>
-                <View style={{borderColor: "white", borderWidth:3, flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
+                <View style={{borderColor: "white", borderWidth:1, flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
                     <BarCodeScanner
                         onBarCodeScanned={scanned ? undefined : handleQRcodeScanned}
                         style={StyleSheet.absoluteFillObject}
@@ -223,6 +287,7 @@ const ProcessScreen = (props) => {
                 messages={messages}
                 onSend={arr => onSend(arr)}
                 renderChatFooter={renderChatFooter}
+             //   renderSystemMessage={renderSystemMessage}
                 user={{
                     _id: props.user.id,
                     name: props.user.username,
@@ -242,6 +307,12 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+    setProcessDeliveredDispatch(id) {
+        dispatch(setProcessDelivered({id:id}))
+    },
+    setProcessReturnedDispatch(id) {
+        dispatch(setProcessReturned({id:id}))
+    },
     getProcessByIdDispatch(id) {
         dispatch(getProcessById({id:id}))
     },

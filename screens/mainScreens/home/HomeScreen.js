@@ -140,7 +140,7 @@ const HomeScreen = (props) => {
                             <VirtualizedList
                                 data={data2}
                                 initialNumToRender={4}
-                                renderItem={({item, index}) => <Text navigation={props.navigation}>{item.user.username} hat jetzt {item.book.titel}</Text>}
+                                renderItem={({item, index}) => <Text navigation={props.navigation}>{item.message}</Text>}
                                 keyExtractor={(item, index)=> 'key'+index+item.id}
                                 getItemCount={getItemCount}
                                 getItem={getItem}

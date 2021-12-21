@@ -149,6 +149,24 @@ export const register = createAsyncThunk(
     }
 )
 
+export const sendPushToken = createAsyncThunk(
+    'app/sendPushToken',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .post(tmpState.appReducer.communication.urlBase+"/user/pushToken/"+data.pushToken,null, tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
 export const getUser = createAsyncThunk(
     'app/getUser',
     async (data, { rejectWithValue, getState }) => {
@@ -740,6 +758,42 @@ export const agreeProcess= createAsyncThunk(
                     returnToGiver: data.returnToGiver,
                     weeksUsageTime: data.weeksUsageTime,
                 } ,tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const setProcessDelivered = createAsyncThunk(
+    'app/setProcessDelivered',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/process/delivered/"+data.id,tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const setProcessReturned = createAsyncThunk(
+    'app/setProcessReturned',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/process/returned/"+data.id,tmpState.appReducer.communication.conf)
             return response.data
         } catch (err) {
             let error = err
@@ -1412,6 +1466,56 @@ const appSlice = createSlice({
             state.process.needReload = false
         },
         [getProcessById.rejected]: (state, action ) => {
+            state.process.loaded = false
+            state.process.loading = false
+            state.process.error = action.payload
+            state.process.needReload = false
+        },
+        [setProcessDelivered.pending]: (state) => {
+            state.process.loaded = false
+            state.process.loading = true
+            state.process.error = null
+            state.process.needReload = false
+        },
+        [setProcessDelivered.fulfilled]: (state, { payload }) => {
+            state.process.loaded = true
+            state.process.loading = false
+            state.process.error = null
+            state.process.book = payload.book
+            state.process.bookGiver = payload.bookGiver
+            state.process.bookReceiver = payload.bookReceiver
+            state.process.giveDate = payload.giveDate
+            state.process.id = payload.id
+            state.process.returnDate = payload.returnDate
+            state.process.status = payload.status
+            state.process.needReload = false
+        },
+        [setProcessDelivered.rejected]: (state, action ) => {
+            state.process.loaded = false
+            state.process.loading = false
+            state.process.error = action.payload
+            state.process.needReload = false
+        },
+        [setProcessReturned.pending]: (state) => {
+            state.process.loaded = false
+            state.process.loading = true
+            state.process.error = null
+            state.process.needReload = false
+        },
+        [setProcessReturned.fulfilled]: (state, { payload }) => {
+            state.process.loaded = true
+            state.process.loading = false
+            state.process.error = null
+            state.process.book = payload.book
+            state.process.bookGiver = payload.bookGiver
+            state.process.bookReceiver = payload.bookReceiver
+            state.process.giveDate = payload.giveDate
+            state.process.id = payload.id
+            state.process.returnDate = payload.returnDate
+            state.process.status = payload.status
+            state.process.needReload = false
+        },
+        [setProcessReturned.rejected]: (state, action ) => {
             state.process.loaded = false
             state.process.loading = false
             state.process.error = action.payload

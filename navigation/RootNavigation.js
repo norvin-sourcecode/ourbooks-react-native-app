@@ -26,7 +26,7 @@ import LoginScreen from "../screens/authScreens/LoginScreen";
 import RegisterScreen from "../screens/authScreens/RegisterScreen";
 import ResetPasswordScreen from "../screens/authScreens/ResetPasswordScreen";
 import {BottomSheet, ListItem, Overlay, SpeedDial, Button} from "react-native-elements";
-import {firebaseLoginFailure, firebaseLoginSuccess, setLoaded} from "../reducers/appSlice";
+import {firebaseLoginFailure, firebaseLoginSuccess, sendPushToken, setLoaded} from "../reducers/appSlice";
 import FirebaseInstance from "../config/firebase";
 import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import AddABib from "../modals/AddABib";
@@ -241,7 +241,10 @@ const RootNavigation = (props) =>{
                     props.firebaseLoginFailureDispatch()
                     console.log(err)
                 })
-            registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+            registerForPushNotificationsAsync().then(token => {
+                setExpoPushToken(token)
+                props.sendPushTokenDispatch(token)
+            });
 
             notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
                 setNotification(notification);
@@ -391,6 +394,9 @@ async function registerForPushNotificationsAsync() {
 }
 
 const mapDispatchToProps = dispatch => ({
+    sendPushTokenDispatch(pushToken) {
+        dispatch(sendPushToken({pushToken:pushToken}))
+    },
     setLoadedDispatch(value) {
         dispatch(setLoaded(value))
     },
