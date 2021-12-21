@@ -77,6 +77,8 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 * [Expo](https://expo.dev/)
 * [Redux](https://redux.js.org/)
 * [Redux-Toolkit](https://redux-toolkit.js.org/)
+* [Firebase](https://firebase.google.com/)
+* [Webpack-Babel](https://webpack.js.org/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
