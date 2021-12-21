@@ -7,7 +7,7 @@ import {BarCodeScanner} from "expo-barcode-scanner";
 import {getFriends, sendFriendRequest} from "../reducers/appSlice";
 
 const AddABib = (props) => {
-
+    //testcommit gitmigiration
     const [bIndex, setBIndex] = useState(0);
     const tabs = ['mit einem/er Freund*in', 'mit einer Gruppe']
     const [scannerDa, setScannerDa] = useState(false)
