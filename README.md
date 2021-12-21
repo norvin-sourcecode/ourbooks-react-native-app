@@ -1,6 +1,6 @@
 <div id="top"></div>
 
-[![Contributors][contributors-shield]][contributors-url]
+[![Contributors][contributors-shield]][https://github.com/MalikLuc]
 [![Forks][forks-shield]][forks-url]
 [![Issues][issues-shield]][issues-url]
 
