@@ -95,7 +95,6 @@ const LoginScreen = (props) => {
         <SafeAreaView style={{backgroundColor: "#2b2e32"}}>
             <KeyboardAwareScrollView
                 extraHeight={130}
-                enableOnAndroid={true}
                 resetScrollToCoords={{ x: 0, y: 0 }}
                 scrollEnabled={false}
                 contentContainerStyle={{height: "100%"}}

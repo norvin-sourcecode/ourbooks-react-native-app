@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import {ButtonGroup, Card, Input, Overlay, Button, ListItem, SearchBar} from "react-native-elements";
 import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {BarCodeScanner} from "expo-barcode-scanner";
-import {getFriends, sendFriendRequest} from "../reducers/appSlice";
+import {createNewGBib, getFriends, sendFriendRequest} from "../reducers/appSlice";
 
 const AddABib = (props) => {
     //testcommit gitmigiration
@@ -63,7 +63,9 @@ const AddABib = (props) => {
     }, []);
 
     function handelAnfageSchickenButtonOnPress() {
-        console.log("GBib create ")
+        props.createNewGBibDispatch(newGBibName,props.user.id, newGBibMemberIdList)
+        props.navigation.navigate('main')
+        console.log("test")
     }
 
     const handlQRCodeScanned = ({ type, data }) => {
@@ -82,7 +84,9 @@ const AddABib = (props) => {
                         onPress: () => setScanned(false)
                     },
                 ],
-                { cancelable: false }
+                {
+                    cancelable: false
+                }
             );
         }
         //props.getBookByIsbnFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, data)
@@ -140,26 +144,26 @@ const AddABib = (props) => {
                     <Text style={{fontWeight:"bold", fontSize:23}}>geteiltes Bücherregal erstellen...</Text>
                 </View>
                 <View style={{width: "100%"}}>
-                    <SearchBar
-                        containerStyle={{alignSelf: "center",paddingRight:3, paddingLeft:3, height:50, backgroundColor: "transparent",paddingTop:24, paddingBottom:20}}
-                        inputStyle={{height:35, color: "white"}}
-                        style={{height:35}}
-                        leftIconContainerStyle={{color: "white"}}
-                        inputContainerStyle={{height:35, backgroundColor:"#565a63"}}
-                        placeholder="suche..."
-                        onChangeText={value => setSearch(value)}
-                        value={search}
-                        platform={"ios"}
-                        cancelButtonTitle="abbrechen"
-                        cancelButtonProps={{color: "#fdd560"}}
-                    />
-                    <View style={{flexDirection:"column", width:"50%"}}>
-                        <Text style={{paddingLeft: 10}}>Mitglieder:</Text>
-                        {newGBibMemberIdList.map((name)=><Text key={name+"key"}>{name}</Text>)}
-                    </View>
                     <View>
                         { bIndex === 0 &&
                             <View>
+                                <SearchBar
+                                    containerStyle={{alignSelf: "center",paddingRight:3, paddingLeft:3, height:50, backgroundColor: "transparent",paddingTop:24, paddingBottom:20}}
+                                    inputStyle={{height:35, color: "white"}}
+                                    style={{height:35}}
+                                    leftIconContainerStyle={{color: "white"}}
+                                    inputContainerStyle={{height:35, backgroundColor:"#565a63"}}
+                                    placeholder="suche..."
+                                    onChangeText={value => setSearch(value)}
+                                    value={search}
+                                    platform={"ios"}
+                                    cancelButtonTitle="abbrechen"
+                                    cancelButtonProps={{color: "#fdd560"}}
+                                />
+                                <View style={{flexDirection:"column", width:"50%"}}>
+                                    <Text style={{paddingLeft: 10}}>Mitglieder:</Text>
+                                    {newGBibMemberIdList.map((name)=><Text key={name+"key"}>{name}</Text>)}
+                                </View>
                                 <VirtualizedList
                                     data={friendsList}
                                     initialNumToRender={5}
@@ -206,6 +210,7 @@ const AddABib = (props) => {
 const mapStateToProps = state => {
     return {
         friends: state.appReducer.friends,
+        user: state.appReducer.user
     }
 }
 
@@ -216,6 +221,9 @@ const mapDispatchToProps = dispatch => ({
     sendFriendRequestDispatch(username) {
         dispatch(sendFriendRequest({username: username}))
     },
+    createNewGBibDispatch(name,owner,members) {
+        dispatch(createNewGBib({name: name, bookclubOwner: owner, bookclubMembers: members}))
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddABib)

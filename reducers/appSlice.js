@@ -692,6 +692,24 @@ export const sendMessage = createAsyncThunk(
     }
 )
 
+export const createNewGBib = createAsyncThunk(
+    'app/createNewGBib',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .post(tmpState.appReducer.communication.urlBase+"/bookclub/createNew", {id:1, name: data.name, bookclubOwner: data.bookclubOwner, bookclubMembers: data.bookclubMembers},tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
 export const getHelperForHomeListFriends = createAsyncThunk(
     'app/getHelperForHomeListFriends',
     async (data, { rejectWithValue, getState }) => {
@@ -1520,6 +1538,22 @@ const appSlice = createSlice({
             state.process.loading = false
             state.process.error = action.payload
             state.process.needReload = false
+        },
+        [createNewGBib.pending]: (state) => {
+            state.bib.loaded = false
+            state.bib.loading = true
+            state.bib.error = null
+        },
+        [createNewGBib.fulfilled]: (state, { payload }) => {
+            state.bib.loaded = true
+            state.bib.loading = false
+            state.bib.error = null
+            state.bibs.loaded = false
+        },
+        [createNewGBib.rejected]: (state, action ) => {
+            state.bib.loaded = false
+            state.bib.loading = false
+            state.bib.error = action.payload
         },
     },
 })
