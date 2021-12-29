@@ -181,22 +181,22 @@ const FriendsScreen = (props) => {
     return (
         <View style={{backgroundColor: "#2b2e32", height:"100%"}}>
             <Header
-                centerComponent={{ text: props.user.username, style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                centerComponent={{ text: "Freund*in hinzufügen", style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
                 rightComponent={<TouchableOpacity onPress={() => console.log("test")}><Entypo style={{position:"absolute", top: -1.5, right:0}} name="camera" size={30} color="#fdd560"/></TouchableOpacity>}
                 leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate("Profil")}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="#fdd560"/></TouchableOpacity>}
             />
             <View>
-                <VirtualizedList
-                    data={friendsList}
-                    initialNumToRender={5}
-                    renderItem={({item, index}) => <Item friend={item} index={index} />}
-                    keyExtractor={(item, index)=> 'key'+index+item.id}
-                    getItemCount={getItemCount}
-                    getItem={getItem}
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                />
+                {/*<VirtualizedList*/}
+                {/*    data={friendsList}*/}
+                {/*    initialNumToRender={5}*/}
+                {/*    renderItem={({item, index}) => <Item friend={item} index={index} />}*/}
+                {/*    keyExtractor={(item, index)=> 'key'+index+item.id}*/}
+                {/*    getItemCount={getItemCount}*/}
+                {/*    getItem={getItem}*/}
+                {/*    refreshing={refreshing}*/}
+                {/*    onRefresh={onRefresh}*/}
+                {/*/>*/}
             </View>
             <View>
                 <Text style={{paddingLeft: 10, paddingTop:20}}>QR-Code scannen:</Text>

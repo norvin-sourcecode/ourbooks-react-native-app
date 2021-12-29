@@ -5,6 +5,7 @@ import {addBookToUserBib, getBookByIsbn, saveBook, sendFriendRequest} from "../r
 import {ButtonGroup, Card, Input, Overlay} from "react-native-elements";
 import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {BarCodeScanner} from "expo-barcode-scanner";
+import SearchOnlineForBook from "../components/searchOnlineForBook";
 
 const AddABookToSaved = (props) => {
 
@@ -76,19 +77,24 @@ const AddABookToSaved = (props) => {
         <View style={{flex: 1, alignItems: "center", width: "100%"}}>
             <View style={{width: "100%",height:"90%"}}>
                 { howToAddIndex === 0 &&
-                <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', width: "100%"}}>
-                    <BarCodeScanner
-                        onBarCodeScanned={scanned ? undefined : handleISBNscanned}
-                        style={StyleSheet.absoluteFillObject}
-                    />
-                    <View style={{position: "absolute", top: "2%", left: "2%"}}>
-                        <View>
-                            <Text onPress={() => props.navigation.navigate('main')} style={{color: "#fdd560", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
+                    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', width: "100%"}}>
+                        <BarCodeScanner
+                            onBarCodeScanned={scanned ? undefined : handleISBNscanned}
+                            style={StyleSheet.absoluteFillObject}
+                        />
+                        <View style={{position: "absolute", top: "2%", left: "2%"}}>
+                            <View>
+                                <Text onPress={() => props.navigation.navigate('main')} style={{color: "#fdd560", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
+                            </View>
+                        </View>
+                        <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "#fdd560"}}>
                         </View>
                     </View>
-                    <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "#fdd560"}}>
+                }
+                {howToAddIndex === 1 &&
+                    <View>
+                        <SearchOnlineForBook />
                     </View>
-                </View>
                 }
             </View>
             <View style={{ width: "100%", height: "10%", justifyContent: "center"}}>
@@ -96,44 +102,44 @@ const AddABookToSaved = (props) => {
             </View>
             <Overlay isVisible={visible} overlayStyle={{backgroundColor: "transparent"}} >
                 {props.book.loading &&
-                <View style={{flex: 1, justifyContent: 'center', alignItems: "center", backgroundColor: "transparent"}}>
-                    <ActivityIndicator size='large' />
-                </View>
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: "center", backgroundColor: "transparent"}}>
+                        <ActivityIndicator size='large' />
+                    </View>
                 }
                 {!props.book.loading &&
-                <View style={{backgroundColor: "white"}}>
-                    <View style={{position: "absolute", flexDirection: "row", justifyContent: "space-between", width: "100%", top: -17.5}} >
-                        <TouchableOpacity style={{left: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={()=>{setVisible(false)}}>
-                            <AntDesign name="closecircle" size={35} color="darkred"/>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{right: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={() => {handelSavedBookPressed(props.book)}}>
-                            <AntDesign name="checkcircle" size={35} color="darkgreen" />
-                        </TouchableOpacity>
-                    </View>
-                    <View>
-                        <Card containerStyle={{alignSelf: "center", padding:0}}>
-                            <Card.Image style={{alignSelf: "center",width: 128, height:200}}  resizeMode="cover" source={{url:props.book.pictureUrl}}/>
-                        </Card>
-                        <Text numberOfLines={1} adjustsFontSizeToFit={true}  style={{ flexWrap: "nowrap",alignSelf: "center",fontWeight: "bold", fontSize: 20, paddingTop:10}}>{props.book.titel}</Text>
-                        <Text style={{paddingTop: 5, alignSelf: "center", color: "grey"}}>ISBN: {props.book.isbn}</Text>
-                        <View style={{padding: 15}}>
-                            <View style={{flexDirection: "column"}}>
-                                <View style={{flexDirection: "row",justifyContent: "space-between"}}>
-                                    <Text style={{textDecorationLine: 'underline'}}>Author*in:</Text>
-                                    <Text style={{ fontWeight: "bold"}}>{props.book.authorName}</Text>
-                                </View>
-                                <View style={{flexDirection: "row",justifyContent: "space-between"}}>
-                                    <Text style={{textDecorationLine: 'underline'}}>Sprache:</Text>
-                                    <Text style={{ fontWeight: "bold"}}>{props.book.sprache}</Text>
-                                </View>
-                                <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                                    <Text style={{textDecorationLine: 'underline'}}>Erscheinungsdatum:</Text>
-                                    <Text style={{ fontWeight: "bold"}}>{props.book.erscheinungsDatum}</Text>
+                    <View style={{backgroundColor: "white"}}>
+                        <View style={{position: "absolute", flexDirection: "row", justifyContent: "space-between", width: "100%", top: -17.5}} >
+                            <TouchableOpacity style={{left: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={()=>{setVisible(false)}}>
+                                <AntDesign name="closecircle" size={35} color="darkred"/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{right: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={() => {handelSavedBookPressed(props.book)}}>
+                                <AntDesign name="checkcircle" size={35} color="darkgreen" />
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <Card containerStyle={{alignSelf: "center", padding:0}}>
+                                <Card.Image style={{alignSelf: "center",width: 128, height:200}}  resizeMode="cover" source={{url:props.book.pictureUrl}}/>
+                            </Card>
+                            <Text numberOfLines={1} adjustsFontSizeToFit={true}  style={{ flexWrap: "nowrap",alignSelf: "center",fontWeight: "bold", fontSize: 20, paddingTop:10}}>{props.book.titel}</Text>
+                            <Text style={{paddingTop: 5, alignSelf: "center", color: "grey"}}>ISBN: {props.book.isbn}</Text>
+                            <View style={{padding: 15}}>
+                                <View style={{flexDirection: "column"}}>
+                                    <View style={{flexDirection: "row",justifyContent: "space-between"}}>
+                                        <Text style={{textDecorationLine: 'underline'}}>Author*in:</Text>
+                                        <Text style={{ fontWeight: "bold"}}>{props.book.authorName}</Text>
+                                    </View>
+                                    <View style={{flexDirection: "row",justifyContent: "space-between"}}>
+                                        <Text style={{textDecorationLine: 'underline'}}>Sprache:</Text>
+                                        <Text style={{ fontWeight: "bold"}}>{props.book.sprache}</Text>
+                                    </View>
+                                    <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                        <Text style={{textDecorationLine: 'underline'}}>Erscheinungsdatum:</Text>
+                                        <Text style={{ fontWeight: "bold"}}>{props.book.erscheinungsDatum}</Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
                     </View>
-                </View>
                 }
             </Overlay>
         </View>

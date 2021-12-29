@@ -125,6 +125,22 @@ const initialState = {
         loading: false,
         error: null,
         activityFeed: []
+    },
+    search: {
+        search1: {
+            loaded: false,
+            loading: false,
+            error: null,
+            searchResultsList: [],
+            searchResultsPage: 1
+        },
+        search2: {
+            loaded: false,
+            loading: false,
+            error: null,
+            searchResultsList: [],
+            searchResultsPage: 1
+        },
     }
 }
 
@@ -174,6 +190,24 @@ export const getUser = createAsyncThunk(
             const tmpState = getState()
             const response = await axios
                 .get(tmpState.appReducer.communication.urlBase+"/user", tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const searchBookByTitle = createAsyncThunk(
+    'app/searchBookByTitle',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/books/searchOnlineTitle/+"+data.title, tmpState.appReducer.communication.conf)
             return response.data
         } catch (err) {
             let error = err
@@ -698,7 +732,7 @@ export const createNewGBib = createAsyncThunk(
         try {
             const tmpState = getState()
             const response = await axios
-                .post(tmpState.appReducer.communication.urlBase+"/bookclub/createNew", {id:1, name: data.name, bookclubOwner: data.bookclubOwner, bookclubMembers: data.bookclubMembers},tmpState.appReducer.communication.conf)
+                .post(tmpState.appReducer.communication.urlBase+"/bookclub/createNew", {id:Math.random(), name: data.name, bookclubOwner: data.bookclubOwner, bookclubMembers: data.bookclubMembers},tmpState.appReducer.communication.conf)
             return response.data
         } catch (err) {
             let error = err
@@ -882,6 +916,26 @@ const appSlice = createSlice({
             state.bib.bookclubOwner = action.payload.bookclubOwner
             state.bib.bookclubMembers = action.payload.bookclubMembers
         },
+        clearSearch: (state, action) => {
+            if (action.payload.searchNumber === 1){
+                state.search.search1 = {
+                    loaded: false,
+                    loading: false,
+                    error: null,
+                    searchResultsList: [],
+                    searchResultsPage: 1
+                }
+            }
+            if (action.payload.searchNumber === 2){
+                state.search.search2 = {
+                    loaded: false,
+                    loading: false,
+                    error: null,
+                    searchResultsList: [],
+                    searchResultsPage: 1
+                }
+            }
+        }
     },
     extraReducers: {
         [register.pending]: (state) => {
@@ -1555,6 +1609,22 @@ const appSlice = createSlice({
             state.bib.loading = false
             state.bib.error = action.payload
         },
+        [searchBookByTitle.pending]: (state) => {
+            state.search.search1.loaded = false
+            state.search.search1.loading = true
+            state.search.search1.error = null
+        },
+        [searchBookByTitle.fulfilled]: (state, { payload }) => {
+            state.search.search1.loaded = true
+            state.search.search1.loading = false
+            state.search.search1.error = null
+            state.search.search1.searchResultsList = payload
+        },
+        [searchBookByTitle.rejected]: (state, action ) => {
+            state.search.search1.loaded = false
+            state.search.search1.loading = false
+            state.search.search1.error = action.payload
+        },
     },
 })
 
@@ -1567,7 +1637,8 @@ export const {
     setShownProcess,
     clearStatesForLogout,
     firebaseLoginSuccess,
-    firebaseLoginFailure
+    firebaseLoginFailure,
+    clearSearch
 } = appSlice.actions
 
 export default appSlice.reducer
