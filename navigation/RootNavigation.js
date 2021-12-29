@@ -28,7 +28,6 @@ import ResetPasswordScreen from "../screens/authScreens/ResetPasswordScreen";
 import {BottomSheet, ListItem, Overlay, SpeedDial, Button} from "react-native-elements";
 import {firebaseLoginFailure, firebaseLoginSuccess, sendPushToken, setLoaded} from "../reducers/appSlice";
 import FirebaseInstance from "../config/firebase";
-import { CurvedBottomBar } from 'react-native-curved-bottom-bar';
 import AddABib from "../modals/AddABib";
 import * as PropTypes from "prop-types";
 import Constants from 'expo-constants';
