@@ -8,7 +8,7 @@ import {Button, Input, Overlay} from "react-native-elements";
 import {register} from "../../reducers/appSlice";
 
 const RegisterScreen = (props) => {
-    //comment
+    //feed
     const [username, setUsername] = useState("")
     const [firstname, setFirstname] = useState("")
     const [lastname, setLastname] = useState("")
