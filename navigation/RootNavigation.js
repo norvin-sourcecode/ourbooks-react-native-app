@@ -15,8 +15,6 @@ import { createNativeStackNavigator} from "@react-navigation/native-stack";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {Entypo, FontAwesome, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {connect} from "react-redux";
-import AddABookToUserBib from "../modals/AddABookToUserBib";
-import AddABookToSaved from "../modals/AddABookToSaved";
 import Book from "../modals/Book";
 import HomeStackScreen from "./HomeStackScreen";
 import SavedStackScreen from "./SavedStackScreen";
@@ -33,6 +31,7 @@ import * as PropTypes from "prop-types";
 import Constants from 'expo-constants';
 import * as Notifications from "expo-notifications";
 import ProcessScreen from "../screens/mainScreens/inbox/ProcessScreen";
+import AddABook from "../modals/AddABook";
 
 const AppTabs = createBottomTabNavigator();
 
@@ -175,13 +174,13 @@ const AppTabsScreen = (props) => {
 
 function AddBookToUserBibModalScreen({ navigation }) {
     return (
-        <AddABookToUserBib navigation={navigation} />
+        <AddABook navigation={navigation} addTarget={1} />
     );
 }
 
 function AddBookToSavedModalScreen({ navigation }) {
     return (
-        <AddABookToSaved navigation={navigation} />
+        <AddABook navigation={navigation} addTarget={2}  />
     );
 }
 

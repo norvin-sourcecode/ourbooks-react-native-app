@@ -7,18 +7,10 @@ import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {BarCodeScanner} from "expo-barcode-scanner";
 import Search from "../components/Search";
 
-const AddABookToSaved = (props) => {
-
-    const [newBookTitel, setNewBookTitel] = useState("");
-    const [newBookAuthorName, setNewBookAuthorName] = useState("");
-    const [newBookErscheinungsDatum, setNewBookErscheinungsDatum] = useState("");
-    const [newBookAuflage, setNewBookAuflage] = useState("");
-    const [newBookSprache, setNewBookSprache] = useState("");
-    const [newBookIsbn, setNewBookIsbn] = useState("");
+const AddABook = (props) => {
 
     const [howToAddIndex, setHowToAddIndexIndex] = useState(0);
-
-    const howToAddButtons = ['ISBN scannen', 'online suchen', 'manuell eingeben']
+    const howToAddButtons = ['ISBN scannen', 'online suchen']
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -40,9 +32,6 @@ const AddABookToSaved = (props) => {
         setScanned(true);
         props.getBookByIsbnDispatch(data)
         setVisible(true)
-        //props.getBookByIsbnFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, data)
-        //props.navigation.navigate("book")
-        // alert(`type: ${type} & data: ${data} gescannt`);
     };
 
     function handelSavedBookPressed(book) {
@@ -66,6 +55,30 @@ const AddABookToSaved = (props) => {
         }
     }
 
+    function handelAddBookToUserBibPressed(book) {
+        if(props.userBib.booksList.some(book => book.isbn === props.book.isbn)){
+            Alert.alert(
+                "Dieses Buch ist schon im Nutzer-Bücherregal vorhanden...",
+                "Möchten Sie wiklich ein zweites Exemplar hinzufügen?",
+                [
+                    {
+                        text: "abbrechen",
+                        onPress: () => setVisible(false)
+                    },
+                    {
+                        text: "OK",
+                        onPress: () => props.addBookToUserBibDispatch(book)
+
+                    },
+                ],
+                { cancelable: false }
+            );
+        } else{
+            props.addBookToUserBibDispatch(book)
+            setVisible(false)
+        }
+    }
+
     if (hasPermission === null) {
         return <Text>Kamerazugriff wird angefragt</Text>;
     }
@@ -75,7 +88,7 @@ const AddABookToSaved = (props) => {
 
     return (
         <View style={{flex: 1, alignItems: "center", width: "100%"}}>
-            <View style={{width: "100%",height:"90%"}}>
+            <View style={{width: "100%",height:"100%"}}>
                 { howToAddIndex === 0 &&
                     <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', width: "100%"}}>
                         <BarCodeScanner
@@ -89,16 +102,26 @@ const AddABookToSaved = (props) => {
                         </View>
                         <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "#fdd560"}}>
                         </View>
+                        <View style={{ width: "100%", height: "10%", top: "46%"}}>
+                            <ButtonGroup containerStyle={{ borderWidth:0}} buttonStyle={{backgroundColor:"#2b2e32", borderWidth:0}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />
+                        </View>
                     </View>
                 }
                 {howToAddIndex === 1 &&
-                    <View>
-                        <Search searchTargetKind={1} />
+                    <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center', width: "100%"}}>
+                        <View style={{position: "absolute", top: "2%", left: "2%"}}>
+                            <View>
+                                <Text onPress={() => props.navigation.navigate('main')} style={{color: "#2b2e32", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
+                            </View>
+                        </View>
+                        <View style={{ width: "100%", height: "90%",paddingTop:"12.5%"}}>
+                            <Search searchTargetKind={1} />
+                        </View>
+                        <View style={{ width: "100%", height: "10%", justifyContent: "center", backgroundColor: "transparent"}}>
+                            <ButtonGroup containerStyle={{ borderWidth:0}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />
+                        </View>
                     </View>
                 }
-            </View>
-            <View style={{ width: "100%", height: "10%", justifyContent: "center"}}>
-                <ButtonGroup buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />
             </View>
             <Overlay isVisible={visible} overlayStyle={{backgroundColor: "transparent"}} >
                 {props.book.loading &&
@@ -109,10 +132,21 @@ const AddABookToSaved = (props) => {
                 {!props.book.loading &&
                     <View style={{backgroundColor: "white"}}>
                         <View style={{position: "absolute", flexDirection: "row", justifyContent: "space-between", width: "100%", top: -17.5}} >
-                            <TouchableOpacity style={{left: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={()=>{setVisible(false)}}>
+                            <TouchableOpacity style={{left: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={()=>{
+                                setVisible(false)
+                                setScanned(false)
+                            }}>
                                 <AntDesign name="closecircle" size={35} color="darkred"/>
                             </TouchableOpacity>
-                            <TouchableOpacity style={{right: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={() => {handelSavedBookPressed(props.book)}}>
+                            <TouchableOpacity style={{right: -17.5,height: 35, width: 35, borderRadius: 17.5, backgroundColor: "white"}} onPress={() => {
+                                if (props.addTarget === 1) { //1 = addToUserBib
+                                    handelAddBookToUserBibPressed(props.book)
+                                }
+                                if (props.addTarget === 2) { //2 = addToSaved
+                                    handelSavedBookPressed(props.book)
+                                }
+                                setScanned(false)
+                            }}>
                                 <AntDesign name="checkcircle" size={35} color="darkgreen" />
                             </TouchableOpacity>
                         </View>
@@ -150,6 +184,7 @@ const mapStateToProps = state => {
     return {
         book: state.appReducer.book,
         saved: state.appReducer.saved,
+        userBib: state.appReducer.userBib,
     }
 }
 
@@ -160,6 +195,9 @@ const mapDispatchToProps = dispatch => ({
     saveBookDispatch(isbn) {
         dispatch(saveBook({isbn: isbn}))
     },
+    addBookToUserBibDispatch(book) {
+        dispatch(addBookToUserBib({book: book}))
+    }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddABookToSaved)
+export default connect(mapStateToProps, mapDispatchToProps)(AddABook)
