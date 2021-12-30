@@ -188,7 +188,6 @@ const CustomListItem = (props) => {
                         </TouchableOpacity>
                     </View>
                 }
-
             </Card>
         </View>
     )

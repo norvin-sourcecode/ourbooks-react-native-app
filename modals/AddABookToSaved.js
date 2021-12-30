@@ -5,7 +5,7 @@ import {addBookToUserBib, getBookByIsbn, saveBook, sendFriendRequest} from "../r
 import {ButtonGroup, Card, Input, Overlay} from "react-native-elements";
 import {AntDesign, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {BarCodeScanner} from "expo-barcode-scanner";
-import SearchOnlineForBook from "../components/searchOnlineForBook";
+import Search from "../components/Search";
 
 const AddABookToSaved = (props) => {
 
@@ -93,7 +93,7 @@ const AddABookToSaved = (props) => {
                 }
                 {howToAddIndex === 1 &&
                     <View>
-                        <SearchOnlineForBook />
+                        <Search searchTargetKind={1} />
                     </View>
                 }
             </View>
