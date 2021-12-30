@@ -6,19 +6,31 @@ import {Badge, Button, ButtonGroup, Divider, Input, ListItem, SearchBar} from 'r
 import {AntDesign} from "@expo/vector-icons";
 import {clearSearch, getBookByIsbn, searchBookByTitle, setShownBook} from "../reducers/appSlice";
 
-const SearchOnlineForBook = (props) => {
+const Search = (props) => {
 
     const [search,setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const [noSearchResults, setNoSearchResults] = useState(false)
 
     useEffect(() => {
-        if (props.search.search1.searchResultsList.length === 0) {
-
+        if (props.searchTargetKind === 1) {
+            if (props.search.search1.searchResultsList.length === 0) {
+                //no Results absicherung 1 TODO
+            }
+            setSearchResults(props.search.search1.searchResultsList)
+            console.log(props.search.search1.searchResultsList)
         }
-        setSearchResults(props.search.search1.searchResultsList)
-        console.log(props.search.search1.searchResultsList)
     }, [props.search.search1.searchResultsList])
+
+    useEffect(() => {
+        if (props.searchTargetKind === 2) {
+            if (props.search.search2.searchResultsList.length === 0) {
+                //no Results absicherung 2 TODO
+            }
+            setSearchResults(props.search.search2.searchResultsList)
+            console.log(props.search.search2.searchResultsList)
+        }
+    }, [props.search.search2.searchResultsList])
 
     function getItem (d, index) {
         return d[index]
@@ -39,7 +51,14 @@ const SearchOnlineForBook = (props) => {
                 placeholder="suche..."
                 onChangeText={value => {
                     setSearch(value)
-                    props.searchBookByTitleDispatch(search)
+                    if (props.searchTargetKind === 1) {    //1 = bookByTitle
+                        props.searchBookByTitleDispatch(search)
+                        console.log("searchTargetKind:1")
+                    }
+                    if (props.searchTargetKind === 2) {    //2 = UserByUsername
+                        //props.searchUserByNameDispatch(search)
+                        console.log("searchTargetKind:2")
+                    }
                 }}
                 value={search}
                 platform={"ios"}
@@ -49,7 +68,16 @@ const SearchOnlineForBook = (props) => {
             <VirtualizedList
                 data={searchResults}
                 initialNumToRender={4}
-                renderItem={({item, index}) => <Text>{index}: {item.titel}</Text>}
+                renderItem={({item, index}) =>
+                    <View>
+                        {props.searchTargetKind === 1 &&
+                            <Text>{index}: {item.titel}</Text>
+                        }
+                        {props.searchTargetKind === 2 &&
+                            <Text>{index}: {item.username}</Text>
+                        }
+                    </View>
+                }
                 keyExtractor={(item, index)=> 'key'+index+Math.random()}
                 getItemCount={getItemCount}
                 getItem={getItem}
@@ -77,4 +105,4 @@ const mapDispatchToProps = dispatch => ({
     },
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchOnlineForBook)
+export default connect(mapStateToProps, mapDispatchToProps)(Search)

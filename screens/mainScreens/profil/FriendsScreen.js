@@ -37,6 +37,7 @@ import {
 } from "../../../reducers/appSlice";
 import UserBibCard from "../../../components/UserBibCard";
 import {BarCodeScanner} from "expo-barcode-scanner";
+import Search from "../../../components/Search";
 const FriendsScreen = (props) => {
 
     const [friendsList, setFriendsList] = useState([])
@@ -183,7 +184,7 @@ const FriendsScreen = (props) => {
             <Header
                 centerComponent={{ text: "Freund*in hinzufügen", style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
-                rightComponent={<TouchableOpacity onPress={() => console.log("test")}><Entypo style={{position:"absolute", top: -1.5, right:0}} name="camera" size={30} color="#fdd560"/></TouchableOpacity>}
+                rightComponent={<TouchableOpacity onPress={() => setScannerDa(true)}><Entypo style={{position:"absolute", top: -1.5, right:0}} name="camera" size={30} color="#fdd560"/></TouchableOpacity>}
                 leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate("Profil")}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="#fdd560"/></TouchableOpacity>}
             />
             <View>
@@ -199,20 +200,8 @@ const FriendsScreen = (props) => {
                 {/*/>*/}
             </View>
             <View>
-                <Text style={{paddingLeft: 10, paddingTop:20}}>QR-Code scannen:</Text>
-                { scannerDa &&
-                    <View style={{alignSelf:"center", marginTop:10,height:250, width: 250, borderWidth:2, borderColor: "#2b2e32"}}>
-                        <BarCodeScanner
-                            onBarCodeScanned={scanned ? undefined : handlQRCodeScanned}
-                            style={StyleSheet.absoluteFillObject}
-                        />
-                    </View>
-                }
-                { !scannerDa &&
-                    <Button title="jetzt scannen" onPress={()=>{setScannerDa(!scannerDa)}} containerStyle={{alignSelf:"center", marginTop:10}} buttonStyle={{height:250, width: 250}}/>
-                }
-                <Text style={{paddingLeft: 10, paddingTop:30}}>über den Nutzernamen:</Text>
-                <Input placeholder="username" value={newFriendUsername} onChangeText={value => setNewFriendUsername(value)} />
+                <Text style={{paddingLeft: 10, paddingTop:30, color: "white"}}>über den Nutzernamen:</Text>
+                <Search searchTargetKind={2} />
             </View>
             <Overlay isVisible={newFriendOverlayVisible} onBackdropPress={toggleNewFriendOverlay}>
                 <View style={{width: 250}}>
@@ -226,6 +215,14 @@ const FriendsScreen = (props) => {
                     <Text>{shownFriend.firstname} {shownFriend.lastname}</Text>
                     <Text>{shownFriend.email}</Text>
                     <Button containerStyle={{paddingTop:10}} title="Freund*in entfernen" onPress={() => {handelRemoveFriendPress(shownFriend.id)}} buttonStyle={{backgroundColor: "black"}} />
+                </View>
+            </Overlay>
+            <Overlay isVisible={scannerDa} onBackdropPress={()=> {setScannerDa(!scannerDa)}} overlayStyle={{height: "50%", width: "90%"}}>
+                <View style={{borderColor: "white", borderWidth:1, flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
+                    <BarCodeScanner
+                        onBarCodeScanned={scanned ? undefined : handlQRCodeScanned}
+                        style={StyleSheet.absoluteFillObject}
+                    />
                 </View>
             </Overlay>
         </View>
