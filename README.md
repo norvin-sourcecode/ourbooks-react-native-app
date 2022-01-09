@@ -71,7 +71,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 
 ### Built With
-
+* ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 * [React.js](https://reactjs.org/)
 * [React-Natve.js](https://reactnative.dev/)
 * [Expo](https://expo.dev/)
