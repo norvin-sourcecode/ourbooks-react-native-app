@@ -63,10 +63,10 @@ const ProfilScreen = (props) => {
     return (
         <View style={{backgroundColor: "#2b2e32", height:"100%"}}>
             <Header
-                centerComponent={{ text: props.user.username, style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                centerComponent={{ text: props.user.username, style: { color: 'white', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
-                leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate('profilFriends')}><AntDesign style={{position:"absolute", top: -1.5, left:0}} name="adduser" size={30} color="#fdd560"/></TouchableOpacity>}
-                rightComponent={<TouchableOpacity onPress={() => toggleQrCodeOverlay()}><AntDesign style={{position:"absolute", top: -1.5, right:0}} name="qrcode" size={30} color="#fdd560"/></TouchableOpacity>}
+                leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate('profilFriends')}><AntDesign style={{position:"absolute", top: -1.5, left:0}} name="adduser" size={30} color="white"/></TouchableOpacity>}
+                rightComponent={<TouchableOpacity onPress={() => toggleQrCodeOverlay()}><AntDesign style={{position:"absolute", top: -1.5, right:0}} name="qrcode" size={30} color="white"/></TouchableOpacity>}
             />
             <View style={{ padding:15, flexDirection:"row",justifyContent: "space-evenly"}}>
                 <Avatar rounded
@@ -76,12 +76,12 @@ const ProfilScreen = (props) => {
             </View>
             <View style={{ padding:15,justifyContent:"center", paddingTop:20}}>
                 <View style={{paddingBottom: 3,flexDirection: "row", justifyContent: "space-between"}}>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"#fdd560"}}>Freund*innen:</Text>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"#fdd560"}}>{friendsList.length}</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>Freund*innen:</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>{friendsList.length}</Text>
                 </View>
                 <View style={{paddingBottom: 3,flexDirection: "row", justifyContent: "space-between"}}>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"#fdd560"}}>Bücher:</Text>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"#fdd560"}}>{props.userBib.booksList.length}</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>Bücher:</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>{props.userBib.booksList.length}</Text>
                 </View>
             </View>
             <View style={{paddingTop: 5}}>

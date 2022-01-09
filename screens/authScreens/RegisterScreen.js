@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useEffect} from "react";
-import {ActivityIndicator, SafeAreaView, Text, View} from "react-native";
+import {ActivityIndicator, Alert, SafeAreaView, Text, View} from "react-native";
 import {connect} from "react-redux";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import {AntDesign} from "@expo/vector-icons";
@@ -72,6 +72,16 @@ const RegisterScreen = (props) => {
                         if (nameIsValid(lastname)) {
                             if (emailIsValid(email)) {
                                 props.registerDispatch(email,firstname,lastname,username,password)
+                                Alert.alert(
+                                    "Email bestätigen",
+                                    "Bitte überprüfen Sie Ihr Postfach und bestätigen Sie die angegebene Email-Adresse",
+                                    [
+                                        {
+                                            text: "OK",
+                                        },
+                                    ],
+                                    { cancelable: false }
+                                );
                             } else {
                                 alert("Eingabe überprüfen");
                             }
@@ -93,7 +103,7 @@ const RegisterScreen = (props) => {
     }
 
     return (
-        <SafeAreaView style={{backgroundColor: "#2b2e32"}}>
+        <SafeAreaView style={{backgroundColor: "white"}}>
             <Overlay isVisible={visible} style={{backgroundColor: "green"}} onBackdropPress={toggleOverlay}>
                 <Text>{props.registerProcess.error !== null && props.registerProcess.error.message}</Text>
             </Overlay>
@@ -111,9 +121,9 @@ const RegisterScreen = (props) => {
                     justifyContent: 'center',
                     width: "100%"
                 }}>
-                    <AntDesign style={{alignSelf: 'center'}} name="doubleleft" size={15} color="#fdd560"
+                    <AntDesign style={{alignSelf: 'center'}} name="doubleleft" size={15} color="#2b2e32"
                                onPress={() => props.navigation.navigate('login')}/>
-                    <Text style={{textDecorationLine: 'underline', paddingLeft: 5, color: "#fdd560"}}
+                    <Text style={{textDecorationLine: 'underline', paddingLeft: 5, color: "#2b2e32"}}
                           onPress={() => props.navigation.navigate("login")}>zurück zum Login</Text>
                 </View>
                 <KeyboardAwareScrollView
@@ -125,49 +135,49 @@ const RegisterScreen = (props) => {
                     <View style={{flex: 1, height: '100%', paddingTop: 75}}>
                         <View>
                             <Input
-                                inputStyle={{color: "#fdd560"}}
+                                inputStyle={{color: "#2b2e32"}}
                                 type="username"
                                 placeholder="username"
                                 value={username}
                                 onChangeText={value => setUsername(value)}
                                 errorMessage={!usernameIsValid(username) && username.length >= 1 && "4-12 Buchstaben und Zahlen"}/>
                             <Input
-                                inputStyle={{color: "#fdd560"}}
+                                inputStyle={{color: "#2b2e32"}}
                                 placeholder="firstname"
                                 value={firstname}
                                 onChangeText={value => setFirstname(value)}
                                 errorMessage={!nameIsValid(firstname) && firstname.length >= 1 && "Vorname ungültig"}/>
                             <Input
-                                inputStyle={{color: "#fdd560"}}
+                                inputStyle={{color: "#2b2e32"}}
                                 placeholder="lastname"
                                 value={lastname}
                                 onChangeText={value => setLastname(value)}
                                 errorMessage={!nameIsValid(lastname) && lastname.length >= 1 && "Nachname ungültig"}/>
                             <Input
-                                inputStyle={{color: "#fdd560"}}
+                                inputStyle={{color: "#2b2e32"}}
                                 placeholder="email"
                                 value={email}
                                 onChangeText={value => setEmail(value)}
                                 errorMessage={!emailIsValid(email) && email.length >= 1 && "Email ungültig"}/>
                             <Input
-                                inputStyle={{color: "#fdd560"}}
+                                inputStyle={{color: "#2b2e32"}}
                                 secureTextEntry={true}
                                 placeholder="password"
                                 value={password}
                                 onChangeText={value => setPassword(value)}
                                 errorMessage={!passwordIsValid(password) && password.length >= 1 && "min. 6 Zeichen mit Zahlen und gemischter Groß- und Kleinschreibung"}/>
                             <Input
-                                inputStyle={{color: "#fdd560"}}
+                                inputStyle={{color: "#2b2e32"}}
                                 secureTextEntry={true}
                                 placeholder="confirm password"
                                 value={confirmPassword}
                                 onChangeText={value => setConfirmPassword(value)}
                                 errorMessage={password !== confirmPassword && confirmPassword.length >= 1 && "Passwörter stimmen nicht überein"}/>
                             <Button
-                                buttonStyle={{backgroundColor: '#fdd560'}}
+                                buttonStyle={{backgroundColor: '#2b2e32'}}
                                 title="Account erstellen"
                                 style={{paddingLeft: 10, paddingRight: 10}}
-                                titleStyle={{color: "#2b2e32"}}
+                                titleStyle={{color: "white"}}
                                 onPress={handelRegisterPressed}/>
                         </View>
                     </View>

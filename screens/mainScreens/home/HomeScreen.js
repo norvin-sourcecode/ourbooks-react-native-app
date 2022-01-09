@@ -109,12 +109,12 @@ const HomeScreen = (props) => {
     return (
         <View style={{backgroundColor: "#2b2e32"}}>
             <Header
-                centerComponent={{ text: 'Home', style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                centerComponent={{ text: 'Home', style: { color: 'white', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
-                rightComponent={bIndex === 0 && <TouchableOpacity onPress={handleAddABibPress}><Ionicons style={{position:"absolute", top: -8.5, right:-8.5}} name="add-sharp" size={40} color="#fdd560"/></TouchableOpacity>}
+                rightComponent={bIndex === 0 && <TouchableOpacity onPress={handleAddABibPress}><Ionicons style={{position:"absolute", top: -8.5, right:-8.5}} name="add-sharp" size={40} color="white"/></TouchableOpacity>}
             />
             <View style={{paddingTop: 5, backgroundColor: "#2b2e32"}}>
-                <ButtonGroup containerStyle={{borderWidth:2, borderColor:"#fdd560"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
+                <ButtonGroup containerStyle={{borderWidth:2, borderColor:"white"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "white"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: 'white'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
                 {bIndex === 1 &&
                 <View>
                     <View style={{paddingRight:11, paddingLeft:11, height:50,paddingTop:9, paddingBottom:20}}>
@@ -162,7 +162,7 @@ const HomeScreen = (props) => {
                         value={search}
                         platform={"ios"}
                         cancelButtonTitle="abbrechen"
-                        cancelButtonProps={{color: "#fdd560"}}
+                        cancelButtonProps={{color: "white"}}
                     />
                     <View>
                         { data.length === 0 &&

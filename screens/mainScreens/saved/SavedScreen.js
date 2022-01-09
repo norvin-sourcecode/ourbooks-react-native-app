@@ -79,7 +79,7 @@ const SavedScreen = (props) => {
                             }
                         </View>
                         <View style={{flexDirection: "column",justifyContent: "center"}}>
-                            <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{flexWrap: "nowrap",padding: 10,top:-3, right:-53,alignSelf:"center", fontWeight: "bold", color:"#fdd560", fontSize: 20}}>{book.titel}</Text>
+                            <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{flexWrap: "nowrap",padding: 10,top:-3, right:-53,alignSelf:"center", fontWeight: "bold", color:"#2b2e32", fontSize: 20}}>{book.titel}</Text>
                             <View style={{paddingLeft: 5,paddingTop:5, top:-3, alignSelf:"center", right:-53, alignItems: "center"}}>
                                 <Text>ISBN: {book.isbn}</Text>
                                 <Text>Author*in: {book.authorName}</Text>
@@ -123,7 +123,7 @@ const SavedScreen = (props) => {
     return (
         <View style={{backgroundColor: "#2b2e32"}}>
             <Header
-                centerComponent={{ text: 'Leseliste', style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                centerComponent={{ text: 'Leseliste', style: { color: 'white', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0, zIndex:8000}}
                 
             />
@@ -159,7 +159,7 @@ const SavedScreen = (props) => {
                         paddingBottom: 10,
                         transform: [{ translateY }],
                     }}>
-                    <Text style={{color: "#fdd560", fontWeight: "bold", right: -5, top: 5}}>neu verfügbar:</Text>
+                    <Text style={{color: "white", fontWeight: "bold", right: -5, top: 5}}>neu verfügbar:</Text>
                     {newlyAdded.length === 0 &&
                         <Text style={{color: "white", alignSelf: "center", padding: 35}}>zurzeit keine neuen Bücher verfügbar</Text>
                     }

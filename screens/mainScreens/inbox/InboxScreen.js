@@ -80,10 +80,10 @@ const InboxScreen = (props) => {
     return (
         <View style={{backgroundColor: "#2b2e32", height:"100%"}}>
             <Header
-                centerComponent={{ text: 'Inbox', style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                centerComponent={{ text: 'Inbox', style: { color: 'white', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
             />
-            <ButtonGroup containerStyle={{borderWidth:2, borderColor:"#fdd560"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
+            <ButtonGroup containerStyle={{borderWidth:2, borderColor:"white"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "white"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: 'white'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
             {bIndex === 1 &&
             <View style={{height: "100%"}}>
                 <VirtualizedList
