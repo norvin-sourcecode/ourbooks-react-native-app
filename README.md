@@ -29,6 +29,7 @@
   </p>
 </div>
 
+* ![Norvin Klinkmann](https://avatars.githubusercontent.com/u/77019645?v=4)
 
 
 <!-- TABLE OF CONTENTS -->
