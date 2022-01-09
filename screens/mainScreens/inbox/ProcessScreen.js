@@ -255,9 +255,9 @@ const ProcessScreen = (props) => {
     return (
         <View style={{height: "100%", backgroundColor: "#2b2e32", flex:1}}>
             <Header
-                centerComponent={{ text: props.process.book.titel, style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                centerComponent={{ text: props.process.book.titel, style: { color: 'white', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
-                leftComponent={<TouchableOpacity onPress={() => props.navigation.goBack()}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="#fdd560"/></TouchableOpacity>}
+                leftComponent={<TouchableOpacity onPress={() => props.navigation.goBack()}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="white"/></TouchableOpacity>}
                 rightComponent={
                     <View>
                     {

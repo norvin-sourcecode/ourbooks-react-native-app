@@ -182,10 +182,10 @@ const FriendsScreen = (props) => {
     return (
         <View style={{backgroundColor: "#2b2e32", height:"100%"}}>
             <Header
-                centerComponent={{ text: "Freund*in hinzufügen", style: { color: '#fdd560', fontWeight: "bold", fontSize:20} }}
+                centerComponent={{ text: "Freund*in hinzufügen", style: { color: 'white', fontWeight: "bold", fontSize:20} }}
                 containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
-                rightComponent={<TouchableOpacity onPress={() => setScannerDa(true)}><Entypo style={{position:"absolute", top: -1.5, right:0}} name="camera" size={30} color="#fdd560"/></TouchableOpacity>}
-                leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate("Profil")}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="#fdd560"/></TouchableOpacity>}
+                rightComponent={<TouchableOpacity onPress={() => setScannerDa(true)}><Entypo style={{position:"absolute", top: -1.5, right:0}} name="camera" size={30} color="white"/></TouchableOpacity>}
+                leftComponent={<TouchableOpacity onPress={() => props.navigation.navigate("Profil")}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="white"/></TouchableOpacity>}
             />
             <View>
                 {/*<VirtualizedList*/}
@@ -201,7 +201,7 @@ const FriendsScreen = (props) => {
             </View>
             <View>
                 <Text style={{paddingLeft: 10, paddingTop:30, color: "white"}}>über den Nutzernamen:</Text>
-                <Search searchTargetKind={2} />
+                <Search searchTargetKind={2} cancelButtonProps={{color: "white"}}/>
             </View>
             <Overlay isVisible={newFriendOverlayVisible} onBackdropPress={toggleNewFriendOverlay}>
                 <View style={{width: 250}}>

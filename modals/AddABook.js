@@ -97,13 +97,13 @@ const AddABook = (props) => {
                         />
                         <View style={{position: "absolute", top: "2%", left: "2%"}}>
                             <View>
-                                <Text onPress={() => props.navigation.navigate('main')} style={{color: "#fdd560", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
+                                <Text onPress={() => props.navigation.navigate('main')} style={{color: "white", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
                             </View>
                         </View>
-                        <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "#fdd560"}}>
+                        <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "white"}}>
                         </View>
                         <View style={{ width: "100%", height: "10%", top: "46%"}}>
-                            <ButtonGroup containerStyle={{ borderWidth:0}} buttonStyle={{backgroundColor:"#2b2e32", borderWidth:0}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />
+                            <ButtonGroup containerStyle={{ borderWidth:0}} buttonStyle={{backgroundColor:"#2b2e32", borderWidth:0}} textStyle={{color: "white"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: 'white'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />
                         </View>
                     </View>
                 }
@@ -115,10 +115,10 @@ const AddABook = (props) => {
                             </View>
                         </View>
                         <View style={{ width: "100%", height: "90%",paddingTop:"12.5%"}}>
-                            <Search searchTargetKind={1} />
+                            <Search searchTargetKind={1} cancelButtonProps={{color: "#2b2e32"}} />
                         </View>
                         <View style={{ width: "100%", height: "10%", justifyContent: "center", backgroundColor: "transparent"}}>
-                            <ButtonGroup containerStyle={{ borderWidth:0}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />
+                            <ButtonGroup containerStyle={{ borderWidth:0}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "white"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: 'white'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />
                         </View>
                     </View>
                 }

@@ -63,7 +63,7 @@ const Search = (props) => {
                 value={search}
                 platform={"ios"}
                 cancelButtonTitle="abbrechen"
-                cancelButtonProps={{color: "#fdd560"}}
+                cancelButtonProps={props.cancelButtonProps}
             />
             <VirtualizedList
                 data={searchResults}

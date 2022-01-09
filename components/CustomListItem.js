@@ -107,7 +107,7 @@ const CustomListItem = (props) => {
                     <Text>{shownFriend.username}</Text>
                     <Text>{shownFriend.firstname} {shownFriend.lastname}</Text>
                     <Text>{shownFriend.email}</Text>
-                    <Button style={{paddingTop:10}} buttonStyle={{ backgroundColor:"#fdd560"}} titleStyle={{color: "#2b2e32"}} title="Freund*in entfernen" onPress={()=> {props.deleteFriendDispatch(shownFriend.id)}}/>
+                    <Button style={{paddingTop:10}} buttonStyle={{ backgroundColor:"white"}} titleStyle={{color: "#2b2e32"}} title="Freund*in entfernen" onPress={()=> {props.deleteFriendDispatch(shownFriend.id)}}/>
                 </View>
             </Overlay>
             <Card containerStyle={{padding: 0, paddingTop: 0, margin:8, marginBottom:0, borderWidth:0, backgroundColor: "white", borderRadius:10}}>
@@ -115,8 +115,8 @@ const CustomListItem = (props) => {
                     <View>
                         <View>
                             <View style={{flexDirection: "row",width:"100%", justifyContent: "flex-start"}}>
-                                <Ionicons style={{padding:10}} name="person" size={30} color="#fdd560" />
-                                <Text style={{paddingTop: 10, paddingBottom: 10,alignSelf:"center", fontWeight: "bold", color:"#fdd560", fontSize: 20}}>{requestFriendName}</Text>
+                                <Ionicons style={{padding:10}} name="person" size={30} color="#2b2e32" />
+                                <Text style={{paddingTop: 10, paddingBottom: 10,alignSelf:"center", fontWeight: "bold", color:"#2b2e32", fontSize: 20}}>{requestFriendName}</Text>
                             </View>
                             <Divider color="#2b2e32" style={{width: "95%", alignSelf: "center"}} width={1.2}/>
                             <View style={{height: 111}}></View>
@@ -147,8 +147,8 @@ const CustomListItem = (props) => {
                             handleBibPress(props.i.inhalt)
                         }}>
                             <View style={{flexDirection: "row",width:"100%", justifyContent: "flex-start"}}>
-                                <Ionicons style={{padding: 10}} name="library" size={30} color="#fdd560"/>
-                                <Text style={{paddingTop: 10, paddingBottom: 10,alignSelf:"center", fontWeight: "bold", color:"#fdd560", fontSize: 20}}>{props.i.inhalt.name}</Text>
+                                <Ionicons style={{padding: 10}} name="library" size={30} color="#2b2e32"/>
+                                <Text style={{paddingTop: 10, paddingBottom: 10,alignSelf:"center", fontWeight: "bold", color:"#2b2e32", fontSize: 20}}>{props.i.inhalt.name}</Text>
                             </View>
                             <Divider color="#2b2e32" style={{width: "95%", alignSelf: "center"}} width={1.2}/>
                             <VirtualizedList
@@ -171,8 +171,8 @@ const CustomListItem = (props) => {
                             toggleFriendOverlay()
                         }}>
                             <View style={{flexDirection: "row",width:"100%", justifyContent: "flex-start"}}>
-                                <Ionicons style={{padding:10}} name="person" size={30} color="#fdd560" />
-                                <Text style={{paddingTop: 10, paddingBottom: 10,alignSelf:"center", fontWeight: "bold", color:"#fdd560", fontSize: 20}}>{props.i.inhalt.username}</Text>
+                                <Ionicons style={{padding:10}} name="person" size={30} color="#2b2e32" />
+                                <Text style={{paddingTop: 10, paddingBottom: 10,alignSelf:"center", fontWeight: "bold", color:"#2b2e32", fontSize: 20}}>{props.i.inhalt.username}</Text>
                             </View>
                             <Divider color="#2b2e32" style={{width: "95%", alignSelf: "center"}} width={1.2}/>
                             <VirtualizedList

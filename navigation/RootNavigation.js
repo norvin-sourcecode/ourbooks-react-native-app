@@ -59,7 +59,7 @@ const CustomBottomTabBarButton = ({ children, onPress,navigation}) => {
         //     </View>
         // </TouchableOpacity>
         <TouchableOpacity onPress={toggleOverlay} style={{ top: -20, justifyContent: "center", alignItems: "center", shadowColor: "grey", shadowOpacity: 0.25, shadowRadius: 3.5, shadowOffset: {width: 0, height:5}}}>
-            <View style={{width: 65, height: 65, borderRadius: 35, backgroundColor: "#fdd560"}}>
+            <View style={{width: 65, height: 65, borderRadius: 35, backgroundColor: "white"}}>
                 {children}
             </View>
             <BottomSheet
@@ -68,9 +68,9 @@ const CustomBottomTabBarButton = ({ children, onPress,navigation}) => {
             >
                 <View style={{width: "100%"}}>
                     <TouchableOpacity style={{width:"100%", height:500}} onPress={toggleOverlay} />
-                    <Button containerStyle={{backgroundColor: "#fdd560", borderTopRightRadius:15, borderTopLeftRadius:15, borderBottomLeftRadius:0, borderBottomRightRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderWidth: 0, borderColor: '#565a63'}} title="Buch zum Nutzer-Bücherregal hinzufügen" onPress={sendToAddABookToUserBibModal}/>
-                    <Button containerStyle={{backgroundColor: "#fdd560", borderRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#fdd560', height:50, borderTopWidth: 1,borderWidth: 0, borderColor: '#565a63'}} title="Buch zur Leseliste hinzufügen" onPress={sendToAddABookToSavedModal}/>
-                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: '#fdd560', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#2b2e32', height:50}} title="abbrechen" onPress={() => setVisible(false)}/>
+                    <Button containerStyle={{borderTopWidth:1,borderColor:"#2b2e32",backgroundColor: "white", borderTopRightRadius:15, borderTopLeftRadius:15, borderBottomLeftRadius:0, borderBottomRightRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: 'white', height:50, borderWidth: 0, borderColor: '#565a63'}} title="Buch zum Nutzer-Bücherregal hinzufügen" onPress={sendToAddABookToUserBibModal}/>
+                    <Button containerStyle={{backgroundColor: "white", borderRadius:0}} titleStyle={{ color: '#2b2e32', fontWeight: "bold"}} buttonStyle={{backgroundColor: 'white', height:50, borderTopWidth: 1,borderWidth: 0, borderColor: '#565a63'}} title="Buch zur Leseliste hinzufügen" onPress={sendToAddABookToSavedModal}/>
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: 'white', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#2b2e32', height:50}} title="abbrechen" onPress={() => setVisible(false)}/>
                 </View>
             </BottomSheet>
         </TouchableOpacity>
@@ -123,7 +123,7 @@ const AppTabsScreen = (props) => {
                 component={HomeStackScreen}
                 options={({ navigation }) => ({
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="library" size={30} color="#fdd560"/>
+                        <Ionicons name="library" size={30} color="white"/>
                     )})}
             />
             <AppTabs.Screen
@@ -131,7 +131,7 @@ const AppTabsScreen = (props) => {
                 component={SavedStackScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <FontAwesome name="bookmark" size={30} color="#fdd560" />
+                        <FontAwesome name="bookmark" size={30} color="white" />
                     )}}
             />
             <AppTabs.Screen
@@ -154,7 +154,7 @@ const AppTabsScreen = (props) => {
                 component={InboxStackScreen}
                 options={({ route }) => ({
                     tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="pending-actions" size={30} color="#fdd560" />
+                        <MaterialIcons name="pending-actions" size={30} color="white" />
                     )
                 })}
             />
@@ -163,7 +163,7 @@ const AppTabsScreen = (props) => {
                 component={ProfilStackScreen}
                 options={({ route }) => ({
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="person" size={30} color="#fdd560" />
+                        <Ionicons name="person" size={30} color="white" />
                     )
                 })}
             />
