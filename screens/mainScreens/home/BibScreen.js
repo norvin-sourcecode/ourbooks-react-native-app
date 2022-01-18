@@ -2,10 +2,11 @@ import React, {useCallback, useState, useLayoutEffect} from "react";
 import {useEffect} from "react";
 import {Text, TouchableOpacity, View, VirtualizedList} from "react-native";
 import { connect } from "react-redux";
-import {Badge, Button, ButtonGroup, Divider, ListItem} from 'react-native-elements';
+import {Badge, Button, ButtonGroup, Divider, Header, ListItem} from 'react-native-elements';
 import {GiftedChat} from "react-native-gifted-chat";
 import {getGBibBooks, setShownBook} from "../../../reducers/appSlice";
 import ListBook from "../../../components/ListBook";
+import {AntDesign, Ionicons} from "@expo/vector-icons";
 
 const BibScreen = (props) => {
 
@@ -39,10 +40,16 @@ const BibScreen = (props) => {
     }
 
     return (
-        <View style={{height: "100%"}}>
+        <View style={{backgroundColor: "#2b2e32"}}>
+            <Header
+                centerComponent={{ text: props.bib.name, style: { color: 'white', fontWeight: "bold", fontSize:20} }}
+                containerStyle={{    backgroundColor:"#2b2e32",    justifyContent: 'center', borderBottomWidth:0 }}
+                rightComponent={<TouchableOpacity onPress={() => props.navigation.goBack()}><AntDesign style={{position:"absolute", top: -1.5, right:0}} name="setting" size={30} color="white" /></TouchableOpacity>}
+                leftComponent={<TouchableOpacity onPress={() => props.navigation.goBack()}><Ionicons style={{position:"absolute", top: -1.5, left:0}} name="chevron-back" size={30} color="white"/></TouchableOpacity>}
+
+            />
             <View style={{paddingTop: 5}}>
-                <ButtonGroup buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "#fdd560"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: '#fdd560'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
-                <Divider style={{paddingTop: 5}}/>
+                <ButtonGroup containerStyle={{borderWidth:2, borderColor:"white"}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "white"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: 'white'}} onPress={setBIndex} selectedIndex={bIndex} buttons={tabs} />
             </View>
             <View style={{height: "100%"}}>
                 {bIndex === 0 &&

@@ -169,10 +169,10 @@ const HomeScreen = (props) => {
                         <Text style={{paddingTop: 100 ,textAlign: 'center', color: "grey"}}>noch keine geteilten Bücherregale...</Text>
                         }
                     </View>
-                    <View style={{height:"69%", width:"100%" , paddingTop: 2}}>
+                    <View style={{height:"50%",width:"100%" , paddingTop: 2}}>
                         <VirtualizedList
                             data={data}
-                            initialNumToRender={4}
+                            initialNumToRender={3}
                             renderItem={({item, index}) => <CustomListItem i={item} index={index} navigation={props.navigation}/>}
                             keyExtractor={(item, index)=> 'key'+index+item.id}
                             getItemCount={getItemCount}

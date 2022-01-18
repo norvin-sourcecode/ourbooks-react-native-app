@@ -70,6 +70,7 @@ const FriendsScreen = (props) => {
         if (!props.friends.loaded) {
             props.getFriendsDispatch()
         }
+        setNewFriendUsername(props.friends.friend.username)
     }, [props.friends])
 
     useEffect(() => {
@@ -131,10 +132,11 @@ const FriendsScreen = (props) => {
     }
 
     const handlQRCodeScanned = ({ type, data }) => {
+        setScannerDa(false)
         setScanned(true)
         setScannedData(data)
         if (data.split(";")[0] === "OURBOOK") {
-            setVisible(true)
+            setNewFriendOverlayVisible(true)
             setNewFriendUsername(data.split(";")[1])
         } else {
             Alert.alert(
@@ -201,7 +203,7 @@ const FriendsScreen = (props) => {
             </View>
             <View>
                 <Text style={{paddingLeft: 10, paddingTop:30, color: "white"}}>über den Nutzernamen:</Text>
-                <Search searchTargetKind={2} cancelButtonProps={{color: "white"}}/>
+                <Search searchTargetKind={2} cancelButtonProps={{color: "white"}} onUserPress={()=>{setNewFriendOverlayVisible(true)}}/>
             </View>
             <Overlay isVisible={newFriendOverlayVisible} onBackdropPress={toggleNewFriendOverlay}>
                 <View style={{width: 250}}>

@@ -76,12 +76,12 @@ const ProfilScreen = (props) => {
             </View>
             <View style={{ padding:15,justifyContent:"center", paddingTop:20}}>
                 <View style={{paddingBottom: 3,flexDirection: "row", justifyContent: "space-between"}}>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>Freund*innen:</Text>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>{friendsList.length}</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>geliehene Bücher:</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>_</Text>
                 </View>
                 <View style={{paddingBottom: 3,flexDirection: "row", justifyContent: "space-between"}}>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>Bücher:</Text>
-                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>{props.userBib.booksList.length}</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>davon zurückgegeben Bücher:</Text>
+                    <Text style={{alignSelf: "center",fontWeight: "bold", paddingBottom: 10, color:"white"}}>_</Text>
                 </View>
             </View>
             <View style={{paddingTop: 5}}>

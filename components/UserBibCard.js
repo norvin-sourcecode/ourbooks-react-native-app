@@ -11,6 +11,7 @@ const UserBibCard = (props) => {
 
     useEffect(() => {
         if (!props.userBib.loaded) {
+            console.log("hier")
             props.getUserBibBooksDispatch()
         }
     }, [props.userBib])
