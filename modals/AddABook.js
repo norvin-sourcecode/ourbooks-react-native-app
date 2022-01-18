@@ -30,6 +30,7 @@ const AddABook = (props) => {
 
     const handleISBNscanned = ({ type, data }) => {
         setScanned(true);
+        console.log(data)
         props.getBookByIsbnDispatch(data)
         setVisible(true)
     };
@@ -56,6 +57,7 @@ const AddABook = (props) => {
     }
 
     function handelAddBookToUserBibPressed(book) {
+        console.log(book.isbn)
         if(props.userBib.booksList.some(book => book.isbn === props.book.isbn)){
             Alert.alert(
                 "Dieses Buch ist schon im Nutzer-Bücherregal vorhanden...",
@@ -115,7 +117,7 @@ const AddABook = (props) => {
                             </View>
                         </View>
                         <View style={{ width: "100%", height: "90%",paddingTop:"12.5%"}}>
-                            <Search searchTargetKind={1} cancelButtonProps={{color: "#2b2e32"}} />
+                            <Search searchTargetKind={1} navigation={props.navigation} cancelButtonProps={{color: "#2b2e32"}} onBookPress={()=>{setVisible(true)}}/>
                         </View>
                         <View style={{ width: "100%", height: "10%", justifyContent: "center", backgroundColor: "transparent"}}>
                             <ButtonGroup containerStyle={{ borderWidth:0}} buttonStyle={{backgroundColor:"#2b2e32"}} textStyle={{color: "white"}} selectedTextStyle={{color:"#2b2e32"}} selectedButtonStyle={{backgroundColor: 'white'}} onPress={setHowToAddIndexIndex} selectedIndex={howToAddIndex} buttons={howToAddButtons} />

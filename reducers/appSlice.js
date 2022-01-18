@@ -71,6 +71,7 @@ const initialState = {
         pictureUrl: "",
         availableAt: [],
         pending: false,
+        ratio: 0,
         description: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
     },
     saved: {
@@ -207,7 +208,26 @@ export const searchBookByTitle = createAsyncThunk(
         try {
             const tmpState = getState()
             const response = await axios
-                .get(tmpState.appReducer.communication.urlBase+"/books/searchOnlineTitle/+"+data.title, tmpState.appReducer.communication.conf)
+                .get(tmpState.appReducer.communication.urlBase+"/books/searchOnlineTitle/"+data.title, tmpState.appReducer.communication.conf)
+            return response.data
+        } catch (err) {
+            let error = err
+            if (!error.response) {
+                throw err
+            }
+            return rejectWithValue(error.response.data)
+        }
+    }
+)
+
+export const searchUserByUsername = createAsyncThunk(
+    'app/searchUserByUsername',
+    async (data, { rejectWithValue, getState }) => {
+        try {
+            const tmpState = getState()
+            const response = await axios
+                .get(tmpState.appReducer.communication.urlBase+"/user/getUserByNameFiltered/"+data.username, tmpState.appReducer.communication.conf)
+            console.log(response.data)
             return response.data
         } catch (err) {
             let error = err
@@ -584,6 +604,7 @@ export const getBookByIsbn = createAsyncThunk(
             const tmpState = getState()
             const response = await axios
                 .get(tmpState.appReducer.communication.urlBase+"/books/searchOnlineISBN/"+data.isbn, tmpState.appReducer.communication.conf)
+            console.log(response.data)
             return response.data
         } catch (err) {
             let error = err
@@ -880,6 +901,9 @@ const appSlice = createSlice({
             state.firebaseUser = null
             state.firebaseLoggedIn = false
         },
+        setShownFriend: (state, action) => {
+            state.friends.friend = action.payload
+        },
         setShownProcess:(state, action) => {
             state.process.loaded = false
             state.process.loading = false
@@ -907,6 +931,7 @@ const appSlice = createSlice({
             state.book.titel = action.payload.titel
             state.book.pictureUrl = action.payload.pictureUrl
             state.book.availableAt = []
+            state.book.ratio = action.payload.ratio
             state.book.pending = false
             state.book.description = action.payload.description
         },
@@ -1322,6 +1347,7 @@ const appSlice = createSlice({
             state.book.isbn = payload.isbn
             state.book.sprache = payload.sprache
             state.book.status = payload.status
+            state.book.ratio = payload.ratio
             state.book.timeCreated = payload.timeCreated
             state.book.titel = payload.titel
             state.book.pictureUrl = payload.pictureUrl
@@ -1625,6 +1651,22 @@ const appSlice = createSlice({
             state.search.search1.loading = false
             state.search.search1.error = action.payload
         },
+        [searchUserByUsername.pending]: (state) => {
+            state.search.search2.loaded = false
+            state.search.search2.loading = true
+            state.search.search2.error = null
+        },
+        [searchUserByUsername.fulfilled]: (state, { payload }) => {
+            state.search.search2.loaded = true
+            state.search.search2.loading = false
+            state.search.search2.error = null
+            state.search.search2.searchResultsList = payload
+        },
+        [searchUserByUsername.rejected]: (state, action ) => {
+            state.search.search2.loaded = false
+            state.search.search2.loading = false
+            state.search.search2.error = action.payload
+        },
     },
 })
 
@@ -1638,7 +1680,8 @@ export const {
     clearStatesForLogout,
     firebaseLoginSuccess,
     firebaseLoginFailure,
-    clearSearch
+    clearSearch,
+    setShownFriend
 } = appSlice.actions
 
 export default appSlice.reducer

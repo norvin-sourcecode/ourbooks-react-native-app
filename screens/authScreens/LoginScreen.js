@@ -223,7 +223,7 @@ const LoginScreen = (props) => {
                 </Animated.View>
             </Overlay>
             <Overlay isVisible={visible} style={{backgroundColor: "green"}} onBackdropPress={toggleOverlay}>
-                <Text>{props.user.error}</Text>
+                <Text>#Fehler# {props.user.error}</Text>
             </Overlay>
         </SafeAreaView>
         /*<SafeAreaView style={{backgroundColor: "#2b2e32"}}>

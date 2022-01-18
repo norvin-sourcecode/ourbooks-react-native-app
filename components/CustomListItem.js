@@ -14,6 +14,7 @@ import {
     setShownBook
 } from "../reducers/appSlice";
 import {connect} from "react-redux";
+import BookCover from "./BookCover";
 
 const CustomListItem = (props) => {
 
@@ -26,14 +27,17 @@ const CustomListItem = (props) => {
     const [requestFriendName, setRequestFriendName] = useState("")
 
     useEffect(() => {
-        if (props.i.kind === 2) {
+        if (props.i.kind === 2) {       //bibs
             setBibBooksList(props.i.inhalt.booksList)
         }
-        if (props.i.kind === 3) {
+        if (props.i.kind === 3) {       //friends
             setFriendsBooksList(props.i.inhalt.booksList)
             setShownFriend(props.i.inhalt)
         }
-        if (props.i.kind === 1) {
+        if (props.i.kind === 1) {       //friendrequests
+            setBibBooksList([])
+        }
+        if (props.i.kind === 4) {       //bibRequests
             setBibBooksList([])
         }
     },[props.friends, props.bibs])
@@ -59,6 +63,14 @@ const CustomListItem = (props) => {
     const toggleFriendOverlay = () => {
         setFriendOverlayVisible(!friendOverlayVisible);
     };
+
+    const handleAcceptBibRequestPress = (id) => {
+        //props.respondeBibRequestDispatch(id, true)
+    }
+
+    const handleDeclineBibRequestPress = (id) => {
+        //props.respondeBibRequestDispatch(id, false)
+    }
 
     const handelAcceptFriendRequestPress = (id) => {
         props.respondFriendRequestDispatch(id, true)
@@ -91,8 +103,9 @@ const CustomListItem = (props) => {
                         </View>
                         }
                         {book.pictureUrl.length !== 0 &&
-                        <Card.Image style={{width: 75, height:110}} resizeMode="contain" source={{url:book.pictureUrl}}>
-                        </Card.Image>
+                            <BookCover url={book.pictureUrl} ratio={book.ratio}/>
+                        // <Card.Image style={{width: 75, height:110}} resizeMode="contain" source={{url:book.pictureUrl}}>
+                        // </Card.Image>
                         }
                     </View>
                 </TouchableOpacity>

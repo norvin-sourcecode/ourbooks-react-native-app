@@ -71,6 +71,7 @@ const Book = (props) => {
     }, [props.saved, props.book, props.book.loading, props.userBib.booksList, props.book.availableAt])
 
     useEffect(() => {
+        console.log(props.book)
         setTargetBook(props.book)
     },[props.book])
 
