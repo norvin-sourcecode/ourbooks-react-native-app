@@ -13,6 +13,8 @@ const BibScreen = (props) => {
     const [bIndex, setBIndex] = useState(0);
     const tabs = ['Aktivitäten', 'Bücher']
 
+    //test
+
     const [booksList, setBooksList] = useState([])
     const [targetBib, setTargetBib] = useState({})
 
