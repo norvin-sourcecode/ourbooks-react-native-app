@@ -226,9 +226,11 @@ const ProcessScreen = (props) => {
                         <TouchableOpacity style={{alignSelf:"center"}} onPress={verringern}>
                             <AntDesign name="minuscircleo" size={40} color="black" />
                         </TouchableOpacity>
-                        <View style={{alignSelf:"center", borderWidth:3, width: 55, height: 55, borderRadius:"50%", justifyContent: "center"}}>
-                            <Text style={{color:"#2b2e32",fontWeight:"bold", alignSelf: "center", fontSize: 40}}>{counter}</Text>
-                        </View>
+                        { licenceRendered()=== "40%" &&
+                            <View style={{alignSelf:"center", borderWidth:3, width: 55, height: 55, borderRadius:"50%", justifyContent: "center"}}>
+                                <Text style={{color:"#2b2e32",fontWeight:"bold", alignSelf: "center", fontSize: 40}}>{counter}</Text>
+                            </View>
+                        }
                         <TouchableOpacity style={{alignSelf:"center"}} onPress={erhoehen}>
                             <AntDesign name="pluscircleo" size={40} color="black" />
                         </TouchableOpacity>

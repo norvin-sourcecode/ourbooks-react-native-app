@@ -119,6 +119,14 @@ const Book = (props) => {
         setAvailable(!available)
     }
 
+    function helper() {
+        if (props.book.ratio === null || props.book.ratio === 0) {
+            return 128
+        } else {
+            return 200/props.book.ratio
+        }
+    }
+
     function handleRemoveBookFromUserBibPressed() {
         Alert.alert(
             "Buch entfernen",
@@ -178,7 +186,7 @@ const Book = (props) => {
                     </View>
                     <View>
                         <Card containerStyle={{alignSelf: "center",padding: 0}}>
-                            <Card.Image style={{alignSelf: "center",width: 128, height:200}}  resizeMode="cover" source={{url:props.book.pictureUrl}}/>
+                            <Card.Image style={{alignSelf: "center",width: helper(), height:200}}  resizeMode="contain" source={{url:props.book.pictureUrl}}/>
                         </Card>
                         <Text style={{position: "absolute",top: 85,left: 163, fontWeight: "bold", color: "#2b2e32", fontSize: 12}}>Verfügbarkeit:</Text>
                         {inUserBib &&
