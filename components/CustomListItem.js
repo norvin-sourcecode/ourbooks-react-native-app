@@ -90,7 +90,7 @@ const CustomListItem = (props) => {
 
     const BibBook = ({ book, index}) => (
         <ListItem key={index+"list-item-home-userBib-booksList"} containerStyle={{backgroundColor: "transparent"}}>
-            <Card key={index+"list-item-card-home-userBib-booksList"} containerStyle={{margin: 0, padding: 1}}>
+            <Card key={index+"list-item-card-home-userBib-booksList"} containerStyle={{margin: 0, padding: 0}}>
                 <TouchableOpacity key={index+"touch-flaeche-home-userBib-booksList"} onPress={() => {
                     handleBookPress(book)
                 }}>
@@ -168,6 +168,7 @@ const CustomListItem = (props) => {
                                 style={{alignSelf: "flex-start"}}
                                 horizontal={true}
                                 data={bibBooksList}
+                                scrollEnabled={bibBooksList.length > 3}
                                 initialNumToRender={3}
                                 renderItem={({item, index}) => <BibBook book={item} index={index} />}
                                 keyExtractor={(item, index)=> 'key'+index+item.id}
@@ -192,6 +193,7 @@ const CustomListItem = (props) => {
                                 style={{alignSelf: "flex-start"}}
                                 horizontal={true}
                                 data={friendsBooksList}
+                                scrollEnabled={friendsBooksList.length > 3}
                                 initialNumToRender={3}
                                 renderItem={({item, index}) => <BibBook book={item} index={index} />}
                                 keyExtractor={(item, index)=> 'key'+index+item.id}

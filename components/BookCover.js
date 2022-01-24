@@ -1,25 +1,26 @@
-
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View, VirtualizedList} from 'react-native';
-import {Button, Card, Divider, ListItem, Overlay} from "react-native-elements";
+import {Image, View} from 'react-native';
 import {connect} from "react-redux";
-import {AntDesign} from "@expo/vector-icons";
-import ListProcess from "./ListProcess";
-import {respondAusleihenRequest, respondFriendRequest} from "../reducers/appSlice";
 
 const BookCover = (props) => {
 
-    const getWH = () => {
-        props.ratio
+    function helper() {
+        if (props.ratio !== undefined && props.ratio !== null && props.ratio !== 0) {
+            const num =  110/props.ratio
+            num.toFixed(2)
+            num.valueOf()
+            return num.valueOf()
+        } else {
+            return 75
+        }
     }
 
     return (
         <View>
-            <Image style={{width: 75, height:110}} resizeMode="contain" source={{url:props.url}} />
+            <Image style={{width: helper(), height:110}} resizeMode="contain" source={{url:props.url}} />
         </View>
     )
 };
-
 
 const mapStateToProps = state => {
     return {

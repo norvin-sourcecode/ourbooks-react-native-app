@@ -32,6 +32,14 @@ const ProfilScreen3 = (props) => {
     );
 }
 
+const ProfilScreen4 = (props) => {
+    return (
+        <View>
+            <Text navigation={props.navigation}>UserBib</Text>
+        </View>
+    );
+}
+
 const ProfilStack = createNativeStackNavigator();
 
 function ProfilStackScreen() {
@@ -53,6 +61,7 @@ function ProfilStackScreen() {
             <ProfilStack.Screen name="profilFriends" component={ProfilScreen3} options={({ navigation}) => ({
                 title: "Freund*innen",
             })} />
+            <ProfilStack.Screen name="profilUserBib" component={ProfilScreen4} />
         </ProfilStack.Navigator>
     );
 }
