@@ -38,6 +38,11 @@ const initialState = {
         loading: false,
         error: null,
         booksList: [],
+        favoriteBooks: {
+            fBook1: null,
+            fBook2: null,
+            fBook3: null,
+        }
     },
     bibs: {
         loaded: false,
@@ -918,6 +923,7 @@ const appSlice = createSlice({
             state.process.needReload = false
         },
         setShownBook:(state, action) => {
+            console.log("hier")
             state.book.loaded = false
             state.book.loading = false
             state.book.error = null
@@ -934,6 +940,17 @@ const appSlice = createSlice({
             state.book.ratio = action.payload.ratio
             state.book.pending = false
             state.book.description = action.payload.description
+        },
+        setFavoriteBookByNum: (state, action) => {
+            if (action.payload.number === 1) {
+                state.userBib.favoriteBooks.fBook1 = action.payload.book
+            }
+            if (action.payload.number === 2) {
+                state.userBib.favoriteBooks.fBook2 = action.payload.book
+            }
+            if (action.payload.number === 3) {
+                state.userBib.favoriteBooks.fBook3 = action.payload.book
+            }
         },
         setShownBib:(state, action) => {
             state.bib.id = action.payload.id
@@ -1681,7 +1698,8 @@ export const {
     firebaseLoginSuccess,
     firebaseLoginFailure,
     clearSearch,
-    setShownFriend
+    setShownFriend,
+    setFavoriteBookByNum,
 } = appSlice.actions
 
 export default appSlice.reducer
