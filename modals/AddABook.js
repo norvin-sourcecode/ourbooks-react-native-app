@@ -97,9 +97,9 @@ const AddABook = (props) => {
                             onBarCodeScanned={scanned ? undefined : handleISBNscanned}
                             style={StyleSheet.absoluteFillObject}
                         />
-                        <View style={{position: "absolute", top: "2%", left: "2%"}}>
+                        <View style={{position: "absolute", top: "3%", left: "2%"}}>
                             <View>
-                                <Text onPress={() => props.navigation.navigate('main')} style={{color: "white", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
+                                <Text onPress={() => props.navigation.navigate('main')} style={{color: "white",fontSize: 18, left: "20%", top: "5%", textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
                             </View>
                         </View>
                         <View style={{position: "absolute", left:"15.8%", top:"40%", width: "70%", height:125, borderWidth: 2, borderColor: "white"}}>
