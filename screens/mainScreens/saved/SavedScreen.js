@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import {Button, Badge, ListItem, Tab, TabView, Card, Divider, Header} from 'react-native-elements';
 import {getNewlyAdded, getSaved, setShownBook} from "../../../reducers/appSlice";
 import Animated from "react-native-reanimated";
+import BookCover from "../../../components/BookCover";
 
 const SavedScreen = (props) => {
 
@@ -59,13 +60,13 @@ const SavedScreen = (props) => {
     });
 
     const SavedBook = ({ book, index}) => (
-        <View key={index+"list-item-saved-book"} style={{ paddingLeft: 5, paddingRight: 5 }}>
-            <Card containerStyle={{padding: 0, paddingTop: 0, margin:8, marginBottom:0, borderWidth:0, backgroundColor: "white", borderRadius:10, height:104}}>
+        <View key={index+"list-item-saved-book"}>
+            <Card containerStyle={{padding: 0, paddingTop: 0, margin:8, marginBottom:0, borderWidth:0, backgroundColor: "white", borderRadius:10, height:110}}>
                 <TouchableOpacity onPress={()=> {
                     handleBookPress(book)
                 }}>
                     <View style={{flexDirection: "row", height:110}}>
-                        <View style={{top:-3, left:0}}>
+                        <View style={{ left:0}}>
                             {book.pictureUrl.length === 0 &&
                             <View style={{justifyContent: "center",width: 75, height: 110}}>
                                 <Text style={{alignSelf: "center"}}>Titel:</Text>
@@ -74,13 +75,12 @@ const SavedScreen = (props) => {
                             </View>
                             }
                             {book.pictureUrl.length !== 0 &&
-                            <Card.Image style={{width: 75, height:110, borderBottomLeftRadius:13, borderTopLeftRadius:13}} resizeMode="contain" source={{url:book.pictureUrl}}>
-                            </Card.Image>
+                                <BookCover url={book.pictureUrl} ratio={book.ratio} />
                             }
                         </View>
-                        <View style={{flexDirection: "column",justifyContent: "center"}}>
-                            <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{flexWrap: "nowrap",padding: 10,top:-3, right:-53,alignSelf:"center", fontWeight: "bold", color:"#2b2e32", fontSize: 20}}>{book.titel}</Text>
-                            <View style={{paddingLeft: 5,paddingTop:5, top:-3, alignSelf:"center", right:-53, alignItems: "center"}}>
+                        <View style={{flexDirection: "column",justifyContent: "center", width:"70%"}}>
+                            <Text style={{fontWeight: "bold", paddingLeft:"5%"}}>{book.titel}</Text>
+                            <View style={{paddingLeft:"5%", alignItems: "left", paddingTop: "4%"}}>
                                 <Text>ISBN: {book.isbn}</Text>
                                 <Text>Author*in: {book.authorName}</Text>
                                 <Text>Erscheinungsdatum: {book.erscheinungsDatum}</Text>

@@ -135,9 +135,9 @@ const AddABib = (props) => {
                 <Button title="Freund*in hinzufügen" onPress={handelAnfageSchickenButtonOnPress} buttonStyle={{backgroundColor: "black"}} />
             </Overlay>
             <View style={{width: "100%", height:"85%"}}>
-                <View style={{paddingLeft: 10,paddingTop: 10,paddingRight: 10,width:"100%" ,flexDirection: "row", justifyContent: "space-between"}}>
+                <View style={{paddingLeft: 10,paddingTop: 15,paddingRight: 10,width:"100%" ,flexDirection: "row", justifyContent: "space-between"}}>
                     <View>
-                        <Text onPress={() => props.navigation.navigate('main')} style={{color: "#565a63", fontSize:15,left: 6,top:4, textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
+                        <Text onPress={() => props.navigation.navigate('main')} style={{color: "#565a63",fontSize: 18, left: "20%", top: "10%", textDecorationLine: 'underline', fontWeight: "bold"}}>schließen</Text>
                     </View>
                 </View>
                 <View style={{paddingLeft: 10,paddingTop: 30,paddingRight: 10}}>

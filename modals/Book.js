@@ -1,15 +1,19 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {useEffect} from "react";
-import {Text, TouchableOpacity, View, Image, ActivityIndicator, Easing, Alert, ScrollView} from "react-native";
+import { Text,View, ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity} from "react-native";
 import { connect } from "react-redux";
-import {AntDesign, FontAwesome, Ionicons} from "@expo/vector-icons";
-import {Divider, CheckBox, Button, Overlay, ButtonGroup, Card, Tooltip} from "react-native-elements";
-
-import {Picker} from "@react-native-picker/picker";
-import DropDownPicker from 'react-native-dropdown-picker';
-import {AnimatedCircularProgress} from "react-native-circular-progress";
-import Animated, {cancelAnimation, useSharedValue} from "react-native-reanimated";
-import {Circle} from "react-native-svg";
+import {AntDesign, Entypo, FontAwesome, Ionicons} from "@expo/vector-icons";
+import {
+    Divider,
+    CheckBox,
+    Button,
+    Overlay,
+    ButtonGroup,
+    Card,
+    Tooltip,
+    Image,
+    BottomSheet
+} from "react-native-elements";
 import {
     checkIfBookAvailable, checkIfBookPending,
     deleteBookFromSaved,
@@ -17,24 +21,26 @@ import {
     saveBook,
     sendAusleihenRequest
 } from "../reducers/appSlice";
+import Svg, {G, Polygon,Text as SvgText} from "react-native-svg";
+import Ribbon from "../components/Ribbon";
 
 const Book = (props) => {
 
+    const [loading, setLoading] = useState(false);
 
-
+    const [targetBook, setTargetBook] = useState({})
     const [saved, setSaved] = useState(false)
     const [inUserBib, setInUserBib] = useState(false)
     const [available, setAvailable] = useState(false)
+    const [descriptionOverlayVisible, setDescriptionOverlayVisible] = useState(false);
+    const [dotsBottomSheetVisible, setDotsBottomSheetVisible] = useState(false)
 
+    const [defaultBookCoverWidth, setDefaultBookCoverWidth] = useState(160)
+    const [defaultBookCoverHeight, setDefaultBookCoverHeight] = useState(275)
 
-    const [visible, setVisible] = useState(false);
-    const [targetBook, setTargetBook] = useState({})
-
-    const [loading, setLoading] = useState(false);
-
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
+    const [dropDownOpen, setDropDownOpen] = useState(false);
+    const [dropDownValue, setDropDownValue] = useState(null);
+    const [dropDownItems, setDropDownItems] = useState([
         {label: 'ilker', value: 'ilker'},
         {label: 'yannick', value: 'yannick'},
         {label: 'gianluca', value: 'gianluca'}
@@ -47,7 +53,7 @@ const Book = (props) => {
                 props.checkIfBookIsPendingDispatch(props.book.id)
             }
         }
-        if (!props.book.loading) {
+        if (!props.book.loading && !props.saved.loading) {
             if(props.userBib.booksList.some(book => book.isbn === props.book.isbn)){
                 setInUserBib(true)
             } else{
@@ -71,13 +77,16 @@ const Book = (props) => {
     }, [props.saved, props.book, props.book.loading, props.userBib.booksList, props.book.availableAt])
 
     useEffect(() => {
-        console.log(props.book)
         setTargetBook(props.book)
     },[props.book])
 
-    const toggleOverlay = () => {
-        setVisible(!visible);
-    };
+    function toggleDescriptionOverlay() {
+        setDescriptionOverlayVisible(!descriptionOverlayVisible);
+    }
+
+    function toggleDotsBotttomSheet() {
+        setDotsBottomSheetVisible(!dotsBottomSheetVisible)
+    }
 
     function savedCheckedBoxPressed() {
         if (!saved) {
@@ -89,42 +98,20 @@ const Book = (props) => {
         setSaved(!saved)
     }
 
-    function checkBoxUserBibOnPress() {
-        // if (!inUserBib) {
-        //     props.addBookToUserBibDispatchAusloeser(props.Communication.urlBase, props.Communication.conf, {
-        //         auflage: targetBook.auflage,
-        //         authorName: targetBook.authorName,
-        //         erscheinungsDatum: targetBook.erscheinungsDatum,
-        //         id: 0,
-        //         isbn: targetBook.isbn,
-        //         sprache: targetBook.sprache,
-        //         status: 0,
-        //         timeCreated: "0",
-        //         titel: targetBook.titel,
-        //         pictureUrl: targetBook.pictureUrl,
-        //     })
-        // }
-        // if (inUserBib) {
-        //     props.deleteBookByIdFromServerDispatchAusloeser(props.Communication.urlBase,props.Communication.conf, targetBook.id)
-        // }
-        setInUserBib(!inUserBib)
-    }
-
-    function handelAnfageSchickenButtonOnPress() {
-        props.sendAusleihenRequestDispatch(targetBook.id, "ausleihanfrage")
-        // props.sendGetBookRequestDispatchAusloeser(props.Communication.urlBase, props.Communication.conf, valueBookId, valueUsername)
-    }
-
     function checkBoxAvaliablOnPress() {
         setAvailable(!available)
     }
 
-    function helper() {
+    function coverDimHelper() {
         if (props.book.ratio === null || props.book.ratio === 0) {
-            return 128
+            return defaultBookCoverWidth
         } else {
-            return 200/props.book.ratio
+            return defaultBookCoverHeight/props.book.ratio
         }
+    }
+
+    function handelAnfageSchickenButtonOnPress() {
+        props.sendAusleihenRequestDispatch(targetBook.id, "ausleihanfrage")
     }
 
     function handleRemoveBookFromUserBibPressed() {
@@ -138,44 +125,29 @@ const Book = (props) => {
                 {
                     text: "OK",
                     onPress: () => props.deleteBookFromUserBibDispatch(targetBook.id)
-
                 },
             ],
-            { cancelable: false }
+            {
+                cancelable: false
+            }
         );
     }
 
     return (
-        <View style={{flex: 1, alignItems: "center", width: "100%"}}>
+        <View style={styles.screenContainer}>
             { loading &&
-                <View style={{justifyContent: "center", alignItems: "center", flex: 1}}>
-                    <ActivityIndicator style={{alignSelf: "center"}} size='large' />
+                <View style={styles.activityIndicatorContainer}>
+                    <ActivityIndicator style={styles.activityIndicator} size='large' />
                 </View>
             }
             { !loading &&
-                <View style={{flex: 1, alignItems: "center", width: "100%"}}>
-                    <View style={{
-                        paddingLeft: 10,
-                        paddingTop: 10,
-                        paddingRight: 10,
-                        width: "100%",
-                        flexDirection: "row",
-                        justifyContent: "space-between"
-                    }}>
-                        <View>
-                            <Text onPress={() => props.navigation.navigate('main')} style={{
-                                color: "#565a63",
-                                fontSize: 15,
-                                left: 6,
-                                top: 4,
-                                textDecorationLine: 'underline',
-                                fontWeight: "bold"
-                            }}>schließen</Text>
-                        </View>
-                        <View style={{flexDirection: "row"}}>
-                            <Ionicons style={{top: 2, right: 9}} name="share-outline" size={36} color="black"/>
+                <View style={styles.contentContainer}>
+                    <View style={styles.menuTopBarContainer}>
+                        <Text onPress={() => props.navigation.navigate('main')} style={styles.menuTopBarCloseText}>schließen</Text>
+                        <View style={styles.menuTopBarRightSideContainer}>
+                            <Entypo style={styles.menuTopBarRightSideDotsIcon} name="dots-three-horizontal" size={36} color="black" onPress={()=>toggleDotsBotttomSheet()} />
                             <CheckBox
-                                containerStyle={{top: 5, padding: 0, margin: 0}}
+                                containerStyle={styles.menuTopBarRightSideSavedCheckBox}
                                 center
                                 checkedIcon={<FontAwesome name="bookmark" size={35} color="black"/>}
                                 uncheckedIcon={<FontAwesome name="bookmark-o" size={35} color="black"/>}
@@ -184,40 +156,45 @@ const Book = (props) => {
                             />
                         </View>
                     </View>
+                    <View style={styles.bookCoverImageContainer}>
+                        <Image style={{alignSelf: "center",width: coverDimHelper(), height: defaultBookCoverHeight}} resizeMode="contain" source={{uri:props.book.pictureUrl}}/>
+                        { available &&
+                            <Ribbon containerStyle={{position: "absolute", right:"0%", top:"7%"}}/>
+                        }
+                    </View>
+                    {/*
                     <View>
-                        <Card containerStyle={{alignSelf: "center",padding: 0}}>
-                            <Card.Image style={{alignSelf: "center",width: helper(), height:200}}  resizeMode="contain" source={{url:props.book.pictureUrl}}/>
-                        </Card>
                         <Text style={{position: "absolute",top: 85,left: 163, fontWeight: "bold", color: "#2b2e32", fontSize: 12}}>Verfügbarkeit:</Text>
-                        {inUserBib &&
+                        { inUserBib &&
                             <View>
                                 <Ionicons style={{position: "absolute", bottom: 60, right: -75}} name="library" size={50} color="black" />
                                 <Text style={{position: "absolute", bottom: 40, right: -80, textDecorationLine: "underline", color: "red"}} onPress={()=>{handleRemoveBookFromUserBibPressed()}}>entfernen</Text>
                             </View>
                         }
-                        {!inUserBib &&
+                        { !inUserBib &&
                             <CheckBox
-                            containerStyle={{bottom: 45,left: 9,position: "absolute", width: "100%", backgroundColor: "transparent" , borderColor: "transparent"}}
-                            size={50}
-                            disabled={true}
-                            center
-                            checkedIcon={<AntDesign name="checkcircle" size={50} color="darkgreen" />}
-                            uncheckedIcon={<AntDesign name="closecircle" size={50} color="darkred" />}
-                            onPress={checkBoxAvaliablOnPress}
-                            checked={available}
+                                containerStyle={{bottom: 45,left: 9,position: "absolute", width: "100%", backgroundColor: "transparent" , borderColor: "transparent"}}
+                                size={50}
+                                disabled={true}
+                                center
+                                checkedIcon={<AntDesign name="checkcircle" size={50} color="darkgreen" />}
+                                uncheckedIcon={<AntDesign name="closecircle" size={50} color="darkred" />}
+                                onPress={checkBoxAvaliablOnPress}
+                                checked={available}
                             />
                         }
                     </View>
-                    <View style={{paddingTop: 15}}>
-                        <Text numberOfLines={1} adjustsFontSizeToFit={true}  style={{flexWrap: "nowrap",alignSelf: "center",fontWeight: "bold", fontSize: 20}}>{props.book.titel}</Text>
-                        <Text style={{paddingTop: 5, alignSelf: "center", color: "grey"}}>ISBN: {props.book.isbn}</Text>
+                    */}
+                    <View style={{paddingTop: "5%"}}>
+                        <Text numberOfLines={2} adjustsFontSizeToFit={true} style={{alignSelf: "center",fontWeight: "bold", fontSize: 20}}>{props.book.titel}</Text>
+                        <Text style={{paddingTop:"3%", alignSelf: "center", color: "grey", fontSize:15, fontWeight: "bold"}}>{props.book.authorName}</Text>
                     </View>
                     <Divider style={{paddingTop: 15, width: "95%"}}/>
                     <View style={{padding: 15, width: "100%"}}>
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <View style={{flexDirection: "column",alignItems: "center"}}>
-                                <Text style={{textDecorationLine: 'underline'}}>Author*in:</Text>
-                                <Text style={{fontWeight: "bold"}}>{props.book.authorName}</Text>
+                                <Text style={{textDecorationLine: 'underline'}}>ISBN:</Text>
+                                <Text style={{fontWeight: "bold"}}>{props.book.isbn}</Text>
                             </View>
                             <View style={{flexDirection: "column",alignItems: "center"}}>
                                 <Text style={{textDecorationLine: 'underline'}}>Sprache:</Text>
@@ -230,15 +207,12 @@ const Book = (props) => {
                         </View>
                     </View>
                     <Divider style={{width: "95%"}}/>
-                    <View style={{padding:10, width: "100%"}} >
-                        <View style={{borderColor: "lightgray", borderWidth: 0.75, borderRadius: 5,padding: 5, width: "100%", height: 130}}>
-                            <Text style={{paddingBottom: 10, textDecorationLine: 'underline'}}>Inhalt:</Text>
-                            <ScrollView>
-                                <Text>{props.book.description}</Text>
-                            </ScrollView>
-                        </View>
+                    <View style={{padding:"5%", width: "100%"}} >
+                        <TouchableOpacity onPress={toggleDescriptionOverlay} >
+                            <Text style={{textDecorationLine: 'underline', color:"grey", fontWeight: "bold"}}>Inhaltsbeschreibung anzeigen...</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={{width: "100%", padding: 10, paddingTop:5}}>
+                    <View style={{width: "100%", paddingLeft: "3%", paddingRight:"3%"}}>
                         <Button
                         disabled={!available || props.book.pending}
                         onPress={()=>{handelAnfageSchickenButtonOnPress()}}
@@ -251,9 +225,91 @@ const Book = (props) => {
                     </View>
                 </View>
             }
+            { dotsBottomSheetVisible &&
+                <View style={{position:"absolute",width: "100%", height:"100%", backgroundColor:"black", opacity:0.4}}/>
+            }
+            <BottomSheet isVisible={dotsBottomSheetVisible} containerStyle={{backgroundColor: "transparent"}}>
+                <View style={{width: "100%"}}>
+                    <TouchableOpacity style={{width:"100%", height:350}} onPress={toggleDotsBotttomSheet} />
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderTopRightRadius:15, borderTopLeftRadius:15, borderBottomLeftRadius:0, borderBottomRightRadius:0}} titleStyle={{ color: 'white'}} buttonStyle={{backgroundColor: '#2b2e32', height:50, justifyContent:"flex-start"}} title="zum Bücherregal hinzufügen/entfernen" onPress={toggleDotsBotttomSheet}/>
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: 'white'}} buttonStyle={{backgroundColor: '#2b2e32', height:50, justifyContent:"flex-start"}} title="details" onPress={toggleDotsBotttomSheet}/>
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: 'white'}} buttonStyle={{backgroundColor: '#2b2e32', height:50, justifyContent:"flex-start"}} title="bearbeiten" onPress={toggleDotsBotttomSheet}/>
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: 'white'}} buttonStyle={{backgroundColor: '#2b2e32', height:50, justifyContent:"flex-start"}} title="teilen" onPress={toggleDotsBotttomSheet}/>
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: 'white'}} buttonStyle={{backgroundColor: '#2b2e32', height:50, justifyContent:"flex-start"}} title="melden" onPress={toggleDotsBotttomSheet}/>
+                    <Button containerStyle={{backgroundColor: "#2b2e32", borderRadius:0}} titleStyle={{ color: 'white', fontWeight: "bold"}} buttonStyle={{backgroundColor: '#2b2e32', height:50}} title="abbrechen" onPress={toggleDotsBotttomSheet}/>
+                </View>
+            </BottomSheet>
+            <Overlay isVisible={descriptionOverlayVisible} onBackdropPress={toggleDescriptionOverlay}>
+                <View style={{width:"90%", height:"75%"}}>
+                    <Text onPress={toggleDescriptionOverlay} style={{color: "#565a63", fontSize: 15, left: 6, top: 4, textDecorationLine: 'underline', fontWeight: "bold", paddingBottom:"5%"}}>schließen</Text>
+                    <ScrollView>
+                        <Text>{props.book.description}</Text>
+                    </ScrollView>
+                </View>
+            </Overlay>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    screenContainer: {
+        flex: 1,
+        alignItems: "center",
+        width: "100%"
+    },
+    activityIndicatorContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1
+    },
+    contentContainer: {
+        flex: 1,
+        alignItems: "center",
+        width: "100%",
+        height: "100%"
+    },
+    activityIndicator: {
+        alignSelf: "center"
+    },
+    menuTopBarContainer: {
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingRight: 10,
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    menuTopBarCloseText: {
+        color: "#565a63",
+        fontSize: 18,
+        left: "20%",
+        top: "3%",
+        textDecorationLine: 'underline',
+        fontWeight: "bold"
+    },
+    menuTopBarRightSideContainer: {
+        flexDirection: "row"
+    },
+    menuTopBarRightSideDotsIcon: {
+        top: 2, right: 9
+    },
+    menuTopBarRightSideSavedCheckBox: {
+        top: 5,
+        padding: 0,
+        margin: 0
+    },
+    bookCoverImageContainer: {
+        paddingTop:"5%",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.7,
+        shadowRadius: 4.65,
+        elevation: 6,}
+});
+
 
 const mapStateToProps = state => {
     return {
@@ -266,19 +322,29 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     checkIfBookIsPendingDispatch(id) {
-        dispatch(checkIfBookPending({id:id}))
+        dispatch(checkIfBookPending({
+            id:id
+        }))
     },
     saveBookDispatch(isbn) {
-        dispatch(saveBook({isbn: isbn}))
+        dispatch(saveBook({
+            isbn: isbn
+        }))
     },
     deleteBookFromSavedDispatch(id) {
-        dispatch(deleteBookFromSaved({id: id}))
+        dispatch(deleteBookFromSaved({
+            id: id
+        }))
     },
     deleteBookFromUserBibDispatch(id) {
-        dispatch(deleteBookFromUserBib({id: id}))
+        dispatch(deleteBookFromUserBib({
+            id: id
+        }))
     },
     checkIfBookAvailableDispatch(isbn) {
-        dispatch(checkIfBookAvailable({isbn:isbn}))
+        dispatch(checkIfBookAvailable({
+            isbn:isbn
+        }))
     },
     sendAusleihenRequestDispatch(bookId, message) {
         dispatch(sendAusleihenRequest({
