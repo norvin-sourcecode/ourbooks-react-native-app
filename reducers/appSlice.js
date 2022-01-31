@@ -609,7 +609,6 @@ export const getBookByIsbn = createAsyncThunk(
             const tmpState = getState()
             const response = await axios
                 .get(tmpState.appReducer.communication.urlBase+"/books/searchOnlineISBN/"+data.isbn, tmpState.appReducer.communication.conf)
-            console.log(response.data)
             return response.data
         } catch (err) {
             let error = err
@@ -923,7 +922,6 @@ const appSlice = createSlice({
             state.process.needReload = false
         },
         setShownBook:(state, action) => {
-            console.log("hier")
             state.book.loaded = false
             state.book.loading = false
             state.book.error = null

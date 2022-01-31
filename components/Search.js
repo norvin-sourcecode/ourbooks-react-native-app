@@ -8,11 +8,12 @@ import {
     clearSearch,
     getBookByIsbn,
     searchBookByTitle,
-    searchUserByUsername,
+    searchUserByUsername, sendFriendRequest,
     setShownBook,
     setShownFriend
 } from "../reducers/appSlice";
 import CustomFrienRequestButton from "./CustomFrienRequestButton";
+import BookCover from "./BookCover";
 
 const Search = (props) => {
 
@@ -92,7 +93,7 @@ const Search = (props) => {
 
                                             }}>
                                                 <View style={{flexDirection: "row", height:110}}>
-                                                    <View style={{top:-3, left:0}}>
+                                                    <View style={{ left:0}}>
                                                         {item.pictureUrl.length === 0 &&
                                                             <View style={{justifyContent: "center",width: 75, height: 110}}>
                                                                 <Text style={{alignSelf: "center"}}>Titel:</Text>
@@ -101,13 +102,12 @@ const Search = (props) => {
                                                             </View>
                                                         }
                                                         {item.pictureUrl.length !== 0 &&
-                                                            <Card.Image style={{width: 75, height:110, borderBottomLeftRadius:13, borderTopLeftRadius:13}} resizeMode="contain" source={{url:item.pictureUrl}}>
-                                                            </Card.Image>
+                                                            <BookCover url={item.pictureUrl} ratio={item.ratio} />
                                                         }
                                                     </View>
-                                                    <View style={{flexDirection: "column",justifyContent: "center"}}>
-                                                        <Text numberOfLines={1} adjustsFontSizeToFit={true} style={{flexWrap: "nowrap",padding: 10,top:-3, right:-53,alignSelf:"center", fontWeight: "bold", color:"#2b2e32", fontSize: 20}}>{item.titel}</Text>
-                                                        <View style={{paddingLeft: 5,paddingTop:5, top:-3, alignSelf:"center", right:-53, alignItems: "center"}}>
+                                                    <View style={{flexDirection: "column",justifyContent: "center", width:"70%"}}>
+                                                        <Text style={{fontWeight: "bold", paddingLeft:"5%"}}>{item.titel}</Text>
+                                                        <View style={{paddingLeft:"5%", alignItems: "left", paddingTop: "4%"}}>
                                                             <Text>ISBN: {item.isbn}</Text>
                                                             <Text>Author*in: {item.authorName}</Text>
                                                             <Text>Erscheinungsdatum: {item.erscheinungsDatum}</Text>
@@ -139,7 +139,7 @@ const Search = (props) => {
                                                 <Text>{item.username}</Text>
                                             </View>
                                             <View style={{paddingRight: "2.5%"}}>
-                                                <CustomFrienRequestButton onPressSend={()=>{console.log("2")}}onPressAbortRequest={()=>{console.log("1")}} />
+                                                <CustomFrienRequestButton onPressSend={()=>{props.sendFriendRequestDispatch(item.username)}} onPressAbortRequest={()=>{console.log("1")}} />
                                             </View>
                                         </View>
                                     </View>
@@ -164,6 +164,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+    sendFriendRequestDispatch(username) {
+        dispatch(sendFriendRequest({username: username}))
+    },
     clearSearchDispatch(searchNumber) {
         dispatch(clearSearch(searchNumber))
     },
