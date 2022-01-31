@@ -7,6 +7,7 @@ import {GiftedChat} from "react-native-gifted-chat";
 import {getGBibBooks, setShownBook} from "../../../reducers/appSlice";
 import ListBook from "../../../components/ListBook";
 import {AntDesign, Ionicons} from "@expo/vector-icons";
+import { Image, FlatList, Dimensions } from "react-native";
 
 const BibScreen = (props) => {
 
