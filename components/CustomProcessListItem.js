@@ -31,7 +31,7 @@ const CustomProcessListItem = (props) => {
                 }
                 {props.i.kind === 2 &&
                 <View style={{borderRadius:10}}>
-                    <ListItem key={props.index+"list-item-reqsdfgduest"} bottomDivider>
+                    <ListItem key={props.index+"list-item-process1"} bottomDivider>
                         <ListItem.Content>
                             <View style={{flexDirection:"row"}}>
                                 <View style={{width: "100%", flexDirection: "row", flexWrap: "nowrap", justifyContent: "space-between"}}>

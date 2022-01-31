@@ -16,6 +16,7 @@ import {
 import DropDownPicker from "react-native-dropdown-picker";
 import {BarCodeScanner} from "expo-barcode-scanner";
 import CustomListItem from "../../../components/CustomListItem";
+import CustomFeedItem from "../../../components/CustomFeedItem";
 
 
 const HomeScreen = (props) => {
@@ -120,7 +121,7 @@ const HomeScreen = (props) => {
                     <View style={{paddingRight:11, paddingLeft:11, height:50,paddingTop:9, paddingBottom:20}}>
                         <View style={{height:36, backgroundColor: "lightgrey",borderRadius: 10}}>
                             <DropDownPicker
-                                placeholder={<View style={{paddingTop:7,flexDirection: "row"}}><MaterialIcons name="sort" size={24} color="grey" /><Text style={{paddingTop:1,color: "grey", fontSize: 18, paddingLeft: 5}}>sortieren nach...</Text></View>}
+                                placeholder={<View style={{paddingTop:7,flexDirection: "row"}}><MaterialIcons name="sort" size={24} color="grey" /><Text style={{paddingTop:1,color: "grey", fontSize: 18, paddingLeft: 5}}>Filter</Text></View>}
                                 style={{height:36, backgroundColor: "#565a63",borderRadius: 10, borderWidth:0}}
                                 containerStyle={{borderWidth:0}}
                                 open={open}
@@ -140,8 +141,9 @@ const HomeScreen = (props) => {
                             <VirtualizedList
                                 data={data2}
                                 initialNumToRender={4}
-                                renderItem={({item, index}) => <Text navigation={props.navigation}>{item.message}</Text>}
-                                keyExtractor={(item, index)=> 'key'+index+item.id}
+                                //renderItem={({item, index}) => <Text navigation={props.navigation}>{item.book.titel}</Text>}
+                                renderItem={({item, index}) => <CustomFeedItem item={item} index={index} navigation={props.navigation}/>}
+                                keyExtractor={(item, index)=> 'key'+index+item+Math.random()}
                                 getItemCount={getItemCount}
                                 getItem={getItem}
                             />
