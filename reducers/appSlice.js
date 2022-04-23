@@ -8,7 +8,7 @@ const initialState = {
     ourbookLoggedIn: false,
     firebaseLoggedIn: false,
     communication: {
-        urlBase: "https://ourbooktest3-n52mpekfgq-ey.a.run.app",
+        urlBase: "",//"https://ourbooktest3-n52mpekfgq-ey.a.run.app",
         token: null,
         conf: {
             auth: {
