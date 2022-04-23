@@ -21,17 +21,22 @@ const ListProcess = (props) => {
         <View>
             <TouchableOpacity onPress={() => {
                 handleProcessPress(props.p)
+                console.log("give date: " + props.p.giveDate)
+                console.log("return date: " + props.p.returnDate)
+                //{props.p.bookReceiver}
+                //{props.p.status}
             }}>
                 <ListItem key={props.index + "list-item-process"} bottomDivider>
                     <ListItem.Content>
+                        <Text style={{alignSelf: "center"}}>noch 15d</Text>
                         <View style={{flexDirection: "row"}}>
                             <Image style={{alignSelf: "center",width: 64, height:100}} resizeMode="cover" source={{url:props.p.book.pictureUrl}}/>
                             <View style={{width: "100%"}}>
-                                <Text style={{fontWeight: "bold"}}>{props.p.book.titel}</Text>
-                                <Text>{props.p.bookReceiver}</Text>
-                                <Text>{props.p.giveDate}</Text>
-                                <Text>{props.p.returnDate}</Text>
-                                <Text>{props.p.status}</Text>
+                                <Text style={{alignSelf: "right", borderLeftWidth: "20", color: 'grey'}}>username</Text>
+                                <Text/>
+                                <Text style={{fontWeight: "bold", alignSelf: "right", borderLeftWidth: "20"}}>{props.p.book.titel}</Text>
+                                <Text style={{alignSelf: "center"}}>{props.p.returnDate}</Text>
+                                <Text style={{alignSelf: "right", borderLeftWidth: "20", color: 'grey'}}>Hi, ich hätte diesen Donnerstag Zeit</Text>
                             </View>
                         </View>
                     </ListItem.Content>

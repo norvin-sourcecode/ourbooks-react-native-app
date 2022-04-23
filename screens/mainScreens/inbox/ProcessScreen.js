@@ -3,7 +3,7 @@ import {useEffect} from "react";
 import {Alert, StyleSheet, Text, TouchableOpacity, View, VirtualizedList} from "react-native";
 import { connect } from "react-redux";
 import {Badge, Button, ButtonGroup, Divider, Header, ListItem, Overlay} from 'react-native-elements';
-import {GiftedChat} from "react-native-gifted-chat";
+import {GiftedChat, SystemMessage} from "react-native-gifted-chat";
 import {
     agreeProcess,
     getFriendById,
@@ -211,6 +211,35 @@ const ProcessScreen = (props) => {
     //     )
     // }
 
+    const customSystemMessage = (props, messages) => {
+        return (
+            <SystemMessage
+                {...props}
+                containerStyle={{ backgroundColor: '"#fdd560"' }}
+                wrapperStyle={{ borderWidth: 5, borderColor: 'white' }}
+                textStyle={{ color: 'white', fontWeight: '900', textAlign: 'center'}}
+            />
+            // <View>
+            //     <Text style={{
+            //         backgroundColor: "#dedede",
+            //         padding:10,
+            //         //borderRadius: 5,
+            //         marginTop: 5,
+            //         marginLeft: "5%",
+            //         maxWidth: '50%',
+            //         alignSelf: 'flex-start',
+            //         //maxWidth: 500,
+            //         //padding: 14,
+            //
+            //         //alignItems:"center",
+            //         borderRadius: 20,
+            //     }}>
+            //         system message
+            //     </Text>
+            // </View>
+        );
+    };
+
     const renderChatFooter = () => {
 
         const licenceRendered = () => {
@@ -289,7 +318,7 @@ const ProcessScreen = (props) => {
                 messages={messages}
                 onSend={arr => onSend(arr)}
                 renderChatFooter={renderChatFooter}
-             //   renderSystemMessage={renderSystemMessage}
+                renderSystemMessage={(props) => customSystemMessage(props)}
                 user={{
                     _id: props.user.id,
                     name: props.user.username,
