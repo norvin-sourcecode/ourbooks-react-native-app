@@ -20,7 +20,6 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#preview">Preview</a></li>
     <li><a href="#technical-details">Technical Details</a></li>
     <li><a href="#license">License</a></li>
