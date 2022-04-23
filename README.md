@@ -29,13 +29,13 @@
 
 ### Preview
 
-![preview1](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/main/repository-assets/ourbooks_login_page.png?raw=true)
-![preview2](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/main/repository-assets/ourbooks_book_page.jpeg?raw=true)
+![preview1](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_login_page.png?raw=true)
+![preview2](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_book_page.jpeg?raw=true)
 
 
 ### Technical Details
 
-![details](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/main/repository-assets/TECHNISCHE_SPEZIFIKATIONEN.pdf?raw=true)
+![details](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/TECHISCHE_SPEZIFIKATIONEN.pdf?raw=true)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
