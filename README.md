@@ -9,8 +9,9 @@
 
 <h3 align="center">OURBOOKS-REACT-NATIVE-APP</h3>
 
-  <p align="center">
-    Teil des Projekts: [OURBOOKS](https://github.com/norvin-sourcecode/ourbooks). Hier entsteht die Frontend-Mobile-Cross-Plattfrom-App.
+<div align="center">
+  
+Teil des Projekts: [OURBOOKS](https://github.com/norvin-sourcecode/ourbooks). Hier entsteht die Frontend-Mobile-Cross-Plattfrom-App.
 
 </div>
 
@@ -26,24 +27,27 @@
   </ol>
 </details>
 
+<div align="center">
+  
 ### Preview
 
 <div style="flex-direction:row">
-  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_login_page.png?raw=true" alt="preview1" width="190"/>
-  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_book_page.jpeg?raw=true" alt="preview2" width="190"/>
-  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_profil_page.jpeg?raw=true" alt="preview3" width="190"/>
-  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_bookscanner_page.jpeg?raw=true" alt="preview4" width="190"/>
-  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_booksearch_page.jpeg?raw=true" alt="preview5" width="190"/>
+  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_login_page.png?raw=true" alt="preview1" width="180"/>
+  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_book_page.jpeg?raw=true" alt="preview2" width="180"/>
+  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_profil_page.jpeg?raw=true" alt="preview3" width="180"/>
+  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_bookscanner_page.jpeg?raw=true" alt="preview4" width="180"/>
+  <img src="https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/ourbooks_booksearch_page.jpeg?raw=true" alt="preview5" width="180"/>
 </div>
 
 
 ### Technical Details
 
+<div align="left">
+  
 ![details](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/master/repository-assets/technical_details.png?raw=true)
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
+<div align="center">
+  
 <!-- LICENSE -->
 ## License
 
