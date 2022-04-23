@@ -7,6 +7,7 @@ import TouchableScale from "react-native-touchable-scale";
 import {LinearGradient} from "expo-linear-gradient";
 import ProfilScreen from "../screens/mainScreens/profil/ProfileScreen";
 import FriendsScreen from "../screens/mainScreens/profil/FriendsScreen";
+import BookTiles from "../components/BibGrid";
 
 const ProfilScreen1 = (props) => {
     return (
@@ -19,7 +20,7 @@ const ProfilScreen1 = (props) => {
 const ProfilScreen2 = (props) => {
     return (
         <View>
-            <Text navigation={props.navigation}>Einstellungen</Text>
+            <BookTiles navigation={props.navigation}/>
         </View>
     );
 }
