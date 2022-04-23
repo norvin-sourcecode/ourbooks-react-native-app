@@ -1,55 +1,17 @@
 <div id="top"></div>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-
 
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
-
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/norvin-sourcecode/ourbook-react-native-app">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-<h3 align="center">OURBOOKS</h3>
+<h3 align="center">OURBOOKS-REACT-NATIVE-APP</h3>
 
   <p align="center">
-    a way of making knowledge more accessible - creating a vision of shared property. simplifying discovery and lending of books by connecting communities.
-Topics
-Resources
+    Teil des Projekts: [OURBOOKS](https://github.com/norvin-sourcecode/ourbooks). Hier entsteht die Frontend-Mobile-Cross-Plattfrom-App.
 
-    <br />
-    <a href="https://github.com/norvin-sourcecode/ourbook-react-native-app"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/norvin-sourcecode/ourbook-react-native-app">View Demo</a>
-    ·
-    <a href="https://github.com/norvin-sourcecode/ourbook-react-native-app/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/norvin-sourcecode/ourbook-react-native-app/issues">Request Feature</a>
-  </p>
 </div>
 
 
@@ -58,54 +20,22 @@ Resources
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#preview">Preview</a></li>
+    <li><a href="#technical-details">Technical Details</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
+### Preview
+
+![preview1](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/main/repository-assets/ourbooks_login_page.png?raw=true)
+![preview2](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/main/repository-assets/ourbooks_book_page.jpeg?raw=true)
 
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+### Technical Details
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `norvin-sourcecode`, `ourbook-react-native-app`, `twitter_handle`, `linkedin_username`, `email`, `email_client`, `OURBOOKS`, "a way of making knowledge more accessible - creating a vision of shared property. simplifying discovery and lending of books by connecting communities.
-Topics
-Resources
-"
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-### Built With
-
-* [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+![details](https://github.com/norvin-sourcecode/ourbooks-react-native-app/blob/main/repository-assets/TECHNISCHE_SPEZIFIKATIONEN.pdf?raw=true)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -196,29 +126,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
-
-Project Link: [https://github.com/norvin-sourcecode/ourbook-react-native-app](https://github.com/norvin-sourcecode/ourbook-react-native-app)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/norvin-sourcecode/ourbook-react-native-app.svg?style=for-the-badge
@@ -231,6 +138,3 @@ Project Link: [https://github.com/norvin-sourcecode/ourbook-react-native-app](ht
 [issues-url]: https://github.com/norvin-sourcecode/ourbook-react-native-app/issues
 [license-shield]: https://img.shields.io/github/license/norvin-sourcecode/ourbook-react-native-app.svg?style=for-the-badge
 [license-url]: https://github.com/norvin-sourcecode/ourbook-react-native-app/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
